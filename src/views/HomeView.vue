@@ -1,5 +1,6 @@
 <script>
 import TabMenu from '../components/TabMenu.vue';
+import DoughNut from '../components/DoughNut.vue'
 
 
 export default {
@@ -9,7 +10,7 @@ export default {
     }),
     components: {
         
-        TabMenu: TabMenu,
+        TabMenu: TabMenu,DoughNut
     }
     
 }
@@ -32,6 +33,9 @@ export default {
         <div class="long">
           <h5>Long term goals (13 - 24 Months)</h5>
         </div>
+      </div>
+      <div class="chart">
+        <DoughNut />
       </div>
     </div>
   </main>
