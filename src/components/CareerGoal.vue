@@ -67,6 +67,7 @@
           </tr>
         </tbody>
       </table>
+      <div class="line mt-4"></div>
       <h4 class="mt-3">Areas of Interest </h4>
       <table border="1">
         <thead>
@@ -133,6 +134,7 @@
           </tr>
         </tbody>
       </table>
+      <div class="line mt-4"></div>
       <h4 class="mt-3">Mentorship and Skills Building</h4>
       <table border="1">
         <thead>
@@ -349,5 +351,10 @@ button {
   font-style: normal;
   font-weight: 400;
   line-height: 19.2px;
+}
+.line {
+  width: 100%;
+  height: 2px;
+  background: #ddd;
 }
 </style>
