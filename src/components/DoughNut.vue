@@ -2,7 +2,7 @@
 import PieChart from '../components/Charts/PieChart.vue';
 </script> 
 <template>
-  <div class="container-fluid mt-2">
+  <div class="container mt-2">
     <div class="d-flex justify-content-between align-center ">
       <div class=" chart-box-3 box-padded">
 
@@ -20,12 +20,13 @@ import PieChart from '../components/Charts/PieChart.vue';
         <h4 class="box-title"> Mentorship and Skills Building </h4>
 
       </div>
+
     </div>
   </div>
 </template>
 
 <style scoped>
-.container-fluid {
+.container {
   display: flex;
   padding: 30px;
   justify-content: center;
