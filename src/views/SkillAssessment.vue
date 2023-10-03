@@ -1,5 +1,6 @@
 <script>
 import TabMenu from '../components/TabMenu.vue';
+import BarChart from '../components/Charts/BarChart.vue'
 
 
 export default {
@@ -9,7 +10,7 @@ export default {
     }),
     components: {
         
-        TabMenu: TabMenu,
+        TabMenu: TabMenu,BarChart,
     }
     
 }
@@ -23,6 +24,7 @@ export default {
       <h3>Skill Assessment</h3>
       <div class="lines"></div>
       <div class="chart">
+        <BarChart />
       </div>
     </div>
   </main>
