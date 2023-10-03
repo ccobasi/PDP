@@ -44,9 +44,6 @@ export default {
 </template>
 
 <style scoped>
-main {
-  height: 2300px;
-}
 .development {
   display: flex;
   padding: 30px;

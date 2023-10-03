@@ -11,6 +11,6 @@ import NavBar from '../src/components/NavBar.vue';
 <style scoped>
 .wrapper {
   padding: 20px 50px;
-  background: #fafafb;
+  background: #eee;
 }
 </style>
