@@ -19,6 +19,11 @@ const routes =  [
         name: "Skill Assessment",
         component: () => import("../views/SkillAssessment.vue"),
       },
+      {
+        path: "/accordion",
+        name: "accordion",
+        component: () => import("../components/Cards/AccordionCard.vue"),
+      },
     ]}
 ]
 

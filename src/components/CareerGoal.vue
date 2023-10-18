@@ -1,5 +1,8 @@
 <script setup>
   import TableOne from '../components/Tables/TableOne.vue'
+  import DetailsCard from '../components/Cards/DetailsCard.vue'
+  import AccordionCard from '../components/Cards/AccordionCard.vue'
+  
 </script>
 <template>
   <div class="career mt-3">
@@ -21,7 +24,8 @@
         </div>
         <div class="side-panel">
           <h3> Details </h3>
-          <div class="accordion" id="accordionPanelsStayOpenExample">
+          <AccordionCard />
+          <!-- <div class="accordion" id="accordionPanelsStayOpenExample">
             <div class="accordion-item">
 
               <h2 class="accordion-header" id="panelsStayOpen-headingOne">
@@ -32,6 +36,7 @@
               <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
                 <div class="accordion-body">
                   <DetailsCard />
+
                 </div>
               </div>
             </div>
@@ -169,14 +174,58 @@
               </div>
             </div>
 
-          </div>
+          </div> -->
         </div>
       </div>
+
     </form>
   </div>
 </template>
 
 <style scoped>
+.intro h3 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.intro p {
+  font-size: 12px;
+}
+
+.custom-table {
+  width: 70%;
+}
+.side-panel {
+  display: flex;
+  width: 390px;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  align-self: stretch;
+  background: var(--Grey-Light, #eee);
+}
+.accordion-body {
+  padding: 10px;
+}
+
+.submit-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 35px;
+  padding: 10px;
+  gap: 10px;
+  border-radius: 50px;
+  background: var(--gradient, linear-gradient(90deg, #227cbf 0%, #47b65c 100%));
+
+  color: #fff;
+  /* Body Text */
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 19.2px;
+}
 .career {
   width: 100%;
   padding-left: 20px;
@@ -209,16 +258,7 @@ form {
   width: 260px;
   height: 30px;
 }
-.side-panel {
-  display: flex;
-  width: 390px;
-  padding: 20px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
-  align-self: stretch;
-  background: var(--Grey-Light, #eee);
-}
+
 .side-panel h4 {
   color: var(--Black, #000);
   font-family: Roboto;

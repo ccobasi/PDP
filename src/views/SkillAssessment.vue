@@ -2,7 +2,6 @@
 import TabMenu from '../components/TabMenu.vue';
 import BarChart from '../components/Charts/BarChart.vue'
 
-
 export default {
     data: () => ({
         tab: null,
@@ -26,6 +25,7 @@ export default {
       <div class="chart">
         <BarChart />
       </div>
+
     </div>
   </main>
 </template>
