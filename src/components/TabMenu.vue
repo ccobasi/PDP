@@ -22,6 +22,10 @@
           <a class="nav-link " href="#">Training Schedule </a>
         </li>
 
+        <li class="nav-item link">
+          <a class="nav-link " href="#">Tasks/Deliverables </a>
+        </li>
+
       </ul>
 
     </nav>
