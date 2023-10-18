@@ -1,208 +1,176 @@
+<script setup>
+  import TableOne from '../components/Tables/TableOne.vue'
+</script>
 <template>
   <div class="career mt-3">
-    <h4>Career Goals and Aspirations</h4>
+
     <form action="">
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Goals </th>
-            <th>What I will do to achieve this</th>
-            <th>Resources and Support Needed</th>
-            <th>What does success look like?</th>
-            <th>Target Date for Completion</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><textarea rows="4" placeholder="Type here" cols="28">
+      <div class="d-goal">
+        Development Plan:
+        <select class="form-select" aria-label="Default select example">
+          <option class="opt" selected>Career Goals and Aspirations</option>
+          <option class="opt" value="1">Career Goals and Aspirations</option>
+          <option class="opt" value="2">Areas of Interest</option>
+          <option class="opt" value="3">Mentorship and Skills Building</option>
+        </select>
+      </div>
+      <div class="d-flex justify-content-between mt-4  ">
+        <div class="custom-table table-responsive-sm">
+          <TableOne />
 
-          </textarea></td>
-            <td><textarea rows="4" placeholder="Type here" cols="28">
+        </div>
+        <div class="side-panel">
+          <h3> Details </h3>
+          <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
 
-          </textarea></td>
-            <td><textarea rows="4" placeholder="Type here" cols="28">
+              <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
+                  Goal
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
+                <div class="accordion-body">
+                  <DetailsCard />
+                </div>
+              </div>
+            </div>
 
-          </textarea></td>
-            <td><textarea rows="4" placeholder="Type here" cols="28">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                  What I will do to achieve this
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                <div class="accordion-body">
+                  <DealTeamCard />
+                </div>
+              </div>
+            </div>
 
-          </textarea></td>
-            <td>
-              <input type="date">
-            </td>
-          </tr>
-        </tbody>
-        <thead class="sec-h">
-          <tr class="bd">
-            <th>Potential Challenges </th>
-            <th>Solution</th>
-            <th>Progress Metrics (Outcome Based)</th>
-            <th>Status</th>
-            <th>Feedback</th>
-            <th>Evidence</th>
-          </tr>
-        </thead>
-        <tbody class="radius">
-          <tr class="dec">
-            <td><textarea class="sec" rows="4" placeholder="Type here" cols="28">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                  Resources and Support Needed
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                <div class="accordion-body">
+                  <CheckList />
+                </div>
+              </div>
+            </div>
 
-          </textarea></td>
-            <td><textarea class="sec" rows="4" placeholder="Type here" cols="28">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="panelsStayOpen-headingFour">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFour " aria-expanded="false" aria-controls="panelsStayOpen-collapseFour">
+                  What does success look like?
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFour">
+                <div class="accordion-body">
+                  <OtherDetailsCard />
+                </div>
+              </div>
+            </div>
 
-          </textarea></td>
-            <td><textarea class="sec" rows="4" placeholder="Type here" cols="28">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="panelsStayOpen-headingFive">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseFive" aria-expanded="false" aria-controls="panelsStayOpen-collapseFive">
+                  Target Date for Completion
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFive">
+                <div class="accordion-body">
+                  <FileCard />
 
-          </textarea></td>
-            <td><select class="form-select" aria-label="Default select example">
-                <option selected>Status</option>
-                <option value="">1</option>
-                <option value="">2</option>
+                </div>
+              </div>
+            </div>
 
-              </select></td>
-            <td><textarea class="sec" rows="4" placeholder="Type here" cols="28">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix">
+                  Potential Challenges
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSix">
+                <div class="accordion-body">
+                  <TimeLineCard v-for="i in 3" />
 
-          </textarea></td>
-            <td>
-              <input type="file" id="attachment" name="attachment" accept=".jpg, .jpeg, .png, .pdf">
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="line mt-4"></div>
-      <h4 class="mt-3">Areas of Interest </h4>
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Goals </th>
-            <th>What I will do to achieve this</th>
-            <th>Resources and Support Needed</th>
-            <th>What does success look like?</th>
-            <th>Target Date for Completion</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><textarea rows="4" placeholder="Type here" cols="28">
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix">
+                  Solution
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSix">
+                <div class="accordion-body">
+                  <TimeLineCard v-for="i in 3" />
 
-          </textarea></td>
-            <td><textarea rows="4" placeholder="Type here" cols="28">
+                </div>
+              </div>
+            </div>
 
-          </textarea></td>
-            <td><textarea rows="4" placeholder="Type here" cols="28">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix">
+                  Progress Metrics (Outcome Based)
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSix">
+                <div class="accordion-body">
+                  <TimeLineCard v-for="i in 3" />
 
-          </textarea></td>
-            <td><textarea rows="4" placeholder="Type here" cols="28">
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix">
+                  Status
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSix">
+                <div class="accordion-body">
+                  <TimeLineCard v-for="i in 3" />
 
-          </textarea></td>
-            <td>
-              <input type="date">
-            </td>
-          </tr>
-        </tbody>
-        <thead class="sec-h">
-          <tr class="bd">
-            <th>Potential Challenges </th>
-            <th>Solution</th>
-            <th>Progress Metrics (Outcome Based)</th>
-            <th>Status</th>
-            <th>Feedback</th>
-            <th>Evidence</th>
-          </tr>
-        </thead>
-        <tbody class="radius">
-          <tr class="dec">
-            <td><textarea class="sec" rows="4" placeholder="Type here" cols="28">
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix">
+                  Feedback
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSix">
+                <div class="accordion-body">
+                  <TimeLineCard v-for="i in 3" />
 
-          </textarea></td>
-            <td><textarea class="sec" rows="4" placeholder="Type here" cols="28">
+                </div>
+              </div>
+            </div>
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="panelsStayOpen-headingSix">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSix" aria-expanded="false" aria-controls="panelsStayOpen-collapseSix">
+                  Evidence
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseSix" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSix">
+                <div class="accordion-body">
+                  <TimeLineCard v-for="i in 3" />
 
-          </textarea></td>
-            <td><textarea class="sec" rows="4" placeholder="Type here" cols="28">
+                </div>
+              </div>
+            </div>
 
-          </textarea></td>
-            <td><select class="form-select" aria-label="Default select example">
-                <option selected>Status</option>
-                <option value="">1</option>
-                <option value="">2</option>
-
-              </select></td>
-            <td><textarea class="sec" rows="4" placeholder="Type here" cols="28">
-
-          </textarea></td>
-            <td>
-              <input type="file" id="attachment" name="attachment" accept=".jpg, .jpeg, .png, .pdf">
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="line mt-4"></div>
-      <h4 class="mt-3">Mentorship and Skills Building</h4>
-      <table border="1">
-        <thead>
-          <tr>
-            <th>Goals </th>
-            <th>What I will do to achieve this</th>
-            <th>Resources and Support Needed</th>
-            <th>What does success look like?</th>
-            <th>Target Date for Completion</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><textarea rows="4" placeholder="Type here" cols="28">
-
-          </textarea></td>
-            <td><textarea rows="4" placeholder="Type here" cols="28">
-
-          </textarea></td>
-            <td><textarea rows="4" placeholder="Type here" cols="28">
-
-          </textarea></td>
-            <td><textarea rows="4" placeholder="Type here" cols="28">
-
-          </textarea></td>
-            <td>
-              <input type="date">
-            </td>
-          </tr>
-        </tbody>
-        <thead class="sec-h">
-          <tr class="bd">
-            <th>Potential Challenges </th>
-            <th>Solution</th>
-            <th>Progress Metrics (Outcome Based)</th>
-            <th>Status</th>
-            <th>Feedback</th>
-            <th>Evidence</th>
-          </tr>
-        </thead>
-        <tbody class="radius">
-          <tr class="dec">
-            <td><textarea class="sec" rows="4" placeholder="Type here" cols="28">
-
-          </textarea></td>
-            <td><textarea class="sec" rows="4" placeholder="Type here" cols="28">
-
-          </textarea></td>
-            <td><textarea class="sec" rows="4" placeholder="Type here" cols="28">
-
-          </textarea></td>
-            <td><select class="form-select" aria-label="Default select example">
-                <option selected>Status</option>
-                <option value="">1</option>
-                <option value="">2</option>
-
-              </select></td>
-            <td><textarea class="sec" rows="4" placeholder="Type here" cols="28">
-
-          </textarea></td>
-            <td>
-              <input type="file" id="attachment" name="attachment" accept=".jpg, .jpeg, .png, .pdf">
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="change mt-3">
-        <button>Save changes</button>
+          </div>
+        </div>
       </div>
     </form>
   </div>
@@ -224,137 +192,50 @@
 form {
   margin: auto;
 }
-table {
-  margin-top: 30px;
-  border: none;
-}
-thead th {
-  width: 215px;
-  color: var(--White, #fff);
-  font-family: Roboto;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 14.4px;
-  padding: 20px 0px;
-}
-.sec-h tr {
-  width: 81%;
-}
-
-.bg th {
-  width: 220px;
-}
-thead tr {
+.d-goal {
   display: flex;
-  height: 55px;
-  padding: 0px 25px;
-  justify-content: left;
+  padding: 7px 20px;
   align-items: flex-start;
   gap: 20px;
-  align-self: stretch;
-  border-radius: 10px 10px 0px 0px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--Primary, #227cbf);
-  box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.05);
-  width: 81%;
-}
-.bd {
-  border-radius: 0px;
-}
-tbody {
-  display: flex;
-  justify-content: left;
-  align-items: flex-start;
-  gap: 20px;
-  align-self: stretch;
-  width: 1165px;
-  border: 2px solid #eee;
-}
-.radius {
-  border-radius: 0px 0px 10px 10px;
-}
-textarea {
-  width: 220px;
-  height: 100px;
-  border-radius: 5px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--Grey-Light, #eee);
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
-  gap: 10px;
-  padding: 10px;
-  flex-direction: column;
-  align-items: flex-start;
-  margin: 10px;
-}
-.sec {
-  width: 200px;
-}
-textarea::placeholder {
-  color: var(--Grey-Dark, #808080);
-  font-family: Roboto;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 14.4px;
-}
-table input {
-  display: flex;
-  height: 40px;
-  width: 150px;
-  padding: 10px;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 5px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--Grey-Light, #eee);
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
 }
 .form-select {
-  width: 170px;
-  height: 40px;
-  border-radius: 5px;
-  border: 1px solid var(--Grey-Light, #ddd);
-  background: var(--Grey-Light, #eee);
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
-  color: var(--Grey-Dark, #808080);
-  font-family: Roboto;
-  font-size: 12px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 14.4px;
-}
-.dec {
-  gap: 10px;
-}
-.dec textarea {
-  width: 175px;
-}
-.dec input {
-  width: 175px;
-}
-.change {
-  display: flex;
-  padding: 10px 0px;
-  align-items: center;
-  gap: 10px;
-  align-self: stretch;
-}
-button {
-  border-radius: 5px;
-  background: var(--Secondary, #47b65c);
-  width: 199px;
-  height: 40px;
-  color: var(--White, #fff);
+  color: var(--Secondary, #47b65c);
+  text-align: right;
   font-family: Roboto;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 19.2px;
+  width: 260px;
+  height: 30px;
 }
-.line {
-  width: 100%;
-  height: 2px;
-  background: #ddd;
+.side-panel {
+  display: flex;
+  width: 390px;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  align-self: stretch;
+  background: var(--Grey-Light, #eee);
+}
+.side-panel h4 {
+  color: var(--Black, #000);
+  font-family: Roboto;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28.8px;
+}
+.accordion-item {
+  display: flex;
+  width: 350px;
+  height: 57px;
+  padding: 15px 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+.accordion-button {
+  width: 330px;
 }
 </style>

@@ -1,6 +1,7 @@
 <script>
 import TabMenu from '../components/TabMenu.vue';
 import DoughNut from '../components/DoughNut.vue'
+import CareerGoal from '../components/CareerGoal.vue'
 
 
 export default {
@@ -10,7 +11,7 @@ export default {
     }),
     components: {
         
-        TabMenu: TabMenu,DoughNut,
+        TabMenu: TabMenu,DoughNut,CareerGoal,
     }
     
 }
@@ -102,6 +103,9 @@ export default {
       <div class="chart">
         <DoughNut />
 
+      </div>
+      <div class="table">
+        <CareerGoal />
       </div>
 
     </div>
