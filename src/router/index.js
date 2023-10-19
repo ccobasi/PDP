@@ -19,6 +19,11 @@ const routes =  [
         name: "Skill Assessment",
         component: () => import("../views/SkillAssessment.vue"),
       },
+      {
+        path: "/trainingschedule",
+        name: "Training Schedule",
+        component: () => import("../views/TrainingSchedule.vue"),
+      },
     ]}
 ]
 

@@ -1,7 +1,7 @@
 <script>
 import TabMenu from '../components/TabMenu.vue';
-import BarChart from '../components/Charts/BarChart.vue'
-import SkillMetrics from '../components/SkillMetrics.vue'
+import DoughnutChart from '../components/Charts/DoughnutChart.vue'
+import TrainingTable from '../components/TrainingTable.vue'
 
 export default {
     data: () => ({
@@ -10,7 +10,7 @@ export default {
     }),
     components: {
         
-        TabMenu: TabMenu,BarChart,SkillMetrics
+        TabMenu: TabMenu,DoughnutChart,TrainingTable
     }
     
 }
@@ -26,48 +26,45 @@ export default {
 
           <!-- Modal Header -->
           <div class="modal-header">
-            <h4 class="modal-title">Skill Request Form</h4>
+            <h4 class="modal-title">Training request form</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
           </div>
 
           <!-- Modal body -->
           <div class="modal-body">
-            <!-- <input type="text" placeholder="Email">
-            <input type="text" placeholder="Subject">
-            <textarea name="email" id="" cols="30" rows="10" placeholder="Body Text"></textarea> -->
+
             <div class="frame">
-              <h6>Skill</h6>
-              <textarea name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
+              <h6>Month</h6>
+              <input type="date">
             </div>
             <div class="frame">
-              <h6>Current state</h6>
+              <h6>Training Topic</h6>
+
+              <textarea name="training topic" id="" cols="30" rows="10" placeholder="Digital marketing"></textarea>
+            </div>
+            <div class="frame">
+              <h6>Learning Outcome</h6>
+              <textarea name="Learning Outcome" id="" cols="30" rows="10" placeholder="Digital marketer"></textarea>
+            </div>
+            <div class="frame">
+              <h6>Training Method</h6>
               <select class="form-select" aria-label="Default select example">
-                <option selected>Beginner</option>
-                <option value="">Beginner</option>
-                <option value="">Intermediate</option>
-                <option value="">Proficient</option>
-                <option value="">Advanced</option>
-                <option value="">Expert</option>
+                <option selected>Online</option>
+                <option value="">Physical</option>
+                <option value="">Online</option>
               </select>
             </div>
             <div class="frame">
-              <h6>Gap</h6>
-              <textarea name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
-            </div>
-            <div class="frame">
-              <h6>Desired state</h6>
+              <h6>Training Initiator</h6>
               <select class="form-select" aria-label="Default select example">
-                <option selected>Expert</option>
-                <option value="">Beginner</option>
-                <option value="">Intermediate</option>
-                <option value="">Proficient</option>
-                <option value="">Advanced</option>
-                <option value="">Expert</option>
+                <option selected>Self</option>
+                <option value="">Manager</option>
+                <option value="">Self</option>
               </select>
             </div>
             <div class="frame">
-              <h6>Initiatives</h6>
-              <textarea name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
+              <h6>Skill Matrix Mapping</h6>
+              <textarea name="Skill Matrix Mapping" id="" cols="30" rows="10" placeholder="Skill Matrix Mapping"></textarea>
             </div>
           </div>
 
@@ -80,16 +77,23 @@ export default {
       </div>
     </div>
     <div class="skill mt-4">
-      <div class="title">
-        <h3>Skill Assessment</h3>
-        <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Request Skill</button>
+      <div class="header">
+        <div class="title mb-4">
+          <h3>Training Schedule</h3>
+          <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Training Request</button>
+
+        </div>
+        <div class="lines"></div>
       </div>
-      <div class="lines"></div>
+
       <div class="chart">
-        <BarChart />
+        <div class="auto">
+          <DoughnutChart chart-id="regions" :doughnut="true" />
+        </div>
       </div>
+
       <div class="table">
-        <SkillMetrics />
+        <TrainingTable />
       </div>
 
     </div>
@@ -110,7 +114,7 @@ main {
 
   border-radius: 10px;
   background: #fff;
-  height: 1276px;
+  height: 1300px;
 }
 .skill h3 {
   color: var(--Black, #000);
@@ -120,20 +124,10 @@ main {
   font-weight: 500;
   line-height: 28.8px;
 }
-.lines {
-  width: 100%;
-  height: 1px;
-  background: #808080;
-}
-.chart {
+.header {
   display: flex;
-  padding: 30px;
-  align-items: center;
-  gap: 40px;
+  flex-direction: column;
   align-self: stretch;
-  border-radius: 7.622px;
-  background: #fff;
-  box-shadow: 1.52441px 1.52441px 15.24414px 0px rgba(0, 0, 0, 0.1);
 }
 .title {
   display: flex;
@@ -156,6 +150,26 @@ main {
   font-weight: 400;
   line-height: 19.2px;
 }
+.lines {
+  width: 100%;
+  height: 1px;
+  background: #808080;
+}
+.chart {
+  display: flex;
+
+  padding: 30px;
+  align-items: center;
+  gap: 40px;
+  align-self: stretch;
+  border-radius: 7.622px;
+  background: #fff;
+  box-shadow: 1.52441px 1.52441px 15.24414px 0px rgba(0, 0, 0, 0.1);
+}
+.auto {
+  margin: auto;
+}
+
 .modal {
   margin-left: 32%;
 }
@@ -206,6 +220,10 @@ main {
   font-style: normal;
   font-weight: 400;
   line-height: 19.2px;
+}
+.frame input {
+  width: 400px;
+  height: 40px;
 }
 .frame textarea {
   display: flex;
