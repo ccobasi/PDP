@@ -29,6 +29,11 @@ const routes =  [
         name: "Task Deliverables",
         component: () => import("../views/TaskDeliverables.vue"),
       },
+      {
+        path: "/careergoaldetail",
+        name: "Career Goal Detail",
+        component: () => import("../components/CareerGoalDetail.vue"),
+      },
     ]}
 ]
 

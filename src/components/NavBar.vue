@@ -35,6 +35,17 @@
   padding: 20px 50px;
 }
 
+.pageheader::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  top: 82px;
+  width: 100%;
+  height: 5px; /* Adjust height to control the thickness of the gradient border */
+  background: linear-gradient(to right, #237dbd, #46b55e); /* Adjust colors as needed */
+}
+
 .pageheader .brand {
   height: 45.62px;
   width: 500px;
