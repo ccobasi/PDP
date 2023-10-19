@@ -16,17 +16,21 @@ export default {
       datasets: [
         {
           label: 'Current state',
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: '#FFBF1A',
+          borderColor: '#FFBF1A',
           borderWidth: 1,
-          data: [0, 1, 2, 3, 4], // Values mapped to 'Beginner', 'Intermediate', 'Proficient', 'Advanced', 'Professional'
+          data: [0.4, 2, 2.85, 1.5, 2.4, 2.7], // Values mapped to 'Beginner', 'Intermediate', 'Proficient', 'Advanced', 'Professional'
+          barThickness: 6,
+          borderRadius: 10
         },
         {
           label: 'Desired state',
-          backgroundColor: 'rgba(255, 99, 132, 0.2)',
-          borderColor: 'rgba(255, 99, 132, 1)',
+          backgroundColor: '#47B65C',
+          borderColor: '#47B65C',
           borderWidth: 1,
-          data: [2, 3, 1, 4, 0], // Values mapped to 'Beginner', 'Intermediate', 'Proficient', 'Advanced', 'Professional'
+          data: [2, 2.8, 4.3, 2.6, 2.9, 4.3], // Values mapped to 'Beginner', 'Intermediate', 'Proficient', 'Advanced', 'Professional'
+          barThickness: 6,
+          borderRadius: 10
         },
       ],
     };
@@ -37,10 +41,13 @@ export default {
       data: data,
       options: {
         scales: {
-          x: { stacked: false },
+          x: { 
+            stacked: false
+            
+             },
           y: {
             stacked: false,
-            beginAtZero: true,
+            beginAtZero: false,
             title: {
               display: true,
               text: 'Skill Level',
