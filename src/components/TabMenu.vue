@@ -5,25 +5,25 @@
 
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <a class="nav-link active" href="#" role="button" aria-expanded="false">
+          <a class="nav-link active" href="/" role="button" aria-expanded="false">
             Development Plan
           </a>
 
         </li>
 
         <li class="nav-item dropdown ">
-          <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link" href="/skillassessment" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Skill Assessment
           </a>
 
         </li>
 
         <li class="nav-item link">
-          <a class="nav-link " href="#">Training Schedule </a>
+          <a class="nav-link " href="/trainingschedule">Training Schedule </a>
         </li>
 
         <li class="nav-item link">
-          <a class="nav-link " href="#">Tasks/Deliverables </a>
+          <a class="nav-link " href="/taskdeliverables">Tasks/Deliverables </a>
         </li>
 
       </ul>
