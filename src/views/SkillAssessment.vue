@@ -19,8 +19,70 @@ export default {
 <template>
   <main class="wrapper">
     <TabMenu />
+    <div class="modal" id="myModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Skill Request Form</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <!-- <input type="text" placeholder="Email">
+            <input type="text" placeholder="Subject">
+            <textarea name="email" id="" cols="30" rows="10" placeholder="Body Text"></textarea> -->
+            <div class="frame">
+              <h6>Skill</h6>
+              <textarea name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
+            </div>
+            <div class="frame">
+              <h6>Current state</h6>
+              <select class="form-select" aria-label="Default select example">
+                <option selected>Beginner</option>
+                <option value="">Beginner</option>
+                <option value="">Intermediate</option>
+                <option value="">Proficient</option>
+                <option value="">Advanced</option>
+                <option value="">Expert</option>
+              </select>
+            </div>
+            <div class="frame">
+              <h6>Gap</h6>
+              <textarea name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
+            </div>
+            <div class="frame">
+              <h6>Desired state</h6>
+              <select class="form-select" aria-label="Default select example">
+                <option selected>Expert</option>
+                <option value="">Beginner</option>
+                <option value="">Intermediate</option>
+                <option value="">Proficient</option>
+                <option value="">Advanced</option>
+                <option value="">Expert</option>
+              </select>
+            </div>
+            <div class="frame">
+              <h6>Initiatives</h6>
+              <textarea name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
+            </div>
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" data-bs-dismiss="modal">Submit Request</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
     <div class="skill mt-4">
-      <h3>Skill Assessment</h3>
+      <div class="title">
+        <h3>Skill Assessment</h3>
+        <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Request Skill</button>
+      </div>
       <div class="lines"></div>
       <div class="chart">
         <BarChart />
@@ -68,5 +130,129 @@ main {
   border-radius: 7.622px;
   background: #fff;
   box-shadow: 1.52441px 1.52441px 15.24414px 0px rgba(0, 0, 0, 0.1);
+}
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+}
+.title button {
+  display: flex;
+  padding: 10px 30px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+
+  color: var(--White, #fff);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
+.modal {
+  margin-left: 32%;
+}
+.modal-dialog {
+  width: 500px;
+  height: 700px;
+  display: inline-flex;
+  padding: 30px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--Grey-Light, #eee);
+  background: var(--Grey-Light, #eee);
+}
+
+.modal-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  color: var(--Black, #000);
+  font-family: Roboto;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.modal-body {
+  display: flex;
+  padding: 30px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 10px;
+  background: #fff;
+}
+.frame {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+.frame h6 {
+  color: var(--Black, #000);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
+.frame textarea {
+  display: flex;
+  width: 400px;
+  height: 70px;
+  padding: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--Grey-Light, #eee);
+  background: var(--White, #fff);
+  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
+}
+.frame textarea::placeholder {
+  color: var(--Grey-Dark, #808080);
+  font-family: Roboto;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 14.4px;
+}
+.form-select {
+  width: 400px;
+  color: var(--Grey-Dark, #808080);
+  font-family: Roboto;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 14.4px;
+}
+.modal-footer {
+  display: flex;
+  height: 60px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  align-self: stretch;
+}
+.modal-footer button {
+  display: flex;
+  padding: 10px 30px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+  color: var(--White, #fff);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
 }
 </style>
