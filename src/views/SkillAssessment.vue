@@ -1,6 +1,7 @@
 <script>
 import TabMenu from '../components/TabMenu.vue';
 import BarChart from '../components/Charts/BarChart.vue'
+import SkillMetrics from '../components/SkillMetrics.vue'
 
 export default {
     data: () => ({
@@ -9,7 +10,7 @@ export default {
     }),
     components: {
         
-        TabMenu: TabMenu,BarChart,
+        TabMenu: TabMenu,BarChart,SkillMetrics
     }
     
 }
@@ -87,6 +88,9 @@ export default {
       <div class="chart">
         <BarChart />
       </div>
+      <div class="table">
+        <SkillMetrics />
+      </div>
 
     </div>
   </main>
@@ -94,7 +98,7 @@ export default {
 
 <style scoped>
 main {
-  height: 1150px;
+  height: 1450px;
 }
 .skill {
   display: flex;
@@ -106,7 +110,7 @@ main {
 
   border-radius: 10px;
   background: #fff;
-  height: 976px;
+  height: 1276px;
 }
 .skill h3 {
   color: var(--Black, #000);
