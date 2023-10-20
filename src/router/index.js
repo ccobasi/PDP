@@ -39,6 +39,11 @@ const routes =  [
         name: "Skill Assessment Details",
         component: () => import("../components/SkillAssessmentDetails.vue"),
       },
+      {
+        path: "/trainingscheduledetails",
+        name: "Training Schedule Details",
+        component: () => import("../components/TrainingScheduleDetails.vue"),
+      },
     ]}
 ]
 
