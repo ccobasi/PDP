@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Base from "../views/BaseView.vue";
+import Base from "../views/User/BaseView.vue";
 import KMBase from "../views/KnowledgeManager/KMBase.vue"
 
 

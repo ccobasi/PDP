@@ -1,5 +1,5 @@
 <script>
-import TabMenu from '../../components/TabMenu.vue';
+import TabMenu from '../../components/Tabs/TabMenu.vue';
 import TableFour from '../../components/Tables/TableFour.vue'
 
 export default {

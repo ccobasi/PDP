@@ -1,5 +1,5 @@
 <script>
-import TabMenu from '../../components/TabMenu.vue';
+import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
 import DoughNut from '../../components/DoughNut.vue'
 import CareerGoal from '../../components/CareerGoal.vue'
 
@@ -25,8 +25,13 @@ export default {
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Development Plan Request Form</h5>
+            <h5 class="modal-title">Development Plan Request</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="request">
+            <button class="blue">My Request</button>
+            <button class="team">Team Member</button>
+            <button class="approval">Requests pending approval</button>
           </div>
           <div class="modal-body">
             <div class="type">
@@ -161,10 +166,46 @@ hr {
   align-self: stretch;
   height: 30px !important;
 }
+.request {
+  display: flex;
+  height: 50px;
+  padding: 10px 15px;
+  align-items: flex-start;
+  gap: 30px;
+  align-self: stretch;
+  border-radius: 50px;
+  background: var(--White, #fff);
+}
+.blue {
+  display: flex;
+  padding: 5px 15px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 20px;
+  background: var(--Primary, #227cbf);
+  color: var(--White, #fff);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
+.team,
+.approval {
+  color: var(--Black, #000);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
 .modal-body {
   gap: 20px;
   background: #fff;
   margin-top: 0px !important;
+  border: 1px solid var(--Grey-Light, #fff);
+  border-radius: 10px;
 }
 .modal-dialog {
   width: 900px;
@@ -176,8 +217,6 @@ hr {
   align-items: flex-start;
   gap: 20px;
   border-radius: 10px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--Grey-Light, #eee);
 }
 .modal-content {
   display: flex;
@@ -186,7 +225,7 @@ hr {
   align-items: flex-start;
   gap: 20px;
   border-radius: 10px;
-  background: #fff;
+  background: #eee;
 }
 .type {
   display: flex;
