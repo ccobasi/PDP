@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Base from "../views/BaseView.vue";
+import KMBase from "../views/KnowledgeManager/KMBase.vue"
 
 
 
@@ -12,22 +13,22 @@ const routes =  [
       {
         path: "",
         name: "Home",
-        component: () => import("../views/HomeView.vue"),
+        component: () => import("../views/User/HomeView.vue"),
       },
       {
         path: "/skillassessment",
         name: "Skill Assessment",
-        component: () => import("../views/SkillAssessment.vue"),
+        component: () => import("../views/User/SkillAssessment.vue"),
       },
       {
         path: "/trainingschedule",
         name: "Training Schedule",
-        component: () => import("../views/TrainingSchedule.vue"),
+        component: () => import("../views/User/TrainingSchedule.vue"),
       },
       {
         path: "/taskdeliverables",
         name: "Task Deliverables",
-        component: () => import("../views/TaskDeliverables.vue"),
+        component: () => import("../views/User/TaskDeliverables.vue"),
       },
       {
         path: "/careergoaldetail",
@@ -44,6 +45,19 @@ const routes =  [
         name: "Training Schedule Details",
         component: () => import("../components/TrainingScheduleDetails.vue"),
       },
+      {
+    path: "/km/",
+    name: "Knowledge Manager",
+    component: KMBase,
+    children: [
+      {
+        path: "",
+        name: "KM Development Plan",
+        component: () => import("../views/KnowledgeManager/DevelopmentPlan.vue"),
+      },
+      
+    ],
+  },
     ]}
 ]
 
