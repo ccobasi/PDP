@@ -64,7 +64,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row, index) in 9">
+        <tr v-for="(row, index) in 9" @click="$router.push('careergoaldetail')">
           <td scope="row">{{ index + 1 }}</td>
           <td>Learn to improve content writing skill</td>
           <td>12/10/2023</td>
