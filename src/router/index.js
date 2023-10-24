@@ -75,11 +75,11 @@ const routes =  [
         name: "Training Schedule",
         component: () => import("../views/KnowledgeManager/TrainingSchedule.vue"),
       },
-      // {
-      //   path: "/taskdeliverables",
-      //   name: "Task Deliverables",
-      //   component: () => import("../views/KnowledgeManager/TaskDeliverables.vue"),
-      // },
+      {
+        path: "/km/taskdeliverables",
+        name: "Task Deliverables",
+        component: () => import("../views/KnowledgeManager/TaskDeliverables.vue"),
+      },
       {
         path: "/km/trainingscheduledetails",
         name: "Training Schedule Details",
