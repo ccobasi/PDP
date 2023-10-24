@@ -86,6 +86,16 @@ const routes =  [
         component: () => import("../views/KnowledgeManager/MyProfile.vue"),
       },
       {
+        path: "/km/myprofileskill",
+        name: "Profile Skill Assessment",
+        component: () => import("../views/KnowledgeManager/ProfileSkillAssessment.vue"),
+      },
+      {
+        path: "/km/profiletraining",
+        name: "Training Schedule",
+        component: () => import("../views/KnowledgeManager/ProfileTrainingSchedule.vue"),
+      },
+      {
         path: "/km/trainingscheduledetails",
         name: "Training Schedule Details",
         component: () => import("../components/KM/TrainingScheduleDetails.vue"),

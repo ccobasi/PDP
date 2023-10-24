@@ -155,6 +155,7 @@
       </div>
 
     </div>
+    <div class="delete"><button>Delete</button></div>
   </div>
 </template>
 <style scoped>
@@ -192,5 +193,27 @@
   background: var(--Secondary, #47b65c);
   color: #fff;
   margin-top: 10px;
+}
+.delete {
+  display: flex;
+  padding: 20px 0px;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 11px;
+  align-self: stretch;
+}
+.delete button {
+  display: flex;
+  padding: 10px 30px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--Red, #f00);
+  color: var(--White, #fff);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
 }
 </style>
