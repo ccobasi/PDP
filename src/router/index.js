@@ -70,6 +70,21 @@ const routes =  [
         name: "Skill Assessment Details",
         component: () => import("../components/KM/SkillAssessmentDetails.vue"),
       },
+      {
+        path: "/km/trainingschedule",
+        name: "Training Schedule",
+        component: () => import("../views/KnowledgeManager/TrainingSchedule.vue"),
+      },
+      // {
+      //   path: "/taskdeliverables",
+      //   name: "Task Deliverables",
+      //   component: () => import("../views/KnowledgeManager/TaskDeliverables.vue"),
+      // },
+      {
+        path: "/km/trainingscheduledetails",
+        name: "Training Schedule Details",
+        component: () => import("../components/KM/TrainingScheduleDetails.vue"),
+      },
     ],
   },
     ]}
