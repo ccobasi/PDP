@@ -75,7 +75,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row, index) in 12">
+        <tr v-for="(row, index) in 12" @click="$router.push('skillassessmentdetails')">
           <td scope="row">{{ index + 1 }}</td>
           <td>Public speaking</td>
           <td>Beginner</td>

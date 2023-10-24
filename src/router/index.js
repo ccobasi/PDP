@@ -56,9 +56,19 @@ const routes =  [
         component: () => import("../views/KnowledgeManager/DevelopmentPlan.vue"),
       },
       {
+        path: "/km/skillassessment",
+        name: "Skill Assessment",
+        component: () => import("../views/KnowledgeManager/SkillAssessment.vue"),
+      },
+      {
         path: "/km/careergoaldetail",
         name: "Career Goal Detail",
         component: () => import("../components/KM/CareerGoalDetails.vue"),
+      },
+      {
+        path: "/km/skillassessmentdetails",
+        name: "Skill Assessment Details",
+        component: () => import("../components/KM/SkillAssessmentDetails.vue"),
       },
     ],
   },
