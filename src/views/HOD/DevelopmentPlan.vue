@@ -151,9 +151,14 @@ export default {
   height: 40px;
   color: #fff;
 }
+hr {
+  width: 100%;
+  height: 1px;
+  background: #808080;
+}
 .goal {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-start !important;
   align-items: flex-start;
   gap: 30px;
   margin-left: 10px;
@@ -179,11 +184,6 @@ export default {
   font-style: normal;
   font-weight: 400;
   line-height: 19.2px;
-}
-hr {
-  width: 100%;
-  height: 1px;
-  background: #808080;
 }
 .chart {
   width: 100%;

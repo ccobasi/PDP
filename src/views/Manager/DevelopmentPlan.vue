@@ -151,35 +151,6 @@ export default {
   height: 40px;
   color: #fff;
 }
-.goal {
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 30px;
-  margin-left: 10px;
-  margin-top: 20px;
-  padding-top: 5px;
-  padding-bottom: 5px;
-  padding-left: 15px;
-  border-radius: 50px;
-  background: var(--Grey-Light, #eee);
-  align-self: stretch;
-}
-.short {
-  display: flex;
-  padding: 5px 15px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 20px;
-  background: var(--Primary, #227cbf);
-  color: var(--White, #fff);
-  font-family: Roboto;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 19.2px;
-}
 hr {
   width: 100%;
   height: 1px;
