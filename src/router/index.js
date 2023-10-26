@@ -1,229 +1,102 @@
-import { createRouter, createWebHistory } from "vue-router";
-import Base from "../views/User/BaseView.vue";
-import KMBase from "../views/KnowledgeManager/KMBase.vue"
-// import ManagerBase from "../views/Manager/ManagerBase.vue"
+import { createRouter, createWebHistory } from 'vue-router'
+import HomeView from '../views/User/HomeView.vue'
+import SkillAssessment from '../views/User/SkillAssessment.vue'
+import TrainingSchedule from '../views/User/TrainingSchedule.vue'
+import TaskDeliverables from '../views/User/TaskDeliverables.vue'
+import CareerGoalDetail from '../components/CareerGoalDetail.vue'
+import SkillAssessmentDetails from '../components/SkillAssessmentDetails.vue'
+import TrainingScheduleDetails from '../components/TrainingScheduleDetails.vue'
+import DevelopmentPlan from '../views/KnowledgeManager/DevelopmentPlan.vue'
+import KMSkillAssessment from '../views/KnowledgeManager/SkillAssessment.vue'
+import KMTrainingSchedule from '../views/KnowledgeManager/TrainingSchedule.vue'
+import KMTaskDeliverables from '../views/KnowledgeManager/TaskDeliverables.vue'
+import MyProfile from '../views/KnowledgeManager/MyProfile.vue'
+import  ProfileSkillAssessment from '../views/KnowledgeManager/ProfileSkillAssessment.vue'
+import ProfileTrainingSchedule from '../views/KnowledgeManager/ProfileTrainingSchedule.vue'
 
-
-
-const routes =  [
-  {
-    path: "/",
-    name: "home",
-    component: Base,
-    children: [
-      {
-        path: "",
-        name: "Home",
-        component: () => import("../views/User/HomeView.vue"),
-      },
-      {
-        path: "/skillassessment",
-        name: "Skill Assessment",
-        component: () => import("../views/User/SkillAssessment.vue"),
-      },
-      {
-        path: "/trainingschedule",
-        name: "Training Schedule",
-        component: () => import("../views/User/TrainingSchedule.vue"),
-      },
-      {
-        path: "/taskdeliverables",
-        name: "Task Deliverables",
-        component: () => import("../views/User/TaskDeliverables.vue"),
-      },
-      {
-        path: "/careergoaldetail",
-        name: "Career Goal Detail",
-        component: () => import("../components/CareerGoalDetail.vue"),
-      },
-      {
-        path: "/skillassessmentdetails",
-        name: "Skill Assessment Details",
-        component: () => import("../components/SkillAssessmentDetails.vue"),
-      },
-      {
-        path: "/trainingscheduledetails",
-        name: "Training Schedule Details",
-        component: () => import("../components/TrainingScheduleDetails.vue"),
-      },
-      {
-    path: "/km/",
-    name: "Knowledge Manager",
-    component: KMBase,
-    children: [
-      {
-        path: "",
-        name: "KM Development Plan",
-        component: () => import("../views/KnowledgeManager/DevelopmentPlan.vue"),
-      },
-      {
-        path: "/km/skillassessment",
-        name: "Skill Assessment",
-        component: () => import("../views/KnowledgeManager/SkillAssessment.vue"),
-      },
-      {
-        path: "/km/careergoaldetail",
-        name: "Career Goal Detail",
-        component: () => import("../components/KM/CareerGoalDetails.vue"),
-      },
-      {
-        path: "/km/skillassessmentdetails",
-        name: "Skill Assessment Details",
-        component: () => import("../components/KM/SkillAssessmentDetails.vue"),
-      },
-      {
-        path: "/km/trainingschedule",
-        name: "Training Schedule",
-        component: () => import("../views/KnowledgeManager/TrainingSchedule.vue"),
-      },
-      {
-        path: "/km/taskdeliverables",
-        name: "Task Deliverables",
-        component: () => import("../views/KnowledgeManager/TaskDeliverables.vue"),
-      },
-      {
-        path: "/km/myprofile",
-        name: "Profile Dev Plan",
-        component: () => import("../views/KnowledgeManager/MyProfile.vue"),
-      },
-      {
-        path: "/km/myprofileskill",
-        name: "Profile Skill Assessment",
-        component: () => import("../views/KnowledgeManager/ProfileSkillAssessment.vue"),
-      },
-      {
-        path: "/km/profiletraining",
-        name: "Training Schedule",
-        component: () => import("../views/KnowledgeManager/ProfileTrainingSchedule.vue"),
-      },
-      {
-        path: "/km/trainingscheduledetails",
-        name: "Training Schedule Details",
-        component: () => import("../components/KM/TrainingScheduleDetails.vue"),
-      },
-    ],
-  },
-  // {
-  //   path: "/m/",
-  //   name: "Manager",
-  //   component: ManagerBase,
-  //   children: [
-  //     {
-  //       path: "",
-  //       name: "Manager Development Plan",
-  //       component: () => import("../views/Manager/DevelopmentPlan.vue"),
-  //     },
-  //     {
-  //       path: "/m/skillassessment",
-  //       name: "Skill Assessment",
-  //       component: () => import("../views/Manager/SkillAssessment.vue"),
-  //     },
-  //     {
-  //       path: "/m/careergoaldetail",
-  //       name: "Career Goal Detail",
-  //       component: () => import("../components/KM/CareerGoalDetails.vue"),
-  //     },
-  //     {
-  //       path: "/m/skillassessmentdetails",
-  //       name: "Skill Assessment Details",
-  //       component: () => import("../components/KM/SkillAssessmentDetails.vue"),
-  //     },
-  //     {
-  //       path: "/m/trainingschedule",
-  //       name: "Training Schedule",
-  //       component: () => import("../views/Manager/TrainingSchedule.vue"),
-  //     },
-  //     {
-  //       path: "/m/taskdeliverables",
-  //       name: "Task Deliverables",
-  //       component: () => import("../views/Manager/TaskDeliverables.vue"),
-  //     },
-  //     {
-  //       path: "/m/myprofile",
-  //       name: "Profile Dev Plan",
-  //       component: () => import("../views/Manager/MyProfile.vue"),
-  //     },
-  //     {
-  //       path: "/m/myprofileskill",
-  //       name: "Profile Skill Assessment",
-  //       component: () => import("../views/Manager/ProfileSkillAssessment.vue"),
-  //     },
-  //     {
-  //       path: "/m/profiletraining",
-  //       name: "Training Schedule",
-  //       component: () => import("../views/Manager/ProfileTrainingSchedule.vue"),
-  //     },
-  //     {
-  //       path: "/m/trainingscheduledetails",
-  //       name: "Training Schedule Details",
-  //       component: () => import("../components/KM/TrainingScheduleDetails.vue"),
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: "/hod/",
-  //   name: "Manager",
-  //   component: ManagerBase,
-  //   children: [
-  //     {
-  //       path: "",
-  //       name: "Manager Development Plan",
-  //       component: () => import("../views/HOD/DevelopmentPlan.vue"),
-  //     },
-  //     {
-  //       path: "/hod/skillassessment",
-  //       name: "Skill Assessment",
-  //       component: () => import("../views/HOD/SkillAssessment.vue"),
-  //     },
-  //     {
-  //       path: "/hod/careergoaldetail",
-  //       name: "Career Goal Detail",
-  //       component: () => import("../components/KM/CareerGoalDetails.vue"),
-  //     },
-  //     {
-  //       path: "/hod/skillassessmentdetails",
-  //       name: "Skill Assessment Details",
-  //       component: () => import("../components/KM/SkillAssessmentDetails.vue"),
-  //     },
-  //     {
-  //       path: "/hod/trainingschedule",
-  //       name: "Training Schedule",
-  //       component: () => import("../views/HOD/TrainingSchedule.vue"),
-  //     },
-  //     {
-  //       path: "/hod/taskdeliverables",
-  //       name: "Task Deliverables",
-  //       component: () => import("../views/HOD/TaskDeliverables.vue"),
-  //     },
-  //     {
-  //       path: "/hod/myprofile",
-  //       name: "Profile Dev Plan",
-  //       component: () => import("../views/HOD/MyProfile.vue"),
-  //     },
-  //     {
-  //       path: "/hod/myprofileskill",
-  //       name: "Profile Skill Assessment",
-  //       component: () => import("../views/HOD/ProfileSkillAssessment.vue"),
-  //     },
-  //     {
-  //       path: "/hod/profiletraining",
-  //       name: "Training Schedule",
-  //       component: () => import("../views/HOD/ProfileTrainingSchedule.vue"),
-  //     },
-  //     {
-  //       path: "/hod/trainingscheduledetails",
-  //       name: "Training Schedule Details",
-  //       component: () => import("../components/KM/TrainingScheduleDetails.vue"),
-  //     },
-  //   ],
-  // },
-    ]}
-]
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes,
-  linkExactActiveClass: 'active',
-});
+  routes: [
+    {
+      path: '/',
+      name: 'home',
+      component: HomeView,
+      
+    },
+     {
+      path: '/skillassessment',
+      name: 'Skill Assessment',
+      component: SkillAssessment,
+    
+    },
+    {
+      path: '/trainingschedule',
+      name: 'Training Schedule',
+      component: TrainingSchedule,
+    
+    },
+    {
+      path: '/taskdeliverables',
+      name: 'Task Deliverables',
+      component: TaskDeliverables,
+     
+    },
+    {
+      path: '/careergoaldetail',
+      name: 'Career Goal Detail',
+      component: CareerGoalDetail,
+     
+    },
+    {
+      path: '/skillassessmentdetails',
+      name: 'Skill Assessment Details',
+      component: SkillAssessmentDetails,
+     
+    },
+    {
+      path: '/trainingscheduledetails',
+      name: 'Training Schedule Details',
+      component: TrainingScheduleDetails,
+     
+    },
+    {
+    path: "/km/",
+    name: "Knowledge Manager Development Plan",
+    component: DevelopmentPlan,
+    },
+    {
+    path: "/km/skillassessment",
+    name: "Knowledge Manager Skill Assessment",
+    component: KMSkillAssessment,
+    },
+    {
+    path: "/km/trainingschedule",
+    name: "Knowledge Manager Training Schedule",
+    component: KMTrainingSchedule,
+    },
+    {
+    path: "/km/taskdeliverables",
+    name: "Knowledge Manager Task Deliverables",
+    component: KMTaskDeliverables,
+    },
+    {
+    path: "/km/myprofile",
+    name: "Knowledge Manager Profile",
+    component: MyProfile,
+    },
+    {
+    path: "/km/profileskillassessment",
+    name: "Knowledge Manager Profile Skill Assessment",
+    component: ProfileSkillAssessment,
+    },
+    {
+    path: "/km/profiletrainingschedule",
+    name: "Knowledge Manager Profile Training Schedule",
+    component: ProfileTrainingSchedule,
+    },
+  ]
+})
+
 
 export default router;

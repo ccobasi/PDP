@@ -153,7 +153,7 @@ export default {
 }
 .goal {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-start !important;
   align-items: flex-start;
   gap: 30px;
   margin-left: 10px;

@@ -159,18 +159,18 @@
         </li>
 
         <li class="nav-item dropdown ">
-          <a class="nav-link" href="/skillassessment" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link" href="/km/skillassessment">
             Skill Assessment
           </a>
 
         </li>
 
         <li class="nav-item link">
-          <a class="nav-link " href="/trainingschedule">Training Schedule </a>
+          <a class="nav-link " href="/km/trainingschedule">Training Schedule </a>
         </li>
 
         <li class="nav-item link">
-          <a class="nav-link " href="/taskdeliverables">Tasks/Deliverables </a>
+          <a class="nav-link " href="/km/taskdeliverables">Tasks/Deliverables </a>
         </li>
 
       </ul>
