@@ -13,6 +13,27 @@ import KMTaskDeliverables from '../views/KnowledgeManager/TaskDeliverables.vue'
 import MyProfile from '../views/KnowledgeManager/MyProfile.vue'
 import  ProfileSkillAssessment from '../views/KnowledgeManager/ProfileSkillAssessment.vue'
 import ProfileTrainingSchedule from '../views/KnowledgeManager/ProfileTrainingSchedule.vue'
+import MDevelopmentPlan from '../views/Manager/DevelopmentPlan.vue'
+import MSkillAssessment from '../views/Manager/SkillAssessment.vue'
+import MTrainingSchedule from '../views/Manager/TrainingSchedule.vue'
+import MTaskDeliverables from '../views/Manager/TaskDeliverables.vue'
+import MMyProfile from '../views/Manager/MyProfile.vue'
+import MProfileSkillAssessment from '../views/Manager/ProfileSkillAssessment.vue'
+import MProfileTrainingSchedule from '../views/Manager/ProfileTrainingSchedule.vue'
+import HODDevelopmentPlan from '../views/HOD/DevelopmentPlan.vue'
+import HODSkillAssessment from '../views/HOD/SkillAssessment.vue'
+import HODTrainingSchedule from '../views/HOD/TrainingSchedule.vue'
+import HODTaskDeliverables from '../views/HOD/TaskDeliverables.vue'
+import HODProfile from '../views/HOD/MyProfile.vue'
+import HODProfileSkillAssessment from '../views/HOD/ProfileSkillAssessment.vue'
+import HODProfileTrainingSchedule from '../views/HOD/ProfileTrainingSchedule.vue'
+import ITDevelopmentPlan from '../views/IT/DevelopmentPlan.vue'
+import ITSkillAssessment from '../views/IT/SkillAssessment.vue'
+import ITTrainingSchedule from '../views/IT/TrainingSchedule.vue'
+import ITTaskDeliverables from '../views/IT/TaskDeliverables.vue'
+import ITProfile from '../views/IT/MyProfile.vue'
+import ITProfileSkillAssessment from '../views/IT/ProfileSkillAssessment.vue'
+import ITProfileTrainingSchedule from '../views/IT/ProfileTrainingSchedule.vue'
 
 
 const router = createRouter({
@@ -94,6 +115,111 @@ const router = createRouter({
     path: "/km/profiletrainingschedule",
     name: "Knowledge Manager Profile Training Schedule",
     component: ProfileTrainingSchedule,
+    },
+    {
+    path: "/m/",
+    name: "Manager Development Plan",
+    component: MDevelopmentPlan,
+    },
+    {
+    path: "/m/skillassessment",
+    name: "Manager Skill Assessment",
+    component: MSkillAssessment,
+    },
+    {
+    path: "/m/trainingschedule",
+    name: "Manager Training Schedule",
+    component: MTrainingSchedule,
+    },
+    {
+    path: "/m/taskdeliverables",
+    name: "Manager Task Deliverables",
+    component: MTaskDeliverables,
+    },
+    {
+    path: "/m/myprofile",
+    name: "Manager Profile",
+    component: MMyProfile,
+    },
+    {
+    path: "/m/profileskillassessment",
+    name: "Manager Profile Skill Assessment",
+    component: MProfileSkillAssessment,
+    },
+    {
+    path: "/m/profiletrainingschedule",
+    name: "Manager Profile Training Schedule",
+    component: MProfileTrainingSchedule,
+    },
+    {
+    path: "/hod/",
+    name: "HOD Development Plan",
+    component: HODDevelopmentPlan,
+    },
+    {
+    path: "/hod/skillassessment",
+    name: "HOD Skill Assessment",
+    component: HODSkillAssessment,
+    },
+    {
+    path: "/hod/trainingschedule",
+    name: "HOD Training Schedule",
+    component: HODTrainingSchedule,
+    },
+    {
+    path: "/hod/taskdeliverables",
+    name: "HOD Task Deliverables",
+    component: HODTaskDeliverables,
+    },
+    {
+    path: "/hod/myprofile",
+    name: "HOD Profile",
+    component: HODProfile,
+    },
+    {
+    path: "/hod/profileskillassessment",
+    name: "HOD Profile Skill Assessment",
+    component: HODProfileSkillAssessment,
+    },
+    {
+    path: "/hod/profiletrainingschedule",
+    name: "HOD Profile Training Schedule",
+    component: HODProfileTrainingSchedule,
+    },
+    {
+    path: "/it/",
+    name: "IT Development Plan",
+    component: ITDevelopmentPlan,
+    },
+    {
+    path: "/it/skillassessment",
+    name: "IT Skill Assessment",
+    component: ITSkillAssessment,
+    },
+    {
+    path: "/it/trainingschedule",
+    name: "IT Training Schedule",
+    component: ITTrainingSchedule,
+    },
+    {
+    path: "/it/taskdeliverables",
+    name: "IT Task Deliverables",
+    component: ITTaskDeliverables,
+    },
+    {
+    path: "/it/myprofile",
+    name: "IT Profile",
+    component: ITProfile,
+    },
+    {
+    path: "/it/profileskillassessment",
+    name: "IT Profile Skill Assessment",
+    component: ITProfileSkillAssessment,
+    },
+    {
+    path: "/it/profiletrainingschedule",
+    name: "IT Profile Training Schedule",
+    component: ITProfileTrainingSchedule,
     },
   ]
 })

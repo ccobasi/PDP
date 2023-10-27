@@ -98,8 +98,8 @@ form {
   gap: 20px;
 }
 .form-select {
-  color: var(--Secondary, #47b65c);
-  text-align: right;
+  color: var(--Secondary, #000);
+  text-align: left;
   font-family: Roboto;
   font-size: 16px;
   font-style: normal;
