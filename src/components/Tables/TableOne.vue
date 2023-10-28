@@ -1,4 +1,11 @@
+<script setup>
+    import { useGoalsStore } from "@/store/goals";
 
+   const store = useGoalsStore();
+    const goals = store.goals;
+
+    console.log(goals);
+</script>
 <template>
   <div class="table-responsive">
 
@@ -72,6 +79,15 @@
           <td>Satisfactory</td>
 
         </tr>
+        <!-- <tr v-for="event in events" :key="event.id" @click="$router.push({ name: 'details', params: { id: event.id } })"> -->
+        <!-- <tr v-for="goal in goals" :key="goal.id" @click="$router.push('careergoaldetail')">
+          <td scope="row">{{ goal.id}}</td>
+          <td>{{ goal.goal}}</td>
+          <td>{{ goal.solution}}</td>
+          <td>On going</td>
+          <td>Satisfactory</td> 
+
+        </tr>-->
       </tbody>
     </table>
   </div>

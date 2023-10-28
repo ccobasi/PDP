@@ -1,6 +1,7 @@
 <script setup>
   import TableOne from '../components/Tables/TableOne.vue'
   import AccordionCard from '../components/Cards/AccordionCard.vue'
+
   
 </script>
 <template>

@@ -1,4 +1,12 @@
-
+<script>
+ export default {
+  computed: {
+    isUserRoute() {
+      return this.$route.path !==  '/skillassessment';
+    },
+  },
+};
+</script>
 <template>
   <div class="wrap">
     <div class="accordion" id="accordionPanelsStayOpenExample">
@@ -129,7 +137,7 @@
           </div>
         </div>
       </div>
-      <div class="delete"><button>Delete</button></div>
+      <div v-if="isUserRoute" class="delete"><button>Delete</button></div>
     </div>
   </div>
 </template>
