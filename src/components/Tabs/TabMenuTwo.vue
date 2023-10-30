@@ -170,6 +170,10 @@
         </li>
 
         <li class="nav-item link">
+          <a class="nav-link " href="/km/alltrainingschedule">All Training Schedule </a>
+        </li>
+
+        <li class="nav-item link">
           <a class="nav-link " href="/km/taskdeliverables">Tasks/Deliverables </a>
         </li>
 

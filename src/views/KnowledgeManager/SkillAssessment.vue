@@ -20,7 +20,7 @@ export default {
 <template>
   <main class="wrapper">
     <TabMenu />
-    <div class="modal" id="myModal">
+    <div class="modal" id="myModal1">
       <div class="modal-dialog">
         <div class="modal-content">
 
@@ -87,7 +87,7 @@ export default {
     <div class="skill mt-4">
       <div class="title">
         <h3>Skill Assessment</h3>
-        <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Request Skill</button>
+        <button data-bs-toggle="modal" data-bs-target="#myModal1" type="button">Request Skill</button>
       </div>
       <div class="lines"></div>
       <div class="chart">

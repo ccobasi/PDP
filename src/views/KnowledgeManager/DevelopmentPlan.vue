@@ -21,7 +21,7 @@ export default {
 <template>
   <main class="wrapper">
     <TabMenu />
-    <div class="modal" id="myModal" tabindex="-1">
+    <div class="modal" id="myModal1" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -38,12 +38,10 @@ export default {
               <h3>Development plan type</h3>
               <select class="form-select" aria-label="Default select example">
                 <option class="opt" selected>Career Goals and Aspirations</option>
-                <option class="opt" value="1">Option 1</option>
-                <option class="opt" value="2">Option 2</option>
-                <option class="opt" value="3">Option 3</option>
-                <option class="opt" value="4">Option 4</option>
-                <option class="opt" value="5">Option 5</option>
-                <option class="opt" value="6">Option 6</option>
+                <option class="opt" value="Area of Interest">Area of Interest</option>
+                <option class="opt" value="Career Goals and Aspirations">Career Goals and Aspirations</option>
+                <option class="opt" value="Mentorship and Skill Build">Mentorship and Skill Build</option>
+
               </select>
             </div>
             <div class="goal">
@@ -91,10 +89,10 @@ export default {
     <div class="development mt-5">
       <div class="dev">
         <h3>Development Plan</h3>
-        <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Development Plan Request</button>
+        <button data-bs-toggle="modal" data-bs-target="#myModal1" type="button">Development Plan Request</button>
       </div>
       <hr>
-      <div class="goal">
+      <div class="goals">
         <div class="short">
           <h5>Short term goals (3 - 6 Months)</h5>
         </div>
@@ -151,7 +149,7 @@ export default {
   height: 40px;
   color: #fff;
 }
-.goal {
+.goals {
   display: flex;
   justify-content: flex-start !important;
   align-items: flex-start;

@@ -1,8 +1,12 @@
-<script setup>
+<script>
     import { useGoalsStore } from "@/store/goals";
     import { ref } from 'vue';
 
-const items = ref([
+
+
+export default {
+  setup(){
+    const items = ref([
   { 
     id: '1',
     goal: 'Learn to improve content writing skill', 
@@ -23,6 +27,19 @@ const showDetails = (item) => {
     const goals = store.goals;
 
     console.log(goals);
+
+    return{
+      items,
+      selectedItem,
+      showDetails,
+    }
+  },
+  computed: {
+    isUserRoute() {
+      return this.$route.path !==  '/';
+    },
+  },
+};
 </script>
 <template>
   <div class="table-responsive d-flex flex-row">

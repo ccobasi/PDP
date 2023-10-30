@@ -9,6 +9,7 @@ import TrainingScheduleDetails from '../components/TrainingScheduleDetails.vue'
 import DevelopmentPlan from '../views/KnowledgeManager/DevelopmentPlan.vue'
 import KMSkillAssessment from '../views/KnowledgeManager/SkillAssessment.vue'
 import KMTrainingSchedule from '../views/KnowledgeManager/TrainingSchedule.vue'
+import KMAllTrainingSchedule from '../views/KnowledgeManager/AllTrainingSchedule.vue'
 import KMTaskDeliverables from '../views/KnowledgeManager/TaskDeliverables.vue'
 import MyProfile from '../views/KnowledgeManager/MyProfile.vue'
 import  ProfileSkillAssessment from '../views/KnowledgeManager/ProfileSkillAssessment.vue'
@@ -96,6 +97,11 @@ const router = createRouter({
     path: "/km/trainingschedule",
     name: "Knowledge Manager Training Schedule",
     component: KMTrainingSchedule,
+    },
+    {
+    path: "/km/alltrainingschedule",
+    name: "Knowledge Manager Training Schedule",
+    component: KMAllTrainingSchedule,
     },
     {
     path: "/km/taskdeliverables",

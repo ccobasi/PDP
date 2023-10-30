@@ -83,8 +83,7 @@ export default {
     <div class="skill mt-4">
       <div class="header">
         <div class="title mb-4">
-          <h3>Training Schedule</h3>
-          <button data-bs-toggle="modal" data-bs-target="#myModal1" type="button">Training Request</button>
+          <h3>All Training Schedule</h3>
 
         </div>
 
