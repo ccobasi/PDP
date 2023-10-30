@@ -1,3 +1,41 @@
+<!-- eslint-disable vue/no-textarea-mustache -->
+<script>
+
+  export default{
+    setup(){
+      const items = [
+        {
+           id: 1,
+            goal: 'Learn to improve content writing skill', 
+            date: '12/10/2023',
+            status: 'On going',
+            feedback: 'Satisfactory'
+        }
+      ]
+      
+      return {
+        items
+      }
+      
+    },
+  //   data() {
+  //   return {
+      
+  //   };
+  // },
+  computed: {
+    detailsId(){
+      return parseInt(this.$route.params.id)
+    },
+    detail(){
+      return this.items.find(item => item.id === this.detailsId)
+    }
+  },
+   
+ }
+
+
+</script>
 <template>
   <div class="details">
     <div class="skill">
@@ -10,7 +48,7 @@
               <caption>Goal</caption>
 
             </div>
-            <textarea name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
+            <textarea name="goal" id="" placeholder="Type here" cols="30" rows="10">{{detail.goal}}</textarea>
           </div>
           <div class="one">
             <div class="title">
@@ -66,7 +104,7 @@
 
             </div>
             <select class="form-select" aria-label="Default select example">
-              <option selected>Status</option>
+              <option selected>{{detail.status}}</option>
               <option value="">Not started</option>
               <option value="">
                 On-going
@@ -99,7 +137,7 @@
               <caption>Feedback</caption>
 
             </div>
-            <textarea name="Feedback" id="" placeholder="Type here" cols="30" rows="10"></textarea>
+            <textarea name="Feedback" id="" placeholder="Type here" cols="30" rows="10">{{detail.feedback}}</textarea>
           </div>
 
         </div>

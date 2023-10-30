@@ -1,3 +1,81 @@
+<script>
+
+  export default{
+    setup(){
+      const items = [
+        { 
+    id: '1',
+    skill: 'Public speaking', 
+    currentState: 'Beginner',
+    desiredState: 'Expert',
+    status: 'On going',
+    feedback: 'Satisfactory',
+   },
+   { 
+    id: '2',
+    skill: 'Public speaking', 
+    currentState: 'Beginner',
+    desiredState: 'Expert',
+    status: 'On going',
+    feedback: 'Satisfactory',
+   },
+   { 
+    id: '3',
+    skill: 'Public speaking', 
+    currentState: 'Beginner',
+    desiredState: 'Expert',
+    status: 'On going',
+    feedback: 'Satisfactory',
+   },
+   { 
+    id: '4',
+    skill: 'Public speaking', 
+    currentState: 'Beginner',
+    desiredState: 'Expert',
+    status: 'On going',
+    feedback: 'Satisfactory',
+   },
+   { 
+    id: '5',
+    skill: 'Public speaking', 
+    currentState: 'Beginner',
+    desiredState: 'Expert',
+    status: 'On going',
+    feedback: 'Satisfactory',
+   },
+   { 
+    id: '6',
+    skill: 'Public speaking', 
+    currentState: 'Beginner',
+    desiredState: 'Expert',
+    status: 'On going',
+    feedback: 'Satisfactory',
+   },
+      ]
+      
+      return {
+        items
+      }
+      
+    },
+  //   data() {
+  //   return {
+      
+  //   };
+  // },
+  computed: {
+    detailsId(){
+      return parseInt(this.$route.params.id)
+    },
+    detail(){
+      return this.items.find(item => item.id === this.detailsId)
+    }
+  },
+   
+ }
+
+
+</script>
 <template>
   <div class="details">
     <div class="skill">

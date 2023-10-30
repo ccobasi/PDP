@@ -64,13 +64,14 @@ const router = createRouter({
      
     },
     {
-      path: '/careergoaldetail',
-      name: 'Career Goal Detail',
+      path: '/careergoaldetail/:id',
+      name: 'Detail',
       component: CareerGoalDetail,
      
     },
+
     {
-      path: '/skillassessmentdetails',
+      path: '/skillassessmentdetails/:id',
       name: 'Skill Assessment Details',
       component: SkillAssessmentDetails,
      

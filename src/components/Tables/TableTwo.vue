@@ -1,4 +1,61 @@
+<script setup>
+    import { useGoalsStore } from "@/store/goals";
+    import { ref } from 'vue';
 
+const items = ref([
+  { 
+    id: '1',
+    skill: 'Public speaking', 
+    currentState: 'Beginner',
+    desiredState: 'Expert',
+    status: 'On going',
+    feedback: 'Satisfactory',
+   },
+   { 
+    id: '2',
+    skill: 'Public speaking', 
+    currentState: 'Beginner',
+    desiredState: 'Expert',
+    status: 'On going',
+    feedback: 'Satisfactory',
+   },
+   { 
+    id: '3',
+    skill: 'Public speaking', 
+    currentState: 'Beginner',
+    desiredState: 'Expert',
+    status: 'On going',
+    feedback: 'Satisfactory',
+   },
+   { 
+    id: '4',
+    skill: 'Public speaking', 
+    currentState: 'Beginner',
+    desiredState: 'Expert',
+    status: 'On going',
+    feedback: 'Satisfactory',
+   },
+   { 
+    id: '5',
+    skill: 'Public speaking', 
+    currentState: 'Beginner',
+    desiredState: 'Expert',
+    status: 'On going',
+    feedback: 'Satisfactory',
+   },
+   { 
+    id: '6',
+    skill: 'Public speaking', 
+    currentState: 'Beginner',
+    desiredState: 'Expert',
+    status: 'On going',
+    feedback: 'Satisfactory',
+   },
+
+]);
+
+
+</script>
 <template>
   <div class="table-responsive">
 
@@ -75,13 +132,14 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row, index) in 12" @click="$router.push('skillassessmentdetails')">
-          <td scope="row">{{ index + 1 }}</td>
-          <td>Public speaking</td>
-          <td>Beginner</td>
-          <td>Expert</td>
-          <td>On going</td>
-          <td>Satisfactory</td>
+        <!-- <tr v-for="item in items" :key="item.id" @click="showDetails(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})"> -->
+        <tr v-for="item in items" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})">
+          <td>{{item.id}}</td>
+          <td>{{item.skill}}</td>
+          <td>{{item.currentState}}</td>
+          <td>{{item.desiredState}}</td>
+          <td>{{item.status}}</td>
+          <td>{{item.feedback}}</td>
         </tr>
       </tbody>
     </table>

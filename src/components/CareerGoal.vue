@@ -1,7 +1,6 @@
 <script setup>
   import TableOne from '../components/Tables/TableOne.vue'
-  import AccordionCard from '../components/Cards/AccordionCard.vue'
-
+  
   
 </script>
 <template>
@@ -22,11 +21,7 @@
           <TableOne />
 
         </div>
-        <div class="side-panel">
-          <h3> Details </h3>
-          <AccordionCard />
 
-        </div>
       </div>
 
     </form>
@@ -44,18 +39,9 @@
 }
 
 .custom-table {
-  width: 70%;
+  width: 100%;
 }
-.side-panel {
-  display: flex;
-  width: 390px;
-  padding: 20px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 1px;
-  align-self: stretch;
-  background: var(--Grey-Light, #eee);
-}
+
 .accordion-body {
   padding: 10px;
 }
@@ -108,15 +94,6 @@ form {
   line-height: 19.2px;
   width: 265px;
   height: 35px;
-}
-
-.side-panel h4 {
-  color: var(--Black, #000);
-  font-family: Roboto;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 28.8px;
 }
 .accordion-item {
   display: flex;

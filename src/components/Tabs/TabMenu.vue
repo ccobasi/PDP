@@ -4,26 +4,23 @@
     <nav class="navbar navbar-expand-md ">
 
       <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link active" href="/" role="button" aria-expanded="false">
+
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/' }">
+          <router-link to="/" class="nav-link">
             Development Plan
-          </a>
-
+          </router-link>
         </li>
 
-        <li class="nav-item dropdown ">
-          <a class="nav-link" href="/skillassessment">
-            Skill Assessment
-          </a>
-
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/skillassessment' }">
+          <router-link to="/skillassessment" class="nav-link">Skill Assessment</router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link " href="/trainingschedule">Training Schedule </a>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/trainingschedule' }">
+          <router-link to="/trainingschedule" class="nav-link">Training Schedule</router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link " href="/taskdeliverables">Tasks/Deliverables </a>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/taskdeliverables' }">
+          <router-link to="/taskdeliverables" class="nav-link">Tasks/Deliverables</router-link>
         </li>
 
       </ul>
@@ -83,7 +80,6 @@ label select {
 .link {
   margin-right: 40px;
 }
-
 .active::after {
   content: '';
   position: absolute;
