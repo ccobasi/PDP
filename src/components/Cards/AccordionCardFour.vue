@@ -104,69 +104,16 @@
         </div>
       </div>
 
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="panelsStayOpen-headingEight">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseEight" aria-expanded="false" aria-controls="panelsStayOpen-collapseEight">
-            Progress Metrics (Outcome Based)
-          </button>
-        </h2>
-        <div id="panelsStayOpen-collapseEight" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingEight">
-          <div class="accordion-body">
-            <textarea name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
-
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="panelsStayOpen-headingNine">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseNine" aria-expanded="false" aria-controls="panelsStayOpen-collapseNine">
-            Status
-          </button>
-        </h2>
-        <div id="panelsStayOpen-collapseNine" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingNine">
-          <div class="accordion-body">
-            <select class="form-select" aria-label="Default select example">
-              <option class="opt" selected>Status</option>
-              <option class="opt" value="1">Completed</option>
-              <option class="opt" value="2">On-going</option>
-              <option class="opt" value="3">Not started</option>
-            </select>
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="panelsStayOpen-headingEleven">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseEleven" aria-expanded="false" aria-controls="panelsStayOpen-collapseEleven">
-            Feedback
-          </button>
-        </h2>
-        <div id="panelsStayOpen-collapseEleven" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingEleven">
-          <div class="accordion-body">
-            <textarea name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
-          </div>
-        </div>
-      </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="panelsStayOpen-headingTen">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTen" aria-expanded="false" aria-controls="panelsStayOpen-collapseTen">
-            Evidence
-          </button>
-        </h2>
-        <div id="panelsStayOpen-collapseTen" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTen">
-          <div class="accordion-body">
-            <input type="file">
-            <button>Save Changes</button>
-          </div>
-        </div>
-      </div>
-
     </div>
-    <div v-if="isUserRoute" class="delete"><button>Delete</button></div>
+    <div class="approve">
+      <button class="decline">Decline</button>
+      <button class="approved">Approve</button>
+    </div>
   </div>
 </template>
 <style scoped>
 .wrap {
-  width: 100%;
+  width: 300px;
 }
 .accordion-body textarea {
   width: 300px;
@@ -200,7 +147,7 @@
   color: #fff;
   margin-top: 10px;
 }
-.delete {
+.approve {
   display: flex;
   padding: 20px 0px;
   justify-content: flex-end;
@@ -208,13 +155,28 @@
   gap: 11px;
   align-self: stretch;
 }
-.delete button {
+.decline {
+  display: flex;
+  padding: 10px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--Grey-Dark, #808080);
+  color: var(--White, #fff);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
+.approved {
   display: flex;
   padding: 10px 30px;
   align-items: center;
   gap: 10px;
   border-radius: 5px;
-  background: var(--Red, #f00);
+  background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
   font-family: Roboto;
   font-size: 16px;

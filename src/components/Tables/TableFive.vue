@@ -1,46 +1,10 @@
 <script setup>
-    import { useGoalsStore } from "@/store/goals";
+
     import { ref } from 'vue';
-    import AccordionCard from "../Cards/AccordionCard.vue"
+    import AccordionCardFour from "../Cards/AccordionCardFour.vue"
 
-const items = ref([
-  { 
-    id: '1',
-    goal: 'Learn to improve content writing skill', 
-    date: '12/10/2023',
-    status: 'On going',
-    feedback: 'Satisfactory' },
 
-]);
 
-// const selectedItem = ref(null);
-
-// const showDetails = (item) => {
-//   // Single click to show details
-//   selectedItem.value = item;
-// };
-const selectedItem = ref(null);
-
-const selectItem = (item) => {
-  selectedItem.value = item;
-};
-// const sidebarItem = ref([])
-
-// const selectItem = (selectedItem) => {
-//     selectedItem.value = sidebarItem.value
-//     console.log('click')
-//     console.log(selectedItem)
-// }
-
-   const store = useGoalsStore();
-    const goals = store.goals;
-
-    console.log(goals);
-// computed: {
-//     isUserRoute() {
-//       return this.$route.path !==  '/';
-//     },
-//   },
 </script>
 <template>
   <div class="table-responsive d-flex flex-row">
@@ -60,7 +24,7 @@ const selectItem = (item) => {
           </th>
           <th scope="col">
             <div class="d-flex align-center gap-1">
-              <span class="noshrink"> Goals</span>
+              <span class="noshrink"> Name</span>
 
               <span class="d-flex flex-column align-center">
                 <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
@@ -71,29 +35,7 @@ const selectItem = (item) => {
           </th>
           <th scope="col">
             <div class="d-flex align-center gap-1">
-              <span class="noshrink"> Target Date for Completion</span>
-
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
-
-            </div>
-          </th>
-          <th scope="col">
-            <div class="d-flex align-center gap-1">
-              <span class="noshrink"> Status</span>
-
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
-
-            </div>
-          </th>
-          <th scope="col">
-            <div class="d-flex align-center gap-1">
-              <span class="noshrink"> Feedbacks </span>
+              <span class="noshrink"> Development plan type</span>
 
               <span class="d-flex flex-column align-center">
                 <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
@@ -107,12 +49,10 @@ const selectItem = (item) => {
       </thead>
       <tbody>
 
-        <tr v-for="item in items" :key="item.id" @click="selectItem(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})">
-          <td>{{item.id}}</td>
-          <td>{{item.goal}}</td>
-          <td>{{item.date}}</td>
-          <td>{{item.status}}</td>
-          <td>{{item.feedback}}</td>
+        <tr v-for="(row, index) in 12">
+          <td scope="row">{{ index + 1 }}</td>
+          <td>Lola Salau</td>
+          <td>Career Goals and Aspirations</td>
 
         </tr>
 
@@ -121,15 +61,15 @@ const selectItem = (item) => {
     <div class="side-panel">
 
       <h3> Details </h3>
-      <AccordionCard :item="selectedItem" />
-      <div v-if="isUserRoute" class="delete"><button>Delete</button></div>
+      <AccordionCardFour />
+
     </div>
   </div>
 </template>
 
 <style scoped>
 table {
-  width: 800px;
+  width: 300px;
 }
 thead tr th {
   font-size: 12px;
@@ -140,11 +80,10 @@ thead tr th {
 
 tbody tr td {
   color: var(--grey-dark, #808080);
-  /* Caption */
   font-size: 12px;
   font-weight: 400;
   line-height: 14.4px;
-  padding: 20px;
+  padding: 5px;
 }
 
 thead,
