@@ -13,24 +13,13 @@ const items = ref([
 
 ]);
 
-// const selectedItem = ref(null);
-
-// const showDetails = (item) => {
-//   // Single click to show details
-//   selectedItem.value = item;
-// };
 const selectedItem = ref(null);
 
 const selectItem = (item) => {
   selectedItem.value = item;
+  console.log(selectedItem)
 };
-// const sidebarItem = ref([])
 
-// const selectItem = (selectedItem) => {
-//     selectedItem.value = sidebarItem.value
-//     console.log('click')
-//     console.log(selectedItem)
-// }
 
    const store = useGoalsStore();
     const goals = store.goals;

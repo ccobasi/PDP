@@ -1,6 +1,7 @@
 <script setup>
-    import { useGoalsStore } from "@/store/goals";
+    // import { useGoalsStore } from "@/store/goals";
     import { ref } from 'vue';
+    import AccordionCardTwo from '../Cards/AccordionCardTwo.vue'
 
 const items = ref([
   { 
@@ -54,10 +55,16 @@ const items = ref([
 
 ]);
 
+const selectedItem = ref(null);
+
+const selectItem = (item) => {
+  selectedItem.value = item;
+  console.log(selectedItem)
+};
 
 </script>
 <template>
-  <div class="table-responsive">
+  <div class="table-responsive d-flex">
 
     <table class="table">
       <thead>
@@ -133,7 +140,7 @@ const items = ref([
       </thead>
       <tbody>
         <!-- <tr v-for="item in items" :key="item.id" @click="showDetails(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})"> -->
-        <tr v-for="item in items" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})">
+        <tr v-for="item in items" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})">
           <td>{{item.id}}</td>
           <td>{{item.skill}}</td>
           <td>{{item.currentState}}</td>
@@ -143,12 +150,22 @@ const items = ref([
         </tr>
       </tbody>
     </table>
+
+    <div class="side-panel">
+      <h3> Details </h3>
+      <AccordionCardTwo :item="selectedItem" />
+
+    </div>
   </div>
 </template>
 
 <style scoped>
+.table-responsive {
+  width: 100%;
+}
+
 table {
-  width: 800px;
+  width: 780px;
 }
 thead tr th {
   font-size: 12px;
@@ -169,5 +186,23 @@ tbody tr td {
 thead,
 tr {
   box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.05);
+}
+.side-panel {
+  display: flex;
+  width: 390px;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  align-self: stretch;
+  background: var(--Grey-Light, #eee);
+}
+.side-panel h4 {
+  color: var(--Black, #000);
+  font-family: Roboto;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28.8px;
 }
 </style>

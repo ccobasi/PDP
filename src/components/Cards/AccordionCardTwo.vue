@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
  export default {
   computed: {
     isUserRoute() {
@@ -6,6 +6,30 @@
     },
   },
 };
+</script> -->
+<script setup>
+import { ref, watch } from 'vue';
+
+
+const props = defineProps(['item'])
+
+const selectedSkill = ref('')
+const selectedCurrentState = ref('')
+const selectedDesiredState = ref('')
+const selectedStatus = ref('')
+const selectedFeedback = ref('')
+
+
+watch(() => props.item, (first, second) => {
+    let newTransct = props.item
+    selectedSkill.value = newTransct.skill
+    selectedCurrentState.value = newTransct.currentState
+    selectedDesiredState.value = newTransct.desiredState
+    selectedStatus.value = newTransct.status
+    selectedFeedback.value = newTransct.feedback
+});
+
+
 </script>
 <template>
   <div class="wrap">
@@ -19,7 +43,7 @@
         </h2>
         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
           <div class="accordion-body">
-            <textarea name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
+            <textarea v-model="selectedSkill" name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
           </div>
         </div>
       </div>
@@ -32,7 +56,7 @@
         </h2>
         <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
           <div class="accordion-body">
-            <select class="form-select" aria-label="Default select example">
+            <select class="form-select" aria-label="Default select example" v-model="selectedCurrentState">
               <option class="opt" selected>Beginner</option>
               <option class="opt" value="1">Beginner</option>
               <option class="opt" value="2">Intermediate</option>
@@ -65,7 +89,7 @@
         </h2>
         <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFour">
           <div class="accordion-body">
-            <select class="form-select" aria-label="Default select example">
+            <select class="form-select" aria-label="Default select example" v-model="selectedDesiredState">
               <option class="opt" selected>Expert</option>
               <option class="opt" value="1">Beginner</option>
               <option class="opt" value="2">Intermediate</option>
@@ -98,7 +122,7 @@
         </h2>
         <div id="panelsStayOpen-collapseSeven" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSeven">
           <div class="accordion-body">
-            <select class="form-select" aria-label="Default select example">
+            <select class="form-select" aria-label="Default select example" v-model="selectedStatus">
               <option class="opt" selected>Status</option>
               <option class="opt" value="1">Not started</option>
               <option class="opt" value="2">On-going</option>
@@ -118,7 +142,7 @@
         </h2>
         <div id="panelsStayOpen-collapseEight" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingEight">
           <div class="accordion-body">
-            <textarea name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
+            <textarea v-model="selectedFeedback" name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
 
           </div>
         </div>

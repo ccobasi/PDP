@@ -20,11 +20,7 @@
           <TableTwo />
 
         </div>
-        <div class="side-panel">
-          <h3> Details </h3>
-          <AccordionCardTwo />
 
-        </div>
       </div>
 
     </form>

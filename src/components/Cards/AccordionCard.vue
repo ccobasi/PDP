@@ -1,12 +1,46 @@
-<script>
+<!-- <script>
+
  export default {
   props: ['item'],
+  created(){
+    console.log(this.$props.item)
+  },
+  watch: {
+  user: {
+    handler(newValue) {
+      if( newValue === true ) triggerLog();
+    },
+    immediate: true
+  },
+  },
   computed: {
     isUserRoute() {
       return this.$route.path !==  '/';
     },
   },
 };
+</script> -->
+<script setup>
+import { ref, watch } from 'vue';
+
+
+const props = defineProps(['item'])
+
+const selectedGoal = ref('')
+const selectedDate = ref('')
+const selectedStatus = ref('')
+const selectedFeedback = ref('')
+
+
+watch(() => props.item, (first, second) => {
+    let newTransct = props.item
+    selectedGoal.value = newTransct.goal
+    selectedDate.value = newTransct.date
+    selectedStatus.value = newTransct.status
+    selectedFeedback.value = newTransct.feedback
+});
+
+
 </script>
 <template>
   <div class="wrap">
@@ -20,7 +54,7 @@
         </h2>
         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
           <div class="accordion-body">
-            <textarea name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
+            <textarea v-model="selectedGoal" name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
           </div>
         </div>
       </div>
@@ -33,7 +67,7 @@
         </h2>
         <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
           <div class="accordion-body">
-            <textarea name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
+            <textarea v-model="selectedAchievement" name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
           </div>
         </div>
       </div>
@@ -46,7 +80,7 @@
         </h2>
         <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
           <div class="accordion-body">
-            <textarea name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
+            <textarea v-model="resourses" name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
           </div>
         </div>
       </div>
@@ -59,7 +93,7 @@
         </h2>
         <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFour">
           <div class="accordion-body">
-            <textarea name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
+            <textarea v-model="success" name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
           </div>
         </div>
       </div>
@@ -72,7 +106,7 @@
         </h2>
         <div id="panelsStayOpen-collapseFive" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFive">
           <div class="accordion-body">
-            <input type="date">
+            <input type="date" v-model="date">
           </div>
         </div>
       </div>
@@ -125,7 +159,7 @@
         </h2>
         <div id="panelsStayOpen-collapseNine" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingNine">
           <div class="accordion-body">
-            <select class="form-select" aria-label="Default select example">
+            <select v-model="selectedStatus" class="form-select" aria-label="Default select example">
               <option class="opt" selected>Status</option>
               <option class="opt" value="1">Completed</option>
               <option class="opt" value="2">On-going</option>
@@ -142,7 +176,7 @@
         </h2>
         <div id="panelsStayOpen-collapseEleven" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingEleven">
           <div class="accordion-body">
-            <textarea name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
+            <textarea v-model="selectedFeedback" name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
           </div>
         </div>
       </div>
