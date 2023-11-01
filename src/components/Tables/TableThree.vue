@@ -1,6 +1,65 @@
+<script setup>
+    // import { useGoalsStore } from "@/store/goals";
+    import { ref } from 'vue';
+    import AccordionCardThree from '../Cards/AccordionCardThree.vue'
 
+const items = ref([
+  { 
+    id: '1',
+    month: '12/10/2023', 
+    trainingTopic: 'Digital Marketing',
+    trainingMethod: 'Online',
+    status: 'On going',
+    
+   },
+   { 
+    id: '2',
+     month: '12/10/2023', 
+    trainingTopic: 'Digital Marketing',
+    trainingMethod: 'Online',
+    status: 'On going',
+   },
+   { 
+    id: '3',
+     month: '12/10/2023', 
+    trainingTopic: 'Digital Marketing',
+    trainingMethod: 'Online',
+    status: 'On going',
+   },
+   { 
+    id: '4',
+     month: '12/10/2023', 
+    trainingTopic: 'Digital Marketing',
+    trainingMethod: 'Online',
+    status: 'On going',
+   },
+   { 
+    id: '5',
+     month: '12/10/2023', 
+    trainingTopic: 'Digital Marketing',
+    trainingMethod: 'Online',
+    status: 'On going',
+   },
+   { 
+    id: '6',
+     month: '12/10/2023', 
+    trainingTopic: 'Digital Marketing',
+    trainingMethod: 'Online',
+    status: 'On going',
+   },
+
+]);
+
+const selectedItem = ref(null);
+
+const selectItem = (item) => {
+  selectedItem.value = item;
+  console.log(selectedItem)
+};
+
+</script>
 <template>
-  <div class="table-responsive">
+  <div class="table-responsive d-flex">
 
     <table class="table">
       <thead>
@@ -75,12 +134,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(row, index) in 12" @click="$router.push('trainingscheduledetails')">
-          <td scope="row">{{ index + 1 }}</td>
-          <td>12/10/2023</td>
-          <td>Digital Marketing</td>
-          <td>Online</td>
-          <td>On going</td>
+        <tr v-for="item in items" @click="selectItem(item)" @dblclick="$router.push('trainingscheduledetails')">
+          <td scope="row">{{item.id}}</td>
+          <td>{{item.month}}</td>
+          <td>{{item.trainingTopic}}</td>
+          <td>{{item.trainingMethod}}</td>
+          <td>{{item.status}}</td>
           <td><svg xmlns="http://www.w3.org/2000/svg" width="87" height="14" viewBox="0 0 87 14" fill="none">
               <path fill-rule="evenodd" clip-rule="evenodd" d="M6.02745 1.3101C6.0735 1.16407 6.16491 1.03653 6.28839 0.945991C6.41187 0.855454 6.561 0.806641 6.71412 0.806641C6.86724 0.806641 7.01637 0.855454 7.13985 0.945991C7.26333 1.03653 7.35474 1.16407 7.40079 1.3101L8.64079 5.12343H12.6408C12.7994 5.11744 12.9556 5.16353 13.0855 5.25466C13.2154 5.34579 13.312 5.47696 13.3603 5.62811C13.4087 5.77927 13.4063 5.9421 13.3534 6.09174C13.3005 6.24137 13.2001 6.36958 13.0675 6.45677L9.82079 8.8101L11.0608 12.6301C11.1098 12.7756 11.1111 12.933 11.0643 13.0793C11.0176 13.2255 10.9253 13.353 10.8009 13.4431C10.6766 13.5332 10.5267 13.5812 10.3732 13.58C10.2196 13.5789 10.0704 13.5287 9.94745 13.4368L6.69412 11.0568L3.44745 13.4168C3.32446 13.5087 3.1753 13.5589 3.02175 13.56C2.8682 13.5612 2.71831 13.5132 2.59397 13.4231C2.46963 13.333 2.37734 13.2055 2.33059 13.0593C2.28384 12.913 2.28508 12.7556 2.33412 12.6101L3.57412 8.7901L0.327455 6.43677C0.194843 6.34958 0.0944225 6.22137 0.0415351 6.07174C-0.0113524 5.9221 -0.013798 5.75927 0.0345718 5.60811C0.0829416 5.45696 0.179467 5.32579 0.3094 5.23466C0.439333 5.14353 0.595528 5.09744 0.754121 5.10344H4.75412L6.02745 1.3101Z" fill="#FDBC15" />
               <path fill-rule="evenodd" clip-rule="evenodd" d="M24.4225 1.3101C24.4685 1.16407 24.5599 1.03653 24.6834 0.945991C24.8069 0.855454 24.956 0.806641 25.1091 0.806641C25.2623 0.806641 25.4114 0.855454 25.5349 0.945991C25.6584 1.03653 25.7498 1.16407 25.7958 1.3101L27.0358 5.12343H31.0358C31.1944 5.11744 31.3506 5.16353 31.4805 5.25466C31.6105 5.34579 31.707 5.47696 31.7554 5.62811C31.8037 5.77927 31.8013 5.9421 31.7484 6.09174C31.6955 6.24137 31.5951 6.36958 31.4625 6.45677L28.2158 8.8101L29.4558 12.6301C29.5048 12.7756 29.5061 12.933 29.4593 13.0793C29.4126 13.2255 29.3203 13.353 29.196 13.4431C29.0716 13.5332 28.9217 13.5812 28.7682 13.58C28.6146 13.5789 28.4655 13.5287 28.3425 13.4368L25.0891 11.0568L21.8425 13.4168C21.7195 13.5087 21.5703 13.5589 21.4168 13.56C21.2632 13.5612 21.1133 13.5132 20.989 13.4231C20.8646 13.333 20.7724 13.2055 20.7256 13.0593C20.6789 12.913 20.6801 12.7556 20.7291 12.6101L21.9691 8.7901L18.7225 6.43677C18.5899 6.34958 18.4894 6.22137 18.4366 6.07174C18.3837 5.9221 18.3812 5.75927 18.4296 5.60811C18.478 5.45696 18.5745 5.32579 18.7044 5.23466C18.8344 5.14353 18.9905 5.09744 19.1491 5.10344H23.1491L24.4225 1.3101Z" fill="#FDBC15" />
@@ -91,12 +150,17 @@
         </tr>
       </tbody>
     </table>
+    <div class="side-panel">
+      <h3> Details </h3>
+      <AccordionCardThree :item="selectedItem" />
+
+    </div>
   </div>
 </template>
 
 <style scoped>
 table {
-  width: 800px;
+  width: 900px;
 }
 thead tr th {
   font-size: 12px;
@@ -117,5 +181,23 @@ tbody tr td {
 thead,
 tr {
   box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.05);
+}
+.side-panel {
+  display: flex;
+  width: 390px;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  align-self: stretch;
+  background: var(--Grey-Light, #eee);
+}
+.side-panel h4 {
+  color: var(--Black, #000);
+  font-family: Roboto;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28.8px;
 }
 </style>

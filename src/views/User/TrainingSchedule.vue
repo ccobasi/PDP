@@ -175,7 +175,7 @@ main {
 }
 .modal-dialog {
   width: 500px;
-  height: 700px;
+  height: 800px;
   display: inline-flex;
   padding: 30px;
   flex-direction: column;

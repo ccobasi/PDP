@@ -1,4 +1,4 @@
-<script>
+<!-- <script>
  export default {
   computed: {
     isUserRoute() {
@@ -6,6 +6,30 @@
     },
   },
 };
+</script> -->
+<script setup>
+import { ref, watch } from 'vue';
+
+
+const props = defineProps(['item'])
+
+const selectedMonth = ref('')
+const selectedTrainingTopic = ref('')
+const selectedTrainingMethod = ref('')
+const selectedStatus = ref('')
+const selectedRate = ref('')
+
+
+watch(() => props.item, (first, second) => {
+    let newTransct = props.item
+    selectedMonth.value = newTransct.month
+    selectedTrainingTopic.value = newTransct.trainingTopic
+    selectedTrainingMethod.value = newTransct.trainingMethod
+    selectedStatus.value = newTransct.status
+    selectedRate.value = newTransct.rate
+});
+
+
 </script>
 <template>
   <div class="wrap">
@@ -19,7 +43,7 @@
         </h2>
         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
           <div class="accordion-body">
-            <input type="date">
+            <input type="date" v-model="selectedMonth">
           </div>
         </div>
       </div>
@@ -32,7 +56,7 @@
         </h2>
         <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
           <div class="accordion-body">
-            <textarea name="training topic" id="" placeholder="Type here" cols="30" rows="10"></textarea>
+            <textarea v-model="trainingTopic" name="training topic" id="" placeholder="Type here" cols="30" rows="10"></textarea>
           </div>
         </div>
       </div>
@@ -58,7 +82,7 @@
         </h2>
         <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFour">
           <div class="accordion-body">
-            <select class="form-select" aria-label="Default select example">
+            <select class="form-select" aria-label="Default select example" v-model="trainingMethod">
               <option class="opt" selected>Online</option>
               <option class="opt" value="1">Physical</option>
               <option class="opt" value="2">Online</option>
@@ -119,7 +143,7 @@
         </h2>
         <div id="panelsStayOpen-collapseEight" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingEight">
           <div class="accordion-body">
-            <select class="form-select" aria-label="Default select example">
+            <select class="form-select" aria-label="Default select example" v-model="status">
               <option class="opt" selected>On-going</option>
               <option class="opt" value="1">Not start</option>
               <option class="opt" value="2">On-going</option>

@@ -1,6 +1,8 @@
 <script setup>
   import TableThree from '../components/Tables/TableThree.vue'
   import AccordionCardThree from '../components/Cards/AccordionCardThree.vue'
+
+  
   
 </script>
 <template>
@@ -12,11 +14,7 @@
           <TableThree />
 
         </div>
-        <div class="side-panel">
-          <h3> Details </h3>
-          <AccordionCardThree />
 
-        </div>
       </div>
 
     </form>
@@ -34,7 +32,7 @@
 }
 
 .custom-table {
-  width: 70%;
+  width: 100%;
 }
 .side-panel {
   display: flex;

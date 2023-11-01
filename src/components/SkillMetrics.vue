@@ -1,6 +1,6 @@
 <script setup>
   import TableTwo from '../components/Tables/TableTwo.vue'
-  import AccordionCardTwo from '../components/Cards/AccordionCardTwo.vue'
+  
   
 </script>
 <template>
@@ -38,7 +38,7 @@
 }
 
 .custom-table {
-  width: 70%;
+  width: 100%;
 }
 .side-panel {
   display: flex;
