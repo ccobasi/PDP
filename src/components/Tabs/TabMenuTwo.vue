@@ -7,10 +7,7 @@
           <div class="modal-header">
             <div class="input-group rounded">
               <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-              <!-- <span class="input-group-text border-0" id="search-addon">
-                <i class="fa fa-search"></i>
 
-              </span> -->
               <span class="input-group-text border-0" id="search-addon">
                 <i class="fa fa-search"></i>
 
@@ -158,7 +155,7 @@
 
         </li>
 
-        <li class="nav-item dropdown ">
+        <li class="nav-item link">
           <a class="nav-link" href="/km/skillassessment">
             Skill Assessment
           </a>
@@ -166,7 +163,7 @@
         </li>
 
         <li class="nav-item link">
-          <a class="nav-link " href="/km/trainingschedule">Training Schedule </a>
+          <a class="nav-link " href="/km/trainingschedules">Training Schedule </a>
         </li>
 
         <li class="nav-item link">

@@ -109,54 +109,11 @@ watch(() => props.item, (first, second) => {
           </div>
         </div>
       </div>
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="panelsStayOpen-headingSeven">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseSeven" aria-expanded="false" aria-controls="panelsStayOpen-collapseSeven">
-            Status
-          </button>
-        </h2>
-        <div id="panelsStayOpen-collapseSeven" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingSeven">
-          <div class="accordion-body">
-            <select class="form-select" aria-label="Default select example" v-model="selectedStatus">
-              <option class="opt" selected>Status</option>
-              <option class="opt" value="1">Not started</option>
-              <option class="opt" value="2">On-going</option>
-              <option class="opt" value="3">Completed</option>
 
-            </select>
-
-          </div>
-        </div>
+      <div class="approve">
+        <button class="decline">Decline</button>
+        <button class="approved">Approve</button>
       </div>
-
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="panelsStayOpen-headingEight">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseEight" aria-expanded="false" aria-controls="panelsStayOpen-collapseEight">
-            Feedback
-          </button>
-        </h2>
-        <div id="panelsStayOpen-collapseEight" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingEight">
-          <div class="accordion-body">
-            <textarea v-model="selectedFeedback" name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
-
-          </div>
-        </div>
-      </div>
-
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="panelsStayOpen-headingTen">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTen" aria-expanded="false" aria-controls="panelsStayOpen-collapseTen">
-            Evidence
-          </button>
-        </h2>
-        <div id="panelsStayOpen-collapseTen" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTen">
-          <div class="accordion-body">
-            <input type="file">
-            <button>Save Changes</button>
-          </div>
-        </div>
-      </div>
-      <div v-if="isUserRoute" class="delete"><button>Delete</button></div>
     </div>
   </div>
 </template>
@@ -196,7 +153,7 @@ watch(() => props.item, (first, second) => {
   color: #fff;
   margin-top: 10px;
 }
-.delete {
+.approve {
   display: flex;
   padding: 20px 0px;
   justify-content: flex-end;
@@ -204,13 +161,28 @@ watch(() => props.item, (first, second) => {
   gap: 11px;
   align-self: stretch;
 }
-.delete button {
+.decline {
+  display: flex;
+  padding: 10px 30px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--Grey-Dark, #808080);
+  color: var(--White, #fff);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
+.approved {
   display: flex;
   padding: 10px 30px;
   align-items: center;
   gap: 10px;
   border-radius: 5px;
-  background: var(--Red, #f00);
+  background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
   font-family: Roboto;
   font-size: 16px;

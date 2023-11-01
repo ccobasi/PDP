@@ -139,7 +139,6 @@ const selectItem = (item) => {
         </tr>
       </thead>
       <tbody>
-        <!-- <tr v-for="item in items" :key="item.id" @click="showDetails(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})"> -->
         <tr v-for="item in items" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})">
           <td>{{item.id}}</td>
           <td>{{item.skill}}</td>

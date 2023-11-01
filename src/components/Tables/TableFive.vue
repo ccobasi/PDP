@@ -1,7 +1,7 @@
 <script setup>
 
     import { ref } from 'vue';
-    import AccordionCardFour from "../Cards/AccordionCardFour.vue"
+    import AccordionCardFive from "../Cards/AccordionCardFive.vue"
 
 
 const items = ref([
@@ -103,7 +103,7 @@ const selectItem = (item) => {
     <div class="side-panel">
 
       <h3> Details </h3>
-      <AccordionCardFour :item="selectedItem" />
+      <AccordionCardFive :item="selectedItem" />
 
     </div>
   </div>
@@ -111,7 +111,7 @@ const selectItem = (item) => {
 
 <style scoped>
 table {
-  width: 300px;
+  width: 500px;
 }
 thead tr th {
   font-size: 12px;

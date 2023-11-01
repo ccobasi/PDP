@@ -32,9 +32,7 @@ export default {
 
           <!-- Modal body -->
           <div class="modal-body">
-            <!-- <input type="text" placeholder="Email">
-            <input type="text" placeholder="Subject">
-            <textarea name="email" id="" cols="30" rows="10" placeholder="Body Text"></textarea> -->
+
             <div class="frame">
               <h6>Skill</h6>
               <textarea name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>

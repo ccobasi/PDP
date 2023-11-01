@@ -1,7 +1,8 @@
 <script setup>
     import { useGoalsStore } from "@/store/goals";
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import AccordionCard from "../Cards/AccordionCard.vue"
+    import { useRoute } from 'vue-router';
 
 const items = ref([
   { 
@@ -25,11 +26,11 @@ const selectItem = (item) => {
     const goals = store.goals;
 
     console.log(goals);
-// computed: {
-//     isUserRoute() {
-//       return this.$route.path !==  '/';
-//     },
-//   },
+
+    const isUserRoute = computed(() => {
+  const route = useRoute();
+  return route.path !== '/';
+});
 </script>
 <template>
   <div class="table-responsive d-flex flex-row">
