@@ -37,7 +37,7 @@ export default {
 
 <style scoped>
 main {
-  height: 800px;
+  height: 950px;
 }
 .header {
   display: flex;
