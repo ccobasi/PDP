@@ -1,12 +1,20 @@
-<script>
- export default {
-  props: ['item'],
-  computed: {
-    isUserRoute() {
-      return this.$route.path !==  '/';
-    },
-  },
-};
+<script setup>
+import { ref, watch } from 'vue';
+
+
+const props = defineProps(['item'])
+
+const selectedName = ref('')
+const selectedPlan = ref('')
+
+
+watch(() => props.item, (first, second) => {
+    let newTransct = props.item
+    selectedName.value = newTransct.name
+    selectedPlan.value = newTransct.plan
+});
+
+
 </script>
 <template>
   <div class="wrap">
@@ -20,7 +28,7 @@
         </h2>
         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
           <div class="accordion-body">
-            <textarea name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
+            <textarea v-model="selectedPlan" name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
           </div>
         </div>
       </div>
@@ -116,7 +124,7 @@
   width: 300px;
 }
 .accordion-body textarea {
-  width: 300px;
+  width: 250px;
   height: 100px;
   border: 1px solid #eee;
 

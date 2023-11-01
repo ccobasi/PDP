@@ -1,12 +1,4 @@
-<!-- <script>
- export default {
-  computed: {
-    isUserRoute() {
-      return this.$route.path !==  '/trainingschedule';
-    },
-  },
-};
-</script> -->
+
 <script setup>
 import { ref, watch } from 'vue';
 
@@ -56,7 +48,7 @@ watch(() => props.item, (first, second) => {
         </h2>
         <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
           <div class="accordion-body">
-            <textarea v-model="trainingTopic" name="training topic" id="" placeholder="Type here" cols="30" rows="10"></textarea>
+            <textarea v-model="selectedTrainingTopic" name="training topic" id="" placeholder="Type here" cols="30" rows="10"></textarea>
           </div>
         </div>
       </div>
@@ -82,7 +74,7 @@ watch(() => props.item, (first, second) => {
         </h2>
         <div id="panelsStayOpen-collapseFour" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingFour">
           <div class="accordion-body">
-            <select class="form-select" aria-label="Default select example" v-model="trainingMethod">
+            <select class="form-select" aria-label="Default select example" v-model="selectedTrainingMethod">
               <option class="opt" selected>Online</option>
               <option class="opt" value="1">Physical</option>
               <option class="opt" value="2">Online</option>
@@ -143,7 +135,7 @@ watch(() => props.item, (first, second) => {
         </h2>
         <div id="panelsStayOpen-collapseEight" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingEight">
           <div class="accordion-body">
-            <select class="form-select" aria-label="Default select example" v-model="status">
+            <select class="form-select" aria-label="Default select example" v-model="selectedStatus">
               <option class="opt" selected>On-going</option>
               <option class="opt" value="1">Not start</option>
               <option class="opt" value="2">On-going</option>

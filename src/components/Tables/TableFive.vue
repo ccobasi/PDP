@@ -4,6 +4,48 @@
     import AccordionCardFour from "../Cards/AccordionCardFour.vue"
 
 
+const items = ref([
+  { 
+    id: '1',
+    name: 'Lola Salau', 
+    plan: 'Career Goals and Aspirations',
+   },
+   { 
+    id: '2',
+     name: 'Lola Salau', 
+    plan: 'Career Goals and Aspirations',
+   },
+   { 
+    id: '3',
+     name: 'Lola Salau', 
+    plan: 'Career Goals and Aspirations',
+   },
+   { 
+    id: '4',
+     name: 'Lola Salau', 
+    plan: 'Career Goals and Aspirations',
+   },
+   { 
+    id: '5',
+     name: 'Lola Salau', 
+    plan: 'Career Goals and Aspirations',
+   },
+   { 
+    id: '6',
+     name: 'Lola Salau', 
+    plan: 'Career Goals and Aspirations',
+   },
+
+]);
+
+const selectedItem = ref(null);
+
+const selectItem = (item) => {
+  selectedItem.value = item;
+  console.log(selectedItem)
+};
+
+
 
 </script>
 <template>
@@ -49,10 +91,10 @@
       </thead>
       <tbody>
 
-        <tr v-for="(row, index) in 12">
-          <td scope="row">{{ index + 1 }}</td>
-          <td>Lola Salau</td>
-          <td>Career Goals and Aspirations</td>
+        <tr v-for="item in items" @click="selectItem(item)">
+          <td scope="row">{{ item.id }}</td>
+          <td>{{item.name}}</td>
+          <td>{{item.plan}}</td>
 
         </tr>
 
@@ -61,7 +103,7 @@
     <div class="side-panel">
 
       <h3> Details </h3>
-      <AccordionCardFour />
+      <AccordionCardFour :item="selectedItem" />
 
     </div>
   </div>
@@ -92,7 +134,7 @@ tr {
 }
 .side-panel {
   display: flex;
-  width: 390px;
+  width: 320px;
   padding: 20px;
   flex-direction: column;
   align-items: flex-start;
