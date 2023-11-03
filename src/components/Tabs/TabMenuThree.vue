@@ -142,36 +142,36 @@
       </div>
     </div>
     <div class="profile">
-      <button>My Profile</button>
+      <button><a class="nav-link active" href="/m/myprofile" role="button" aria-expanded="false">My Profile</a></button>
       <div class="btn" data-bs-toggle="modal" data-bs-target="#myModal" type="button"><span>Team Profile</span></div>
     </div>
     <nav class="navbar navbar-expand-md ">
 
       <ul class="navbar-nav">
         <li class="nav-item active">
-          <a class="nav-link active" href="/km/" role="button" aria-expanded="false">
+          <a class="nav-link active" href="/m/" role="button" aria-expanded="false">
             Development Plan
           </a>
 
         </li>
 
         <li class="nav-item link">
-          <a class="nav-link" href="/km/skillassessment">
+          <a class="nav-link" href="/m/skillassessment">
             Skill Assessment
           </a>
 
         </li>
 
         <li class="nav-item link">
-          <a class="nav-link " href="/km/trainingschedules">Training Schedule </a>
+          <a class="nav-link " href="/m/trainingschedule">Training Schedule </a>
         </li>
 
         <li class="nav-item link">
-          <a class="nav-link " href="/km/alltrainingschedule">All Training Schedule </a>
+          <a class="nav-link " href="/m/alltrainingschedule">All Training Schedule </a>
         </li>
 
         <li class="nav-item link">
-          <a class="nav-link " href="/km/taskdeliverables">Tasks/Deliverables </a>
+          <a class="nav-link " href="/m/taskdeliverables">Tasks/Deliverables </a>
         </li>
 
       </ul>
@@ -201,7 +201,7 @@
   background: var(--Color-3, #fff);
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.06);
 }
-.profile button {
+.profile button a {
   display: flex;
   padding: 6px 5px;
   align-items: flex-start;
@@ -376,7 +376,6 @@ thead tr th {
 
 tbody tr td {
   color: var(--grey-dark, #808080);
-  /* Caption */
   font-size: 12px;
   font-weight: 400;
   line-height: 14.4px;

@@ -1,7 +1,8 @@
 <script>
-import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
+import TabMenu from '../../components/Tabs/TabMenuThree.vue';
 import BarChart from '../../components/Charts/BarChart.vue'
 import SkillMetrics from '../../components/SkillMetrics.vue'
+import Table from '../../components/Tables/TableFive.vue'
 
 export default {
     data: () => ({
@@ -10,7 +11,8 @@ export default {
     }),
     components: {
         
-        TabMenu: TabMenu,BarChart,SkillMetrics
+        // eslint-disable-next-line vue/no-reserved-component-names
+        TabMenu: TabMenu,BarChart,SkillMetrics,Table,
     }
     
 }
@@ -20,7 +22,7 @@ export default {
 <template>
   <main class="wrapper">
     <TabMenu />
-    <div class="modal" id="myModal">
+    <div class="modal" id="myModal1">
       <div class="modal-dialog">
         <div class="modal-content">
 
@@ -29,56 +31,128 @@ export default {
             <h4 class="modal-title">Skill Request Form</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
           </div>
-          <div class="request mb-2">
-            <button class="blue">My Request</button>
-            <button class="team">Team Member</button>
-            <button class="approval">Requests pending approval</button>
-          </div>
 
           <!-- Modal body -->
           <div class="modal-body">
-            <!-- <input type="text" placeholder="Email">
-            <input type="text" placeholder="Subject">
-            <textarea name="email" id="" cols="30" rows="10" placeholder="Body Text"></textarea> -->
-            <div class="frame">
-              <h6>Skill</h6>
-              <textarea name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
-            </div>
-            <div class="frame">
-              <h6>Current state</h6>
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Beginner</option>
-                <option value="">Beginner</option>
-                <option value="">Intermediate</option>
-                <option value="">Proficient</option>
-                <option value="">Advanced</option>
-                <option value="">Expert</option>
-              </select>
-            </div>
-            <div class="frame">
-              <h6>Gap</h6>
-              <textarea name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
-            </div>
-            <div class="frame">
-              <h6>Desired state</h6>
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Expert</option>
-                <option value="">Beginner</option>
-                <option value="">Intermediate</option>
-                <option value="">Proficient</option>
-                <option value="">Advanced</option>
-                <option value="">Expert</option>
-              </select>
-            </div>
-            <div class="frame">
-              <h6>Initiatives</h6>
-              <textarea name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
-            </div>
-          </div>
 
-          <!-- Modal footer -->
-          <div class="modal-footer">
-            <button type="button" data-bs-dismiss="modal">Submit Request</button>
+            <v-card style="background-color: #eee;">
+              <v-tabs v-model="tab" bg-color="white" color="#227cbf" class="custom-tabs">
+                <v-tab style="font-size: 10px;" value="one">My Request</v-tab>
+                <v-tab style="font-size: 10px;" value="two">Team Member</v-tab>
+                <v-tab style="font-size: 10px;" value="three">Requests pending approval</v-tab>
+              </v-tabs>
+
+              <v-card-text style="background-color: #eee;">
+                <v-window v-model="tab">
+                  <v-window-item value="one">
+
+                    <div class="modal-bod">
+
+                      <div class="frame">
+                        <h6>Skill</h6>
+                        <textarea name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
+                      </div>
+                      <div class="frame">
+                        <h6>Current state</h6>
+                        <select class="form-select" aria-label="Default select example">
+                          <option selected>Beginner</option>
+                          <option value="">Beginner</option>
+                          <option value="">Intermediate</option>
+                          <option value="">Proficient</option>
+                          <option value="">Advanced</option>
+                          <option value="">Expert</option>
+                        </select>
+                      </div>
+                      <div class="frame">
+                        <h6>Gap</h6>
+                        <textarea name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
+                      </div>
+                      <div class="frame">
+                        <h6>Desired state</h6>
+                        <select class="form-select" aria-label="Default select example">
+                          <option selected>Expert</option>
+                          <option value="">Beginner</option>
+                          <option value="">Intermediate</option>
+                          <option value="">Proficient</option>
+                          <option value="">Advanced</option>
+                          <option value="">Expert</option>
+                        </select>
+                      </div>
+                      <div class="frame">
+                        <h6>Initiatives</h6>
+                        <textarea name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
+                      </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                      <button type="button" data-bs-dismiss="modal">Submit Request</button>
+                    </div>
+                  </v-window-item>
+
+                  <v-window-item value="two">
+                    <div class="modal-bod">
+                      <div class="frame">
+                        <h6>Select team member</h6>
+                        <select class="form-select" aria-label="Default select example">
+                          <option selected>Lola</option>
+                          <option value="">Lola</option>
+                          <option value="">Mark</option>
+                          <option value="">Uzo</option>
+                          <option value="">Daniel</option>
+                          <option value="">Jane</option>
+                        </select>
+                      </div>
+                      <div class="frame">
+                        <h6>Skill</h6>
+                        <textarea name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
+                      </div>
+                      <div class="frame">
+                        <h6>Current state</h6>
+                        <select class="form-select" aria-label="Default select example">
+                          <option selected>Beginner</option>
+                          <option value="">Beginner</option>
+                          <option value="">Intermediate</option>
+                          <option value="">Proficient</option>
+                          <option value="">Advanced</option>
+                          <option value="">Expert</option>
+                        </select>
+                      </div>
+                      <div class="frame">
+                        <h6>Gap</h6>
+                        <textarea name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
+                      </div>
+                      <div class="frame">
+                        <h6>Desired state</h6>
+                        <select class="form-select" aria-label="Default select example">
+                          <option selected>Expert</option>
+                          <option value="">Beginner</option>
+                          <option value="">Intermediate</option>
+                          <option value="">Proficient</option>
+                          <option value="">Advanced</option>
+                          <option value="">Expert</option>
+                        </select>
+                      </div>
+                      <div class="frame">
+                        <h6>Initiatives</h6>
+                        <textarea name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
+                      </div>
+                    </div>
+
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                      <button type="button" data-bs-dismiss="modal">Submit Request</button>
+                    </div>
+                  </v-window-item>
+
+                  <v-window-item value="three">
+                    <div class="pending">
+                      <Table />
+                    </div>
+                  </v-window-item>
+                </v-window>
+              </v-card-text>
+            </v-card>
           </div>
 
         </div>
@@ -87,7 +161,7 @@ export default {
     <div class="skill mt-4">
       <div class="title">
         <h3>Skill Assessment</h3>
-        <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Request Skill</button>
+        <button data-bs-toggle="modal" data-bs-target="#myModal1" type="button">Request Skill</button>
       </div>
       <div class="lines"></div>
       <div class="chart">
@@ -104,6 +178,17 @@ export default {
 <style scoped>
 main {
   height: 1450px;
+}
+.dynamic {
+  justify-content: space-between;
+  gap: 35px;
+}
+.member,
+.plan {
+  width: 300px;
+}
+.custom-tabs {
+  border-radius: 50px;
 }
 .skill {
   display: flex;
@@ -165,8 +250,8 @@ main {
   margin-left: 32%;
 }
 .modal-dialog {
-  width: 500px;
-  height: 700px;
+  width: 600px;
+  height: 850px;
   display: inline-flex;
   padding: 30px;
   flex-direction: column;
@@ -192,31 +277,6 @@ main {
   background: #eee;
   border: none;
 }
-.request {
-  display: flex;
-  height: 40px;
-  padding: 10px 15px;
-  align-items: flex-start;
-  gap: 30px;
-  align-self: stretch;
-  border-radius: 50px;
-  background: var(--White, #fff);
-}
-.blue {
-  display: flex;
-  padding: 0px 15px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 20px;
-  background: var(--Primary, #227cbf);
-  color: var(--White, #fff);
-  font-family: Roboto;
-  font-size: 13px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 19.2px;
-}
 .team,
 .approval {
   color: var(--Black, #000);
@@ -226,14 +286,23 @@ main {
   font-weight: 400;
   line-height: 19.2px;
 }
-.modal-body {
+.modal-bod {
+  display: flex;
+  padding: 30px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  align-self: stretch;
+  border-radius: 10px;
+  background: #fff;
+}
+.modal-bodys {
   display: flex;
   padding: 30px;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
   border-radius: 10px;
-  background: #fff;
 }
 .frame {
   display: flex;
@@ -251,8 +320,8 @@ main {
 }
 .frame textarea {
   display: flex;
-  width: 400px;
-  height: 70px;
+  width: 300px;
+  height: 50px;
   padding: 10px;
   flex-direction: column;
   align-items: flex-start;
@@ -271,7 +340,7 @@ main {
   line-height: 14.4px;
 }
 .form-select {
-  width: 400px;
+  width: 300px;
   color: var(--Grey-Dark, #808080);
   font-family: Roboto;
   font-size: 12px;

@@ -1,7 +1,8 @@
 <script>
-import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
+import TabMenu from '../../components/Tabs/TabMenuFour.vue';
 import DoughNut from '../../components/DoughNut.vue'
 import CareerGoal from '../../components/CareerGoal.vue'
+import Table from '../../components/Tables/TableFive.vue'
 
 
 export default {
@@ -11,7 +12,8 @@ export default {
     }),
     components: {
         
-        TabMenu: TabMenu,DoughNut,CareerGoal,
+        // eslint-disable-next-line vue/no-reserved-component-names
+        TabMenu: TabMenu,DoughNut,CareerGoal,Table,
     }
     
 }
@@ -21,77 +23,164 @@ export default {
 <template>
   <main class="wrapper">
     <TabMenu />
-    <div class="modal" id="myModal" tabindex="-1">
+    <div class="modal" id="myModal1" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Development Plan Request</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="request">
-            <button class="blue">My Request</button>
-            <button class="team">Team Member</button>
-            <button class="approval">Requests pending approval</button>
-          </div>
-          <div class="modal-body">
-            <div class="type">
-              <h3>Development plan type</h3>
-              <select class="form-select" aria-label="Default select example">
-                <option class="opt" selected>Career Goals and Aspirations</option>
-                <option class="opt" value="1">Option 1</option>
-                <option class="opt" value="2">Option 2</option>
-                <option class="opt" value="3">Option 3</option>
-                <option class="opt" value="4">Option 4</option>
-                <option class="opt" value="5">Option 5</option>
-                <option class="opt" value="6">Option 6</option>
-              </select>
-            </div>
-            <div class="goal">
-              <div class="left">
-                <h4>Goal</h4>
-                <textarea name="Goal" placeholder="Goal" id="" cols="30" rows="10"></textarea>
-              </div>
-              <div class="right">
-                <h4 class="">What I will do to achieve this</h4>
-                <textarea name="Goal" placeholder="What I will do to achieve this" id="" cols="30" rows="10"></textarea>
-              </div>
-            </div>
-            <div class="goal">
-              <div class="left">
-                <h4>Resources and Support Needed</h4>
-                <textarea name="Resources and Support Needed" placeholder="Resources and Support Needed" id="" cols="30" rows="10"></textarea>
-              </div>
-              <div class="right">
-                <h4 class="">What does success look like?</h4>
-                <textarea name="Goal" placeholder="What does success look like?" id="" cols="30" rows="10"></textarea>
-              </div>
-            </div>
-            <div class="goal">
-              <div class="left">
-                <h4>Potential Challenges</h4>
-                <textarea name="Potential Challenges" placeholder="Potential Challenges" id="" cols="30" rows="10"></textarea>
-              </div>
-              <div class="right">
-                <h4 class="">Solution</h4>
-                <textarea name="Goal" placeholder="Solution" id="" cols="30" rows="10"></textarea>
-              </div>
-            </div>
-            <div class="type mt-3">
-              <h3>Target Date for Completion</h3>
-              <input type="date">
-            </div>
-          </div>
-          <div class="modal-footer">
+          <v-card style="background:#eee">
+            <v-tabs v-model="tab" bg-color="white" color="#227cbf" style="border-radius:50px">
+              <v-tab value="one">My Request</v-tab>
+              <v-tab value="two">Team Member</v-tab>
+              <v-tab value="three">Requests pending approval</v-tab>
+            </v-tabs>
 
-            <button type="button" class="btn">Submit Request</button>
-          </div>
+            <v-card-text>
+              <v-window v-model="tab">
+                <v-window-item value="one">
+                  <div class="modal-bodys">
+                    <div class="type">
+
+                      <h3>Development plan type</h3>
+                      <select class="form-select" aria-label="Default select example">
+                        <option class="opt" selected>Career Goals and Aspirations</option>
+                        <option class="opt" value="Area of Interest">Area of Interest</option>
+                        <option class="opt" value="Career Goals and Aspirations">Career Goals and Aspirations</option>
+                        <option class="opt" value="Mentorship and Skill Build">Mentorship and Skill Build</option>
+                      </select>
+
+                    </div>
+
+                    <div class="goal">
+                      <div class="left">
+                        <h4>Goal</h4>
+                        <textarea name="Goal" placeholder="Goal" id="" cols="30" rows="10"></textarea>
+                      </div>
+                      <div class="right">
+                        <h4 class="">What I will do to achieve this</h4>
+                        <textarea name="Goal" placeholder="What I will do to achieve this" id="" cols="30" rows="10"></textarea>
+                      </div>
+                    </div>
+                    <div class="goal">
+                      <div class="left">
+                        <h4>Resources and Support Needed</h4>
+                        <textarea name="Resources and Support Needed" placeholder="Resources and Support Needed" id="" cols="30" rows="10"></textarea>
+                      </div>
+                      <div class="right">
+                        <h4 class="">What does success look like?</h4>
+                        <textarea name="Goal" placeholder="What does success look like?" id="" cols="30" rows="10"></textarea>
+                      </div>
+                    </div>
+                    <div class="goal">
+                      <div class="left">
+                        <h4>Potential Challenges</h4>
+                        <textarea name="Potential Challenges" placeholder="Potential Challenges" id="" cols="30" rows="10"></textarea>
+                      </div>
+                      <div class="right">
+                        <h4 class="">Solution</h4>
+                        <textarea name="Goal" placeholder="Solution" id="" cols="30" rows="10"></textarea>
+                      </div>
+                    </div>
+                    <div class="type mt-3">
+                      <h3>Target Date for Completion</h3>
+                      <input type="date">
+                    </div>
+
+                    <div class="modal-footer">
+
+                      <button type="button" class="btn">Submit Request</button>
+                    </div>
+                  </div>
+                </v-window-item>
+
+                <v-window-item value="two">
+                  <div class="modal-bodys">
+                    <div class="type">
+                      <div class="dynamic d-flex">
+                        <div class="member">
+                          <h3>Select Team Member</h3>
+                          <select class="form-select" aria-label="Default select example">
+                            <option class="opt" selected>Lola Oyebola</option>
+                            <option class="opt" value="Lola Oyebola">Lola Oyebola</option>
+                            <option class="opt" value="Mark Dean">Mark Dean</option>
+                            <option class="opt" value="Uzo Okoro">Uzo Okoro</option>
+                            <option class="opt" value="Daniel Muller">Daniel Muller</option>
+                            <option class="opt" value="Jane Doe">Jane Doe</option>
+                          </select>
+                        </div>
+                        <div class="plan">
+                          <h3>Development plan type</h3>
+                          <select class="form-select" aria-label="Default select example">
+                            <option class="opt" selected>Career Goals and Aspirations</option>
+                            <option class="opt" value="Area of Interest">Area of Interest</option>
+                            <option class="opt" value="Career Goals and Aspirations">Career Goals and Aspirations</option>
+                            <option class="opt" value="Mentorship and Skill Build">Mentorship and Skill Build</option>
+                          </select>
+                        </div>
+                      </div>
+
+                    </div>
+                    <div class="goal">
+                      <div class="left">
+                        <h4>Goal</h4>
+                        <textarea name="Goal" placeholder="Goal" id="" cols="30" rows="10"></textarea>
+                      </div>
+                      <div class="right">
+                        <h4 class="">What I will do to achieve this</h4>
+                        <textarea name="Goal" placeholder="What I will do to achieve this" id="" cols="30" rows="10"></textarea>
+                      </div>
+                    </div>
+                    <div class="goal">
+                      <div class="left">
+                        <h4>Resources and Support Needed</h4>
+                        <textarea name="Resources and Support Needed" placeholder="Resources and Support Needed" id="" cols="30" rows="10"></textarea>
+                      </div>
+                      <div class="right">
+                        <h4 class="">What does success look like?</h4>
+                        <textarea name="Goal" placeholder="What does success look like?" id="" cols="30" rows="10"></textarea>
+                      </div>
+                    </div>
+                    <div class="goal">
+                      <div class="left">
+                        <h4>Potential Challenges</h4>
+                        <textarea name="Potential Challenges" placeholder="Potential Challenges" id="" cols="30" rows="10"></textarea>
+                      </div>
+                      <div class="right">
+                        <h4 class="">Solution</h4>
+                        <textarea name="Goal" placeholder="Solution" id="" cols="30" rows="10"></textarea>
+                      </div>
+                    </div>
+                    <div class="type mt-3">
+                      <h3>Target Date for Completion</h3>
+                      <input type="date">
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+
+                    <button type="button" class="btn">Submit Request</button>
+                  </div>
+                </v-window-item>
+
+                <v-window-item value="three">
+
+                  <div class="pending">
+                    <Table />
+                  </div>
+
+                </v-window-item>
+              </v-window>
+            </v-card-text>
+          </v-card>
         </div>
+
       </div>
     </div>
     <div class="development mt-5">
       <div class="dev">
         <h3>Development Plan</h3>
-        <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Development Plan Request</button>
+        <button data-bs-toggle="modal" data-bs-target="#myModal1" type="button">Development Plan Request</button>
       </div>
       <hr>
       <div class="goal">
@@ -151,12 +240,20 @@ export default {
   height: 40px;
   color: #fff;
 }
+.dynamic {
+  justify-content: space-between;
+  gap: 35px;
+}
+.member,
+.plan {
+  width: 300px;
+}
 hr {
   width: 100%;
   height: 1px;
   background: #808080;
 }
-.goal {
+.goals {
   display: flex;
   justify-content: flex-start !important;
   align-items: flex-start;
@@ -195,31 +292,6 @@ hr {
   align-self: stretch;
   height: 30px !important;
 }
-.request {
-  display: flex;
-  height: 50px;
-  padding: 10px 15px;
-  align-items: flex-start;
-  gap: 30px;
-  align-self: stretch;
-  border-radius: 50px;
-  background: var(--White, #fff);
-}
-.blue {
-  display: flex;
-  padding: 5px 15px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 20px;
-  background: var(--Primary, #227cbf);
-  color: var(--White, #fff);
-  font-family: Roboto;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 19.2px;
-}
 .team,
 .approval {
   color: var(--Black, #000);
@@ -249,7 +321,7 @@ hr {
 }
 .modal-content {
   display: flex;
-  padding: 30px;
+  padding: 20px;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
@@ -272,7 +344,7 @@ hr {
 }
 .form-select {
   display: flex;
-  width: 400px;
+  width: 320px;
   height: 40px;
   padding: 10px;
   justify-content: space-between;
@@ -284,7 +356,7 @@ hr {
 }
 .goal {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 20px;
   margin-top: 20px;
@@ -340,10 +412,30 @@ hr {
   justify-content: space-between;
   align-items: flex-end;
   align-self: stretch;
+  margin-bottom: 20px;
 }
 .modal-footer .btn {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: #fff;
+}
+.modal-bodys {
+  gap: 10px;
+  background: #fff;
+  margin-top: 0px !important;
+  border: 1px solid var(--Grey-Light, #fff);
+  border-radius: 10px;
+  padding: 10px;
+}
+.pending {
+  display: flex;
+  width: 685px;
+  height: 705px;
+  padding: 30px 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  border-radius: 10px;
+  background: #fff;
 }
 </style>

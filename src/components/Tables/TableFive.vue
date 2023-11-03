@@ -2,6 +2,12 @@
 
     import { ref } from 'vue';
     import AccordionCardFive from "../Cards/AccordionCardFive.vue"
+    import {useGoalsStore} from "@/store/goals"
+
+    
+const store = useGoalsStore();
+console.log(store.goals);
+
 
 
 const items = ref([
@@ -111,7 +117,7 @@ const selectItem = (item) => {
 
 <style scoped>
 table {
-  width: 500px;
+  width: 370px;
 }
 thead tr th {
   font-size: 12px;
