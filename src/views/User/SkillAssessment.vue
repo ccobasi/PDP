@@ -1,82 +1,113 @@
-<script>
+<script setup>
 import TabMenu from '../../components/Tabs/TabMenu.vue';
 import BarChart from '../../components/Charts/BarChart.vue'
 import SkillMetrics from '../../components/SkillMetrics.vue'
+import { ref, onMounted} from 'vue'
+import {useSkillsStore} from "@/store/skills"
 
-export default {
-    data: () => ({
-        tab: null,
-        
-    }),
-    components: {
-        
-        TabMenu: TabMenu,BarChart,SkillMetrics
-    }
-    
+
+const store = useSkillsStore();
+console.log(store.skills);
+
+const addSkill = () => {
+  if (skill.value.trim() !== '' || currentState.value.trim() !== '' || gap.value.trim() !== ''
+      || desiredState.value.trim() !== ''
+      || initiative.value.trim() !== '' ) {
+    store.addSkill(skill.value.trim(), currentState.value.trim(), gap.value.trim(), desiredState.value.trim(), initiative.value.trim());
+  
+  }
 }
+
+// eslint-disable-next-line no-unused-vars
+const skills = ref([])
+  const skill = ref('')
+  const currentState = ref('')
+  const gap = ref('')
+  const desiredState = ref('')
+  const initiative  = ref('')
+  const selectedValue = ref('')
+
+const handleSubmit = () => {
+  addSkill();
+  console.log("Skill added")
+};
+
+
+onMounted(() => {
+  
+  store.fetchSkills();
+});
+
+const onSelectChange = () => {
+  // eslint-disable-next-line no-self-assign
+  selectedValue.value = selectedValue.value
+}
+ 
 </script>
 
 
 <template>
   <main class="wrapper">
     <TabMenu />
-    <div class="modal" id="myModal">
-      <div class="modal-dialog">
-        <div class="modal-content">
+    <form method="post" action="" @submit.prevent="handleSubmit">
+      <div class="modal" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
 
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title">Skill Request Form</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Skill Request Form</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+
+              <div class="frame">
+                <h6>Skill</h6>
+                <textarea v-model="skill" name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
+              </div>
+              <div class="frame">
+                <h6>Current state</h6>
+                <select v-model="currentState" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                  <option selected>Beginner</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Proficient">Proficient</option>
+                  <option value="Advanced">Advanced</option>
+                  <option value="Expert">Expert</option>
+                </select>
+              </div>
+              <div class="frame">
+                <h6>Gap</h6>
+                <textarea v-model="gap" name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
+              </div>
+              <div class="frame">
+                <h6>Desired state</h6>
+                <select v-model="desiredState" class="form-select" aria-label="Default select example">
+                  <option selected>Expert</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Proficient">Proficient</option>
+                  <option value="Advanced">Advanced</option>
+                  <option value="Expert">Expert</option>
+                </select>
+              </div>
+              <div class="frame">
+                <h6>Initiatives</h6>
+                <textarea v-model="initiative" name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
+              </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="submit" @click="$router.push('/skillassessment')" data-bs-dismiss="modal">Submit Request</button>
+            </div>
+
           </div>
-
-          <!-- Modal body -->
-          <div class="modal-body">
-
-            <div class="frame">
-              <h6>Skill</h6>
-              <textarea name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
-            </div>
-            <div class="frame">
-              <h6>Current state</h6>
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Beginner</option>
-                <option value="">Beginner</option>
-                <option value="">Intermediate</option>
-                <option value="">Proficient</option>
-                <option value="">Advanced</option>
-                <option value="">Expert</option>
-              </select>
-            </div>
-            <div class="frame">
-              <h6>Gap</h6>
-              <textarea name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
-            </div>
-            <div class="frame">
-              <h6>Desired state</h6>
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Expert</option>
-                <option value="">Beginner</option>
-                <option value="">Intermediate</option>
-                <option value="">Proficient</option>
-                <option value="">Advanced</option>
-                <option value="">Expert</option>
-              </select>
-            </div>
-            <div class="frame">
-              <h6>Initiatives</h6>
-              <textarea name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
-            </div>
-          </div>
-
-          <!-- Modal footer -->
-          <div class="modal-footer">
-            <button type="button" data-bs-dismiss="modal">Submit Request</button>
-          </div>
-
         </div>
       </div>
-    </div>
+    </form>
     <div class="skill mt-4">
       <div class="title">
         <h3>Skill Assessment</h3>
@@ -161,7 +192,7 @@ main {
   width: 500px;
   height: 700px;
   display: inline-flex;
-  padding: 30px;
+  padding: 20px;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
@@ -169,7 +200,6 @@ main {
   border: 1px solid var(--Grey-Light, #eee);
   background: var(--Grey-Light, #eee);
 }
-
 .modal-title {
   display: flex;
   justify-content: space-between;
@@ -184,7 +214,7 @@ main {
 }
 .modal-body {
   display: flex;
-  padding: 30px;
+  padding: 20px 30px;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
@@ -208,7 +238,7 @@ main {
 .frame textarea {
   display: flex;
   width: 400px;
-  height: 70px;
+  height: 50px;
   padding: 10px;
   flex-direction: column;
   align-items: flex-start;
@@ -237,7 +267,7 @@ main {
 }
 .modal-footer {
   display: flex;
-  height: 60px;
+  height: 50px;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;

@@ -160,7 +160,6 @@ onMounted(() => {
   align-items: flex-start;
   gap: 10px;
   align-self: stretch;
-
   border-radius: 10px;
   background: #fff;
 }
