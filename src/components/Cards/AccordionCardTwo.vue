@@ -23,7 +23,7 @@ watch(() => props.item, (first, second) => {
 
   const isUserRoute = computed(() => {
   const route = useRoute();
-  return route.path !== '/';
+  return route.path !== '/skillassessment';
 });
 </script>
 <template>
@@ -38,7 +38,7 @@ watch(() => props.item, (first, second) => {
         </h2>
         <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingOne">
           <div class="accordion-body">
-            <textarea v-model="selectedSkill" name="goal" id="" placeholder="Type here" cols="30" rows="10"></textarea>
+            <textarea v-model="selectedSkill" name="skill" id="" placeholder="Type here" cols="30" rows="10"></textarea>
           </div>
         </div>
       </div>

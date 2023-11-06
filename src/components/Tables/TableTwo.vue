@@ -1,5 +1,4 @@
 <script setup>
-    // import { useGoalsStore } from "@/store/goals";
     import { ref } from 'vue';
     import AccordionCardTwo from '../Cards/AccordionCardTwo.vue'
 

@@ -1,25 +1,3 @@
-<!-- <script>
-
- export default {
-  props: ['item'],
-  created(){
-    console.log(this.$props.item)
-  },
-  watch: {
-  user: {
-    handler(newValue) {
-      if( newValue === true ) triggerLog();
-    },
-    immediate: true
-  },
-  },
-  computed: {
-    isUserRoute() {
-      return this.$route.path !==  '/';
-    },
-  },
-};
-</script> -->
 <script setup>
 import { ref, watch } from 'vue';
 

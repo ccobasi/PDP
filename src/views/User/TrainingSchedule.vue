@@ -1,81 +1,118 @@
-<script>
+<script setup>
 import TabMenu from '../../components/Tabs/TabMenu.vue';
 import DoughnutChart from '../../components/Charts/DoughnutChart.vue'
 import TrainingTable from '../../components/TrainingTable.vue'
+import {useTrainingsStore} from "@/store/trainings"
+import { ref, onMounted} from 'vue'
 
-export default {
-    data: () => ({
-        tab: null,
-        
-    }),
-    components: {
-        
-        TabMenu: TabMenu,DoughnutChart,TrainingTable
-    }
-    
+const store = useTrainingsStore();
+console.log(store.trainings);
+
+const addTraining = () => {
+  if (month.value.trim() !== '' || trainingTopic.value.trim() !== '' || learningOutcome.value.trim() !== ''
+      || trainingMethod.value.trim() !== ''
+      || trainingInitiator.value.trim() !== '' || skillMatrixMapping.value.trim() !== '') {
+    store.addTraining(month.value.trim(), trainingTopic.value.trim(), learningOutcome.value.trim(),
+       trainingMethod.value.trim(), trainingInitiator.value.trim(), skillMatrixMapping.value.trim());
+  
+  }
+};
+
+
+// eslint-disable-next-line no-unused-vars
+const trainings = ref([])
+  const month = ref('')
+  const trainingTopic = ref('')
+  const learningOutcome = ref('')
+  const trainingMethod = ref('')
+  const trainingInitiator  = ref('')
+  const skillMatrixMapping = ref('')
+   const selectedValue = ref('')
+ 
+
+const handleSubmit = () => {
+  addTraining();
+  console.log("Training added")
+};
+
+
+onMounted(() => {
+  
+  store.fetchTrainings();
+});
+
+ 
+
+ const onSelectChange = () => {
+  // eslint-disable-next-line no-self-assign
+  selectedValue.value = selectedValue.value
 }
+
+
 </script>
 
 
 <template>
   <main class="wrapper">
     <TabMenu />
-    <div class="modal" id="myModal">
-      <div class="modal-dialog">
-        <div class="modal-content">
+    <form method="post" action="" @submit.prevent="handleSubmit">
+      <div class="modal" id="myModal">
+        <div class="modal-dialog">
+          <div class="modal-content">
 
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title">Training request form</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Training request form</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+
+              <div class="frame">
+                <h6>Month</h6>
+                <input type="date" v-model="month">
+              </div>
+              <div class="frame">
+                <h6>Training Topic</h6>
+
+                <textarea v-model="trainingTopic" name="training topic" id="" cols="30" rows="10" placeholder="Digital marketing"></textarea>
+              </div>
+              <div class="frame">
+                <h6>Learning Outcome</h6>
+                <textarea v-model="learningOutcome" name="Learning Outcome" id="" cols="30" rows="10" placeholder="Digital marketer"></textarea>
+              </div>
+              <div class="frame">
+                <h6>Training Method</h6>
+                <select v-model="trainingMethod" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                  <option selected>Online</option>
+                  <option value="Physical">Physical</option>
+                  <option value="Online">Online</option>
+                </select>
+              </div>
+              <div class="frame">
+                <h6>Training Initiator</h6>
+                <select v-model="trainingInitiator" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                  <option selected>Self</option>
+                  <option value="Manager">Manager</option>
+                  <option value="Self">Self</option>
+                </select>
+              </div>
+              <div class="frame">
+                <h6>Skill Matrix Mapping</h6>
+                <textarea v-model="skillMatrixMapping" name="Skill Matrix Mapping" id="" cols="30" rows="10" placeholder="Skill Matrix Mapping"></textarea>
+              </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="submit" data-bs-dismiss="modal">Submit Request</button>
+            </div>
+
           </div>
-
-          <!-- Modal body -->
-          <div class="modal-body">
-
-            <div class="frame">
-              <h6>Month</h6>
-              <input type="date">
-            </div>
-            <div class="frame">
-              <h6>Training Topic</h6>
-
-              <textarea name="training topic" id="" cols="30" rows="10" placeholder="Digital marketing"></textarea>
-            </div>
-            <div class="frame">
-              <h6>Learning Outcome</h6>
-              <textarea name="Learning Outcome" id="" cols="30" rows="10" placeholder="Digital marketer"></textarea>
-            </div>
-            <div class="frame">
-              <h6>Training Method</h6>
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Online</option>
-                <option value="">Physical</option>
-                <option value="">Online</option>
-              </select>
-            </div>
-            <div class="frame">
-              <h6>Training Initiator</h6>
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Self</option>
-                <option value="">Manager</option>
-                <option value="">Self</option>
-              </select>
-            </div>
-            <div class="frame">
-              <h6>Skill Matrix Mapping</h6>
-              <textarea name="Skill Matrix Mapping" id="" cols="30" rows="10" placeholder="Skill Matrix Mapping"></textarea>
-            </div>
-          </div>
-
-          <!-- Modal footer -->
-          <div class="modal-footer">
-            <button type="button" data-bs-dismiss="modal">Submit Request</button>
-          </div>
-
         </div>
       </div>
-    </div>
+    </form>
     <div class="skill mt-4">
       <div class="header">
         <div class="title mb-4">
@@ -175,9 +212,9 @@ main {
 }
 .modal-dialog {
   width: 500px;
-  height: 800px;
+  height: 700px;
   display: inline-flex;
-  padding: 30px;
+  padding: 20px;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
@@ -200,7 +237,7 @@ main {
 }
 .modal-body {
   display: flex;
-  padding: 30px;
+  padding: 20px 30px;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
@@ -228,7 +265,7 @@ main {
 .frame textarea {
   display: flex;
   width: 400px;
-  height: 70px;
+  height: 50px;
   padding: 10px;
   flex-direction: column;
   align-items: flex-start;
@@ -257,7 +294,7 @@ main {
 }
 .modal-footer {
   display: flex;
-  height: 60px;
+  height: 50px;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
