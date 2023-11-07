@@ -158,7 +158,7 @@ tr {
 }
 .accordion-item {
   display: flex;
-  width: 350px;
+  width: 320px;
   height: 57px;
   padding: 15px 0px;
   justify-content: space-between;

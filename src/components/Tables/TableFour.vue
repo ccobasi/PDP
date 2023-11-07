@@ -137,7 +137,6 @@ thead tr th {
 
 tbody tr td {
   color: var(--grey-dark, #808080);
-  /* Caption */
   font-size: 12px;
   font-weight: 400;
   line-height: 14.4px;

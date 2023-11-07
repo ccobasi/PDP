@@ -1,27 +1,68 @@
-<script>
+<script setup>
 import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
 import DoughNut from '../../components/DoughNut.vue'
 import CareerGoal from '../../components/CareerGoal.vue'
 import Table from '../../components/Tables/TableFive.vue'
 
-export default {
-    data: () => ({
-        tab: null,
-        
-    }),
-    components: {
-        
-        // eslint-disable-next-line vue/no-reserved-component-names
-        TabMenu: TabMenu,DoughNut,CareerGoal,Table,
-    }
-    
+
+ import { ref, /*onMounted*/} from 'vue'
+import {useGoalsStore} from "@/store/goals"
+
+
+const store = useGoalsStore();
+console.log(store.goals);
+
+const addGoal = () => {
+  if (plan.value.trim() !== '' || goal.value.trim() !== '' || achieve.value.trim() !== ''
+      || resource.value.trim() !== ''
+      || success.value.trim() !== '' || date.value.trim() !== '') {
+    store.addGoal(plan.value.trim(), goal.value.trim(), achieve.value.trim(),
+      achieve.value.trim(), resource.value.trim(), success.value.trim(), date.value.trim());
+  
+  }
+};
+
+
+// eslint-disable-next-line no-unused-vars
+const goals = ref([])
+  const plan = ref('')
+  const goal = ref('')
+  const achieve = ref('')
+  const resource = ref('')
+  const success  = ref('')
+  const potential = ref('')
+  const solution = ref('')
+  const date = ref('')
+  const selectedValue = ref('')
+ 
+
+const handleSubmit = () => {
+  addGoal();
+  console.log("Goal added")
+};
+
+
+// onMounted(() => {
+  
+//   store.fetchGoals();
+// });
+
+ 
+
+ const onSelectChange = () => {
+  // eslint-disable-next-line no-self-assign
+  selectedValue.value = selectedValue.value
 }
+
+const tab = ref(null);
+    
 </script>
 
 
 <template>
   <main class="wrapper">
     <TabMenu />
+
     <div class="modal" id="myModal1" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -29,8 +70,8 @@ export default {
             <h5 class="modal-title">Development Plan Request</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <v-card>
-            <v-tabs v-model="tab" bg-color="white" color="#227cbf">
+          <v-card style="background:#eee">
+            <v-tabs v-model="tab" bg-color="white" color="#227cbf" style="border-radius:50px">
               <v-tab value="one">My Request</v-tab>
               <v-tab value="two">Team Member</v-tab>
               <v-tab value="three">Requests pending approval</v-tab>
@@ -39,127 +80,133 @@ export default {
             <v-card-text>
               <v-window v-model="tab">
                 <v-window-item value="one">
-                  <div class="modal-body">
-                    <div class="type">
+                  <form method="post" action="" @submit.prevent="handleSubmit">
+                    <div class="modal-body">
 
-                      <h3>Development plan type</h3>
-                      <select class="form-select" aria-label="Default select example">
-                        <option class="opt" selected>Career Goals and Aspirations</option>
-                        <option class="opt" value="Area of Interest">Area of Interest</option>
-                        <option class="opt" value="Career Goals and Aspirations">Career Goals and Aspirations</option>
-                        <option class="opt" value="Mentorship and Skill Build">Mentorship and Skill Build</option>
-                      </select>
+                      <div class="type">
+
+                        <h3>Development plan type</h3>
+                        <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="plan">
+                          <option class="opt" selected>Career Goals and Aspirations</option>
+                          <option class="opt" value="Area of Interest">Area of Interest</option>
+                          <option class="opt" value="Career Goals and Aspirations">Career Goals and Aspirations</option>
+                          <option class="opt" value="Mentorship and Skill Build">Mentorship and Skill Build</option>
+                        </select>
+
+                      </div>
+                      <div class="goal">
+                        <div class="left">
+                          <h4>Goal</h4>
+                          <textarea v-model="goal" name="Goal" placeholder="Goal" id="" cols="30" rows="10"></textarea>
+                        </div>
+                        <div class="right">
+                          <h4 class="">What I will do to achieve this</h4>
+                          <textarea v-model="achieve" name="Achieve" placeholder="What I will do to achieve this" id="" cols="30" rows="10"></textarea>
+                        </div>
+                      </div>
+                      <div class="goal">
+                        <div class="left">
+                          <h4>Resources and Support Needed</h4>
+                          <textarea v-model="resource" name="Resources and Support Needed" placeholder="Resources and Support Needed" id="" cols="30" rows="10"></textarea>
+                        </div>
+                        <div class="right">
+                          <h4 class="">What does success look like?</h4>
+                          <textarea v-model="success" name="Goal" placeholder="What does success look like?" id="" cols="30" rows="10"></textarea>
+                        </div>
+                      </div>
+                      <div class="goal">
+                        <div class="left">
+                          <h4>Potential Challenges</h4>
+                          <textarea v-model="potential" name="Potential Challenges" placeholder="Potential Challenges" id="" cols="30" rows="10"></textarea>
+                        </div>
+                        <div class="right">
+                          <h4 class="">Solution</h4>
+                          <textarea v-model="solution" name="Goal" placeholder="Solution" id="" cols="30" rows="10"></textarea>
+                        </div>
+                      </div>
+                      <div class="type mt-3">
+                        <h3>Target Date for Completion</h3>
+                        <input type="date" v-model="date">
+                      </div>
 
                     </div>
 
-                  </div>
-                  <div class="goal">
-                    <div class="left">
-                      <h4>Goal</h4>
-                      <textarea name="Goal" placeholder="Goal" id="" cols="30" rows="10"></textarea>
-                    </div>
-                    <div class="right">
-                      <h4 class="">What I will do to achieve this</h4>
-                      <textarea name="Goal" placeholder="What I will do to achieve this" id="" cols="30" rows="10"></textarea>
-                    </div>
-                  </div>
-                  <div class="goal">
-                    <div class="left">
-                      <h4>Resources and Support Needed</h4>
-                      <textarea name="Resources and Support Needed" placeholder="Resources and Support Needed" id="" cols="30" rows="10"></textarea>
-                    </div>
-                    <div class="right">
-                      <h4 class="">What does success look like?</h4>
-                      <textarea name="Goal" placeholder="What does success look like?" id="" cols="30" rows="10"></textarea>
-                    </div>
-                  </div>
-                  <div class="goal">
-                    <div class="left">
-                      <h4>Potential Challenges</h4>
-                      <textarea name="Potential Challenges" placeholder="Potential Challenges" id="" cols="30" rows="10"></textarea>
-                    </div>
-                    <div class="right">
-                      <h4 class="">Solution</h4>
-                      <textarea name="Goal" placeholder="Solution" id="" cols="30" rows="10"></textarea>
-                    </div>
-                  </div>
-                  <div class="type mt-3">
-                    <h3>Target Date for Completion</h3>
-                    <input type="date">
-                  </div>
+                    <div class="modal-footer">
 
-                  <div class="modal-footer">
-
-                    <button type="button" class="btn">Submit Request</button>
-                  </div>
+                      <button type="submit" class="btn">Submit Request</button>
+                    </div>
+                  </form>
                 </v-window-item>
 
                 <v-window-item value="two">
-                  <div class="modal-bodys">
-                    <div class="type">
-                      <div class="dynamic d-flex">
-                        <div class="member">
-                          <h3>Select Team Member</h3>
-                          <select class="form-select" aria-label="Default select example">
-                            <option class="opt" selected>Lola Oyebola</option>
-                            <option class="opt" value="Lola Oyebola">Lola Oyebola</option>
-                            <option class="opt" value="Mark Dean">Mark Dean</option>
-                            <option class="opt" value="Uzo Okoro">Uzo Okoro</option>
-                            <option class="opt" value="Daniel Muller">Daniel Muller</option>
-                            <option class="opt" value="Jane Doe">Jane Doe</option>
-                          </select>
+                  <form method="post" action="" @submit.prevent="handleSubmit">
+                    <div class="modal-bodys">
+                      <div class="type">
+                        <div class="dynamic d-flex">
+                          <div class="member">
+                            <h3>Select Team Member</h3>
+                            <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="name">
+                              <option class="opt" selected>Lola Oyebola</option>
+                              <option class="opt" value="Lola Oyebola">Lola Oyebola</option>
+                              <option class="opt" value="Mark Dean">Mark Dean</option>
+                              <option class="opt" value="Uzo Okoro">Uzo Okoro</option>
+                              <option class="opt" value="Daniel Muller">Daniel Muller</option>
+                              <option class="opt" value="Jane Doe">Jane Doe</option>
+                            </select>
+                          </div>
+                          <div class="plan">
+                            <h3>Development plan type</h3>
+                            <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="plan">
+                              <option class="opt" selected>Career Goals and Aspirations</option>
+                              <option class="opt" value="Area of Interest">Area of Interest</option>
+                              <option class="opt" value="Career Goals and Aspirations">Career Goals and Aspirations</option>
+                              <option class="opt" value="Mentorship and Skill Build">Mentorship and Skill Build</option>
+                            </select>
+                          </div>
                         </div>
-                        <div class="plan">
-                          <h3>Development plan type</h3>
-                          <select class="form-select" aria-label="Default select example">
-                            <option class="opt" selected>Career Goals and Aspirations</option>
-                            <option class="opt" value="Area of Interest">Area of Interest</option>
-                            <option class="opt" value="Career Goals and Aspirations">Career Goals and Aspirations</option>
-                            <option class="opt" value="Mentorship and Skill Build">Mentorship and Skill Build</option>
-                          </select>
+
+                      </div>
+                      <div class="goal">
+                        <div class="left">
+                          <h4>Goal</h4>
+                          <textarea v-model="goal" name="Goal" placeholder="Goal" id="" cols="30" rows="10"></textarea>
+                        </div>
+                        <div class="right">
+                          <h4 class="">What I will do to achieve this</h4>
+                          <textarea v-model="achieve" name="Goal" placeholder="What I will do to achieve this" id="" cols="30" rows="10"></textarea>
                         </div>
                       </div>
+                      <div class="goal">
+                        <div class="left">
+                          <h4>Resources and Support Needed</h4>
+                          <textarea v-model="resource" name="Resources and Support Needed" placeholder="Resources and Support Needed" id="" cols="30" rows="10"></textarea>
+                        </div>
+                        <div class="right">
+                          <h4 class="">What does success look like?</h4>
+                          <textarea v-model="success" name="Goal" placeholder="What does success look like?" id="" cols="30" rows="10"></textarea>
+                        </div>
+                      </div>
+                      <div class="goal">
+                        <div class="left">
+                          <h4>Potential Challenges</h4>
+                          <textarea v-model="potential" name="Potential Challenges" placeholder="Potential Challenges" id="" cols="30" rows="10"></textarea>
+                        </div>
+                        <div class="right">
+                          <h4 class="">Solution</h4>
+                          <textarea v-model="solution" name="Goal" placeholder="Solution" id="" cols="30" rows="10"></textarea>
+                        </div>
+                      </div>
+                      <div class="type mt-3">
+                        <h3>Target Date for Completion</h3>
+                        <input type="date" v-model="date">
+                      </div>
+                    </div>
 
-                    </div>
-                    <div class="goal">
-                      <div class="left">
-                        <h4>Goal</h4>
-                        <textarea name="Goal" placeholder="Goal" id="" cols="30" rows="10"></textarea>
-                      </div>
-                      <div class="right">
-                        <h4 class="">What I will do to achieve this</h4>
-                        <textarea name="Goal" placeholder="What I will do to achieve this" id="" cols="30" rows="10"></textarea>
-                      </div>
-                    </div>
-                    <div class="goal">
-                      <div class="left">
-                        <h4>Resources and Support Needed</h4>
-                        <textarea name="Resources and Support Needed" placeholder="Resources and Support Needed" id="" cols="30" rows="10"></textarea>
-                      </div>
-                      <div class="right">
-                        <h4 class="">What does success look like?</h4>
-                        <textarea name="Goal" placeholder="What does success look like?" id="" cols="30" rows="10"></textarea>
-                      </div>
-                    </div>
-                    <div class="goal">
-                      <div class="left">
-                        <h4>Potential Challenges</h4>
-                        <textarea name="Potential Challenges" placeholder="Potential Challenges" id="" cols="30" rows="10"></textarea>
-                      </div>
-                      <div class="right">
-                        <h4 class="">Solution</h4>
-                        <textarea name="Goal" placeholder="Solution" id="" cols="30" rows="10"></textarea>
-                      </div>
-                    </div>
-                    <div class="type mt-3">
-                      <h3>Target Date for Completion</h3>
-                      <input type="date">
-                    </div>
-                  </div>
-                  <div class="modal-footer">
+                    <div class="modal-footer">
 
-                    <button type="button" class="btn">Submit Request</button>
-                  </div>
+                      <button type="submit" class="btn">Submit Request</button>
+                    </div>
+                  </form>
                 </v-window-item>
 
                 <v-window-item value="three">
@@ -283,6 +330,7 @@ hr {
 .chart {
   width: 100%;
 }
+
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -337,7 +385,7 @@ hr {
 }
 .modal-content {
   display: flex;
-  padding: 30px;
+  padding: 10px;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
@@ -423,7 +471,7 @@ hr {
 }
 .modal-footer {
   display: flex;
-  height: 40px;
+  height: 60px;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;

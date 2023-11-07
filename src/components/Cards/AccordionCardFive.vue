@@ -121,6 +121,9 @@ watch(() => props.item, (first, second) => {
 .wrap {
   width: 100%;
 }
+.accordion {
+  width: 250px;
+}
 .accordion-body textarea {
   width: 300px;
   height: 100px;

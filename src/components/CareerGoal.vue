@@ -16,7 +16,7 @@
           <option class="opt" value="3">Mentorship and Skills Building</option>
         </select>
       </div>
-      <div class="d-flex justify-content-between mt-4  ">
+      <div class="d-flex justify-content-between mt-4">
         <div class="custom-table table-responsive-sm">
           <TableOne />
 

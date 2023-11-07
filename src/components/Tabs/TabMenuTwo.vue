@@ -148,32 +148,35 @@
     <nav class="navbar navbar-expand-md ">
 
       <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link active" href="/km/" role="button" aria-expanded="false">
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/' }">
+          <router-link to="/km/" class="nav-link">
             Development Plan
-          </a>
-
+          </router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link" href="/km/skillassessment">
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/skillassessment' }">
+          <router-link to="/km/skillassessment" class="nav-link">
             Skill Assessment
-          </a>
-
+          </router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link " href="/km/trainingschedules">Training Schedule </a>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/training' }">
+          <router-link to="/km/training" class="nav-link">
+            Training Schedule
+          </router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link " href="/km/alltrainingschedule">All Training Schedule </a>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/alltrainingschedule' }">
+          <router-link to="/km/alltrainingschedule" class="nav-link">
+            All Training Schedule
+          </router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link " href="/km/taskdeliverables">Tasks/Deliverables </a>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/taskdeliverables' }">
+          <router-link to="/km/taskdeliverables" class="nav-link">
+            Task/Deliverables
+          </router-link>
         </li>
-
       </ul>
 
     </nav>

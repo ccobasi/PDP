@@ -1,22 +1,50 @@
-<script>
+<script setup>
 import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
 import BarChart from '../../components/Charts/BarChart.vue'
 import SkillMetrics from '../../components/SkillMetrics.vue'
 import Table from '../../components/Tables/TableFive.vue'
+import { ref, /*onMounted*/} from 'vue'
+import {useSkillsStore} from "@/store/skills"
 
 
-export default {
-    data: () => ({
-        tab: null,
-        
-    }),
-    components: {
-        
-        // eslint-disable-next-line vue/no-reserved-component-names
-        TabMenu: TabMenu,BarChart,SkillMetrics,Table,
-    }
-    
+const store = useSkillsStore();
+console.log(store.skills);
+
+const addSkill = () => {
+  if (skill.value.trim() !== '' || currentState.value.trim() !== '' || gap.value.trim() !== ''
+      || desiredState.value.trim() !== ''
+      || initiative.value.trim() !== '' ) {
+    store.addSkill(skill.value.trim(), currentState.value.trim(), gap.value.trim(), desiredState.value.trim(), initiative.value.trim());
+  
+  }
 }
+
+// eslint-disable-next-line no-unused-vars
+const skills = ref([])
+  const skill = ref('')
+  const currentState = ref('')
+  const gap = ref('')
+  const desiredState = ref('')
+  const initiative  = ref('')
+  const selectedValue = ref('')
+
+const handleSubmit = () => {
+  addSkill();
+  console.log("Skill added")
+};
+
+
+// onMounted(() => {
+  
+//   store.fetchSkills();
+// });
+
+const onSelectChange = () => {
+  // eslint-disable-next-line no-self-assign
+  selectedValue.value = selectedValue.value
+}
+
+const tab = ref(null);
 </script>
 
 
@@ -40,104 +68,107 @@ export default {
             <v-card-text style="background-color: #eee;">
               <v-window v-model="tab">
                 <v-window-item value="one">
+                  <form method="post" action="" @submit.prevent="handleSubmit">
+                    <div class="modal-body">
 
-                  <div class="modal-body">
+                      <div class="frame">
+                        <h6>Skill</h6>
+                        <textarea v-model="skill" name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
+                      </div>
+                      <div class="frame">
+                        <h6>Current state</h6>
+                        <select v-model="currentState" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                          <option selected>Beginner</option>
+                          <option value="Beginner">Beginner</option>
+                          <option value="Intermediate">Intermediate</option>
+                          <option value="Proficient">Proficient</option>
+                          <option value="Advanced">Advanced</option>
+                          <option value="Expert">Expert</option>
+                        </select>
+                      </div>
+                      <div class="frame">
+                        <h6>Gap</h6>
+                        <textarea v-model="gap" name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
+                      </div>
+                      <div class="frame">
+                        <h6>Desired state</h6>
+                        <select v-model="desiredState" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                          <option selected>Expert</option>
+                          <option value="Beginner">Beginner</option>
+                          <option value="Intermediate">Intermediate</option>
+                          <option value="Proficient">Proficient</option>
+                          <option value="Advanced">Advanced</option>
+                          <option value="Expert">Expert</option>
+                        </select>
+                      </div>
+                      <div class="frame">
+                        <h6>Initiatives</h6>
+                        <textarea v-model="initiative" name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
+                      </div>
+                    </div>
 
-                    <div class="frame">
-                      <h6>Skill</h6>
-                      <textarea name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                      <button type="submit" data-bs-dismiss="modal">Submit Request</button>
                     </div>
-                    <div class="frame">
-                      <h6>Current state</h6>
-                      <select class="form-select" aria-label="Default select example">
-                        <option selected>Beginner</option>
-                        <option value="">Beginner</option>
-                        <option value="">Intermediate</option>
-                        <option value="">Proficient</option>
-                        <option value="">Advanced</option>
-                        <option value="">Expert</option>
-                      </select>
-                    </div>
-                    <div class="frame">
-                      <h6>Gap</h6>
-                      <textarea name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
-                    </div>
-                    <div class="frame">
-                      <h6>Desired state</h6>
-                      <select class="form-select" aria-label="Default select example">
-                        <option selected>Expert</option>
-                        <option value="">Beginner</option>
-                        <option value="">Intermediate</option>
-                        <option value="">Proficient</option>
-                        <option value="">Advanced</option>
-                        <option value="">Expert</option>
-                      </select>
-                    </div>
-                    <div class="frame">
-                      <h6>Initiatives</h6>
-                      <textarea name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
-                    </div>
-                  </div>
-
-                  <!-- Modal footer -->
-                  <div class="modal-footer">
-                    <button type="button" data-bs-dismiss="modal">Submit Request</button>
-                  </div>
+                  </form>
                 </v-window-item>
 
                 <v-window-item value="two">
-                  <div class="modal-body">
-                    <div class="frame">
-                      <h6>Select team member</h6>
-                      <select class="form-select" aria-label="Default select example">
-                        <option selected>Lola</option>
-                        <option value="">Lola</option>
-                        <option value="">Mark</option>
-                        <option value="">Uzo</option>
-                        <option value="">Daniel</option>
-                        <option value="">Jane</option>
-                      </select>
+                  <form method="post" action="" @submit.prevent="handleSubmit">
+                    <div class="modal-body">
+                      <div class="frame">
+                        <h6>Select team member</h6>
+                        <select v-model="name" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                          <option selected>Lola</option>
+                          <option value="Lola">Lola</option>
+                          <option value="Mark">Mark</option>
+                          <option value="Uzo">Uzo</option>
+                          <option value="Daniel">Daniel</option>
+                          <option value="Jane">Jane</option>
+                        </select>
+                      </div>
+                      <div class="frame">
+                        <h6>Skill</h6>
+                        <textarea v-model="skill" name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
+                      </div>
+                      <div class="frame">
+                        <h6>Current state</h6>
+                        <select v-model="currentState" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                          <option selected>Beginner</option>
+                          <option value="Beginner">Beginner</option>
+                          <option value="Intermediate">Intermediate</option>
+                          <option value="Proficient">Proficient</option>
+                          <option value="Advanced">Advanced</option>
+                          <option value="Expert">Expert</option>
+                        </select>
+                      </div>
+                      <div class="frame">
+                        <h6>Gap</h6>
+                        <textarea v-model="gap" name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
+                      </div>
+                      <div class="frame">
+                        <h6>Desired state</h6>
+                        <select v-model="desiredState" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                          <option selected>Expert</option>
+                          <option value="Beginner">Beginner</option>
+                          <option value="Intermediate">Intermediate</option>
+                          <option value="Proficient">Proficient</option>
+                          <option value="Advanced">Advanced</option>
+                          <option value="Expert">Expert</option>
+                        </select>
+                      </div>
+                      <div class="frame">
+                        <h6>Initiatives</h6>
+                        <textarea v-model="initiative" name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
+                      </div>
                     </div>
-                    <div class="frame">
-                      <h6>Skill</h6>
-                      <textarea name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
-                    </div>
-                    <div class="frame">
-                      <h6>Current state</h6>
-                      <select class="form-select" aria-label="Default select example">
-                        <option selected>Beginner</option>
-                        <option value="">Beginner</option>
-                        <option value="">Intermediate</option>
-                        <option value="">Proficient</option>
-                        <option value="">Advanced</option>
-                        <option value="">Expert</option>
-                      </select>
-                    </div>
-                    <div class="frame">
-                      <h6>Gap</h6>
-                      <textarea name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
-                    </div>
-                    <div class="frame">
-                      <h6>Desired state</h6>
-                      <select class="form-select" aria-label="Default select example">
-                        <option selected>Expert</option>
-                        <option value="">Beginner</option>
-                        <option value="">Intermediate</option>
-                        <option value="">Proficient</option>
-                        <option value="">Advanced</option>
-                        <option value="">Expert</option>
-                      </select>
-                    </div>
-                    <div class="frame">
-                      <h6>Initiatives</h6>
-                      <textarea name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
-                    </div>
-                  </div>
 
-                  <!-- Modal footer -->
-                  <div class="modal-footer">
-                    <button type="button" data-bs-dismiss="modal">Submit Request</button>
-                  </div>
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                      <button type="submit" data-bs-dismiss="modal">Submit Request</button>
+                    </div>
+                  </form>
                 </v-window-item>
 
                 <v-window-item value="three">

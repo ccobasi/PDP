@@ -19,11 +19,32 @@ export default {
 <template>
   <main class="wrapper">
     <TabMenu />
+    <form method="post" action="" @submit.prevent="handleSubmit">
+      <div class="modal" id="myModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Tasks/Deliverables Form</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal" @click="$router.push('/taskdeliverables')">Submit Request</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </form>
     <div class="task mt-5">
       <div class="header">
         <div class="title mb-4">
           <h3>Task Deliverables</h3>
-          <button data-bs-toggle="modal" data-bs-target="#myModal1" type="button">Add Task/Deliverables</button>
+          <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Add Task/Deliverables</button>
 
         </div>
 
