@@ -16,7 +16,8 @@ import  ProfileSkillAssessment from '../views/KnowledgeManager/ProfileSkillAsses
 import ProfileTrainingSchedule from '../views/KnowledgeManager/ProfileTrainingSchedule.vue'
 import MDevelopmentPlan from '../views/Manager/DevelopmentPlan.vue'
 import MSkillAssessment from '../views/Manager/SkillAssessment.vue'
-import MTrainingSchedule from '../views/Manager/TrainingSchedule.vue'
+// import MTrainingSchedule from '../views/Manager/TrainingSchedule.vue'
+import MAllTrainingSchedule from '../views/Manager/AllTrainingSchedule.vue'
 import MTaskDeliverables from '../views/Manager/TaskDeliverables.vue'
 import MMyProfile from '../views/Manager/MyProfile.vue'
 import MProfileSkillAssessment from '../views/Manager/ProfileSkillAssessment.vue'
@@ -136,7 +137,12 @@ const router = createRouter({
     {
     path: "/m/trainingschedule",
     name: "Manager Training Schedule",
-    component: MTrainingSchedule,
+    component: () => import("../views/Manager/TrainingSchedule.vue"),
+    },
+    {
+    path: "/m/alltrainingschedule",
+    name: "Manager Training Schedule",
+    component: MAllTrainingSchedule,
     },
     {
     path: "/m/taskdeliverables",

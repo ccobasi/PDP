@@ -1,5 +1,5 @@
 <script setup>
-import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
+import TabMenu from '../../components/Tabs/TabMenuThree.vue';
 import DoughnutChart from '../../components/Charts/DoughnutChart.vue'
 import TrainingTable from '../../components/TrainingTable.vue'
 import Table from '../../components/Tables/TableFive.vue'

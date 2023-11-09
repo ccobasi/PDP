@@ -1,4 +1,12 @@
+<script setup>
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
 
+  const isUserRoute = computed(() => {
+  const route = useRoute();
+  return route.path !== '/m/alltrainingschedule';
+});
+</script>
 <template>
   <div class="menu">
     <div class="modal" id="myModal" tabindex="-1">
@@ -141,37 +149,41 @@
         </div>
       </div>
     </div>
-    <div class="profile">
+    <div class="profile" v-if="isUserRoute">
       <button><a class="nav-link active" href="/m/myprofile" role="button" aria-expanded="false">My Profile</a></button>
       <div class="btn" data-bs-toggle="modal" data-bs-target="#myModal" type="button"><span>Team Profile</span></div>
     </div>
     <nav class="navbar navbar-expand-md ">
 
       <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link active" href="/m/" role="button" aria-expanded="false">
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/m/' }">
+          <router-link to="/m/" class="nav-link">
             Development Plan
-          </a>
-
+          </router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link" href="/m/skillassessment">
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/m/skillassessment' }">
+          <router-link to="/m/skillassessment" class="nav-link">
             Skill Assessment
-          </a>
-
+          </router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link " href="/m/trainingschedule">Training Schedule </a>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/m/trainingschedule' }">
+          <router-link to="/m/trainingschedule" class="nav-link">
+            Training Schedule
+          </router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link " href="/m/alltrainingschedule">All Training Schedule </a>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/m/alltrainingschedule' }">
+          <router-link to="/m/alltrainingschedule" class="nav-link">
+            All Training Schedule
+          </router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link " href="/m/taskdeliverables">Tasks/Deliverables </a>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/m/taskdeliverables' }">
+          <router-link to="/m/taskdeliverables" class="nav-link">
+            Task/Deliverables
+          </router-link>
         </li>
 
       </ul>
