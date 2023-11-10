@@ -1,80 +1,186 @@
-<script>
+<script setup>
 import TabMenu from '../../components/Tabs/TabMenuFour.vue';
 import DoughnutChart from '../../components/Charts/DoughnutChart.vue'
 import TrainingTable from '../../components/TrainingTable.vue'
+import Table from '../../components/Tables/TableFive.vue'
+import { ref } from 'vue'
+import {useTrainingsStore} from "@/store/trainings"
 
-export default {
-    data: () => ({
-        tab: null,
-        
-    }),
-    components: {
-        
-        TabMenu: TabMenu,DoughnutChart,TrainingTable
-    }
-    
+
+const store = useTrainingsStore();
+console.log(store.trainings);
+
+const addTraining = () => {
+  if (month.value.trim() !== '' || trainingTopic.value.trim() !== '' || learningOutcome.value.trim() !== ''
+      || trainingMethod.value.trim() !== ''
+      || trainingInitiator.value.trim() !== '' || skillMatrixMapping.value.trim() !== '' ) {
+    store.addTraining(month.value.trim(), trainingTopic.value.trim(), learningOutcome.value.trim(), trainingMethod.value.trim(), trainingInitiator.value.trim(), skillMatrixMapping.value.trim());
+  
+  }
 }
+
+// eslint-disable-next-line no-unused-vars
+const trainings = ref([])
+const month = ref('') 
+const trainingTopic = ref('') 
+const learningOutcome = ref('') 
+const trainingMethod = ref('') 
+const trainingInitiator = ref('') 
+const skillMatrixMapping = ref('')
+const selectedValue = ref('')
+
+const handleSubmit = () => {
+  addTraining();
+  console.log("Skill added")
+};
+
+const onSelectChange = () => {
+  // eslint-disable-next-line no-self-assign
+  selectedValue.value = selectedValue.value
+}
+
+
+const tab = ref(null);
 </script>
 
 
 <template>
   <main class="wrapper">
     <TabMenu />
-    <div class="modal" id="myModal">
+    <div class="modal" id="myModal1">
       <div class="modal-dialog">
         <div class="modal-content">
 
           <!-- Modal Header -->
           <div class="modal-header">
             <h4 class="modal-title">Training request form</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
-          <div class="request mb-2">
-            <button class="blue">My Request</button>
-            <button class="team">Team Member</button>
-            <button class="approval">Requests pending approval</button>
-          </div>
+
           <!-- Modal body -->
           <div class="modal-body">
+            <v-card style="background:#eee">
+              <v-tabs v-model="tab" bg-color="white" color="#227cbf" style="border-radius:50px">
+                <v-tab value="one">My Request</v-tab>
+                <v-tab value="two">Team Member</v-tab>
+                <v-tab value="three">Requests pending approval</v-tab>
+              </v-tabs>
 
-            <div class="frame">
-              <h6>Month</h6>
-              <input type="date">
-            </div>
-            <div class="frame">
-              <h6>Training Topic</h6>
+              <v-card-text>
+                <v-window v-model="tab">
 
-              <textarea name="training topic" id="" cols="30" rows="10" placeholder="Digital marketing"></textarea>
-            </div>
-            <div class="frame">
-              <h6>Learning Outcome</h6>
-              <textarea name="Learning Outcome" id="" cols="30" rows="10" placeholder="Digital marketer"></textarea>
-            </div>
-            <div class="frame">
-              <h6>Training Method</h6>
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Online</option>
-                <option value="">Physical</option>
-                <option value="">Online</option>
-              </select>
-            </div>
-            <div class="frame">
-              <h6>Training Initiator</h6>
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Self</option>
-                <option value="">Manager</option>
-                <option value="">Self</option>
-              </select>
-            </div>
-            <div class="frame">
-              <h6>Skill Matrix Mapping</h6>
-              <textarea name="Skill Matrix Mapping" id="" cols="30" rows="10" placeholder="Skill Matrix Mapping"></textarea>
-            </div>
-          </div>
+                  <v-window-item value="one" style="background:#fff;padding:10px;border-radius:10px;height:550px;width:605px">
+                    <form method="post" action="" @submit.prevent="handleSubmit">
+                      <div class="frame">
+                        <h6>Month</h6>
+                        <input type="date" v-model="month">
+                      </div>
+                      <div class="frame">
+                        <h6>Training Topic</h6>
 
-          <!-- Modal footer -->
-          <div class="modal-footer">
-            <button type="button" data-bs-dismiss="modal">Submit Request</button>
+                        <textarea v-model="trainingTopic" name="training topic" id="" cols="30" rows="10" placeholder="Digital marketing"></textarea>
+                      </div>
+                      <div class="frame">
+                        <h6>Learning Outcome</h6>
+                        <textarea v-model="learningOutcome" name="Learning Outcome" id="" cols="30" rows="10" placeholder="Digital marketer"></textarea>
+                      </div>
+                      <div class="frame">
+                        <h6>Training Method</h6>
+                        <select v-on:change="onSelectChange(e)" v-model="trainingMethod" class="form-select" aria-label="Default select example">
+                          <option selected>Online</option>
+                          <option value="Physical">Physical</option>
+                          <option value="Online">Online</option>
+                        </select>
+                      </div>
+                      <div class="frame">
+                        <h6>Training Initiator</h6>
+                        <select v-on:change="onSelectChange(e)" v-model="trainingInitiator" class="form-select" aria-label="Default select example">
+                          <option selected>Self</option>
+                          <option value="Manager">Manager</option>
+                          <option value="Self">Self</option>
+                        </select>
+                      </div>
+                      <div class="frame">
+                        <h6>Skill Matrix Mapping</h6>
+                        <textarea v-model="skillMatrixMapping" name="Skill Matrix Mapping" id="" cols="30" rows="10" placeholder="Skill Matrix Mapping"></textarea>
+                      </div>
+
+                      <div class="modal-footer">
+
+                        <button type="submit" class="btn">Submit Request</button>
+                      </div>
+                    </form>
+
+                  </v-window-item>
+
+                  <v-window-item value="two" style="background:#fff;padding:10px;border-radius:10px;height:600px;width:605px">
+                    <form method="post" action="" @submit.prevent="handleSubmit">
+                      <div class="modal-bodys">
+
+                        <div class="member">
+                          <h3>Select Team Member</h3>
+                          <select v-on:change="onSelectChange(e)" v-model="name" class="form-select" aria-label="Default select example">
+                            <option class="opt" selected>Lola Oyebola</option>
+                            <option class="opt" value="Lola Oyebola">Lola Oyebola</option>
+                            <option class="opt" value="Mark Dean">Mark Dean</option>
+                            <option class="opt" value="Uzo Okoro">Uzo Okoro</option>
+                            <option class="opt" value="Daniel Muller">Daniel Muller</option>
+                            <option class="opt" value="Jane Doe">Jane Doe</option>
+                          </select>
+                          <div class="frame">
+                            <h6>Month</h6>
+                            <input type="date" v-model="month">
+                          </div>
+                          <div class="frame">
+                            <h6>Training Topic</h6>
+
+                            <textarea v-model="trainingTopic" name="training topic" id="" cols="30" rows="10" placeholder="Digital marketing"></textarea>
+                          </div>
+                          <div class="frame">
+                            <h6>Learning Outcome</h6>
+                            <textarea v-model="learningOutcome" name="Learning Outcome" id="" cols="30" rows="10" placeholder="Digital marketer"></textarea>
+                          </div>
+                          <div class="frame">
+                            <h6>Training Method</h6>
+                            <select v-on:change="onSelectChange(e)" v-model="trainingMethod" class="form-select" aria-label="Default select example">
+                              <option selected>Online</option>
+                              <option value="Physical">Physical</option>
+                              <option value="Online">Online</option>
+                            </select>
+                          </div>
+                          <div class="frame">
+                            <h6>Training Initiator</h6>
+                            <select v-on:change="onSelectChange(e)" v-model="trainingInitiator" class="form-select" aria-label="Default select example">
+                              <option selected>Self</option>
+                              <option value="Manager">Manager</option>
+                              <option value="Self">Self</option>
+                            </select>
+                          </div>
+                          <div class="frame">
+                            <h6>Skill Matrix Mapping</h6>
+                            <textarea v-model="skillMatrixMapping" name="Skill Matrix Mapping" id="" cols="30" rows="10" placeholder="Skill Matrix Mapping"></textarea>
+                          </div>
+                        </div>
+
+                        <div class="modal-footer">
+
+                          <button type="submit" class="btn">Submit Request</button>
+                        </div>
+
+                      </div>
+
+                    </form>
+                  </v-window-item>
+
+                  <v-window-item value="three" style="height:570px;width:600px">
+                    <div class="pending">
+                      <Table />
+                    </div>
+                  </v-window-item>
+                </v-window>
+              </v-card-text>
+            </v-card>
+
           </div>
 
         </div>
@@ -84,7 +190,7 @@ export default {
       <div class="header">
         <div class="title mb-4">
           <h3>Training Schedule</h3>
-          <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Training Request</button>
+          <button data-bs-toggle="modal" data-bs-target="#myModal1" type="button">Training Request</button>
 
         </div>
 
@@ -176,11 +282,12 @@ main {
 }
 
 .modal {
-  margin-left: 32%;
+  margin-left: 24%;
+  --bs-modal-width: 700px;
 }
 .modal-dialog {
-  width: 500px;
-  height: 700px;
+  width: 700px;
+  height: 770px;
   display: inline-flex;
   padding: 30px;
   flex-direction: column;
@@ -208,31 +315,6 @@ main {
   background: #eee;
   border: none;
 }
-.request {
-  display: flex;
-  height: 40px;
-  padding: 10px 15px;
-  align-items: flex-start;
-  gap: 30px;
-  align-self: stretch;
-  border-radius: 50px;
-  background: var(--White, #fff);
-}
-.blue {
-  display: flex;
-  padding: 0px 15px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 20px;
-  background: var(--Primary, #227cbf);
-  color: var(--White, #fff);
-  font-family: Roboto;
-  font-size: 13px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 19.2px;
-}
 .team,
 .approval {
   color: var(--Black, #000);
@@ -244,12 +326,21 @@ main {
 }
 .modal-body {
   display: flex;
-  padding: 30px;
+  padding: 0px;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
   border-radius: 10px;
   background: #fff;
+}
+.member h3 {
+  color: var(--Black, #000);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+  align-self: stretch;
 }
 .frame {
   display: flex;
@@ -272,7 +363,7 @@ main {
 .frame textarea {
   display: flex;
   width: 400px;
-  height: 70px;
+  height: 60px;
   padding: 10px;
   flex-direction: column;
   align-items: flex-start;
