@@ -1,4 +1,13 @@
+<script setup>
+import { useRoute } from 'vue-router';
+import { computed } from 'vue';
 
+  const isUserRoute = computed(() => {
+  const route = useRoute();
+  return route.path !== '/hod/skillassessment';
+});
+</script>
+  
 <template>
   <div class="menu">
     <div class="modal" id="myModal" tabindex="-1">
@@ -141,37 +150,41 @@
         </div>
       </div>
     </div>
-    <div class="profile">
-      <button><a class="nav-link active" href="/m/myprofile" role="button" aria-expanded="false">My Profile</a></button>
+    <div class="profile" v-if="isUserRoute">
+      <button><a class="nav-link active" href="/hod/myprofile" role="button" aria-expanded="false">My Profile</a></button>
       <div class="btn" data-bs-toggle="modal" data-bs-target="#myModal" type="button"><span>Team Profile</span></div>
     </div>
     <nav class="navbar navbar-expand-md ">
 
       <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link active" href="/hod/" role="button" aria-expanded="false">
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/hod/' }">
+          <router-link to="/hod/" class="nav-link">
             Development Plan
-          </a>
-
+          </router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link" href="/hod/skillassessment">
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/hod/skillassessment' }">
+          <router-link to="/hod/skillassessment" class="nav-link">
             Skill Assessment
-          </a>
-
+          </router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link " href="/hod/trainingschedule">Training Schedule </a>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/hod/trainingschedule' }">
+          <router-link to="/hod/trainingschedule" class="nav-link">
+            Training Schedule
+          </router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link " href="/hod/alltrainingschedule">All Training Schedule </a>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/hod/alltrainingschedule' }">
+          <router-link to="/hod/alltrainingschedule" class="nav-link">
+            All Training Schedule
+          </router-link>
         </li>
 
-        <li class="nav-item link">
-          <a class="nav-link " href="/hod/taskdeliverables">Tasks/Deliverables </a>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/hod/taskdeliverables' }">
+          <router-link to="/hod/taskdeliverables" class="nav-link">
+            Task/Deliverables
+          </router-link>
         </li>
 
       </ul>
@@ -232,22 +245,6 @@
 .btn span {
   margin-left: 0px;
 }
-
-label {
-  display: flex;
-  gap: 10px;
-  justify-content: space-between;
-  align-items: center;
-}
-
-label span {
-  flex-shrink: 0;
-}
-
-label select {
-  flex-grow: 0;
-}
-
 .navbar {
   border-bottom: 1px solid #808080;
   width: 100%;
@@ -297,40 +294,6 @@ label select {
   align-items: center;
   align-self: stretch;
   height: 30px !important;
-}
-.request {
-  display: flex;
-  height: 50px;
-  padding: 10px 15px;
-  align-items: flex-start;
-  gap: 30px;
-  align-self: stretch;
-  border-radius: 50px;
-  background: var(--White, #fff);
-}
-.blue {
-  display: flex;
-  padding: 5px 15px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 20px;
-  background: var(--Primary, #227cbf);
-  color: var(--White, #fff);
-  font-family: Roboto;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 19.2px;
-}
-.team,
-.approval {
-  color: var(--Black, #000);
-  font-family: Roboto;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 19.2px;
 }
 .modal-body {
   display: flex;
