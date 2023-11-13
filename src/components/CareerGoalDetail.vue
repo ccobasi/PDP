@@ -142,7 +142,7 @@
 
         </div>
         <div class="save">
-          <button class="back">Back</button>
+          <button class="back" @click="$router.push('/')">Back</button>
           <button class="bsave">Save Changes</button>
         </div>
       </div>

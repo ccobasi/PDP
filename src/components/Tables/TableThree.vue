@@ -134,7 +134,7 @@ const selectItem = (item) => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in items" @click="selectItem(item)" @dblclick="$router.push('trainingscheduledetails')">
+        <tr v-for="item in items" @click="selectItem(item)" @dblclick="$router.push({name: 'Training Schedule Details', params: {id: item.id}})">
           <td scope="row">{{item.id}}</td>
           <td>{{item.month}}</td>
           <td>{{item.trainingTopic}}</td>

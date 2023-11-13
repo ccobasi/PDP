@@ -1,6 +1,6 @@
 <script setup>
   import TableThree from '../components/Tables/TableThree.vue'
-  import AccordionCardThree from '../components/Cards/AccordionCardThree.vue'
+  // import AccordionCardThree from '../components/Cards/AccordionCardThree.vue'
 
   
   

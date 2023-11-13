@@ -1,100 +1,227 @@
-<script>
-import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
+<script setup>
+import TabMenu from '../../components/Tabs/TabMenuFive.vue';
 import DoughNut from '../../components/DoughNut.vue'
 import CareerGoal from '../../components/CareerGoal.vue'
+import { ref } from 'vue';
+import Table from '../../components/Tables/TableFive.vue'
+import {useGoalsStore} from "@/store/goals"
 
 
-export default {
-    data: () => ({
-        tab: null,
-        
-    }),
-    components: {
-        
-        TabMenu: TabMenu,DoughNut,CareerGoal,
-    }
-    
+const store = useGoalsStore();
+console.log(store.goals);
+
+const addGoal = () => {
+  if (plan.value.trim() !== '' || goal.value.trim() !== '' || achieve.value.trim() !== ''
+      || resource.value.trim() !== ''
+      || success.value.trim() !== '' || date.value.trim() !== '') {
+    store.addGoal(plan.value.trim(), goal.value.trim(), achieve.value.trim(),
+      achieve.value.trim(), resource.value.trim(), success.value.trim(), date.value.trim());
+  
+  }
+};
+
+
+// eslint-disable-next-line no-unused-vars
+const goals = ref([])
+  const plan = ref('')
+  const goal = ref('')
+  const achieve = ref('')
+  const resource = ref('')
+  const success  = ref('')
+  const potential = ref('')
+  const solution = ref('')
+  const date = ref('')
+  const selectedValue = ref('')
+ 
+
+const handleSubmit = () => {
+  addGoal();
+  console.log("Goal added")
+};
+
+
+ 
+
+ const onSelectChange = () => {
+  // eslint-disable-next-line no-self-assign
+  selectedValue.value = selectedValue.value
 }
+
+const tab = ref(null)
 </script>
 
 
 <template>
   <main class="wrapper">
     <TabMenu />
-    <div class="modal" id="myModal" tabindex="-1">
+    <div class="modal" id="myModal1" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Development Plan Request</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="request">
-            <button class="blue">My Request</button>
-            <button class="team">Team Member</button>
-            <button class="approval">Requests pending approval</button>
-          </div>
-          <div class="modal-body">
-            <div class="type">
-              <h3>Development plan type</h3>
-              <select class="form-select" aria-label="Default select example">
-                <option class="opt" selected>Career Goals and Aspirations</option>
-                <option class="opt" value="1">Option 1</option>
-                <option class="opt" value="2">Option 2</option>
-                <option class="opt" value="3">Option 3</option>
-                <option class="opt" value="4">Option 4</option>
-                <option class="opt" value="5">Option 5</option>
-                <option class="opt" value="6">Option 6</option>
-              </select>
-            </div>
-            <div class="goal">
-              <div class="left">
-                <h4>Goal</h4>
-                <textarea name="Goal" placeholder="Goal" id="" cols="30" rows="10"></textarea>
-              </div>
-              <div class="right">
-                <h4 class="">What I will do to achieve this</h4>
-                <textarea name="Goal" placeholder="What I will do to achieve this" id="" cols="30" rows="10"></textarea>
-              </div>
-            </div>
-            <div class="goal">
-              <div class="left">
-                <h4>Resources and Support Needed</h4>
-                <textarea name="Resources and Support Needed" placeholder="Resources and Support Needed" id="" cols="30" rows="10"></textarea>
-              </div>
-              <div class="right">
-                <h4 class="">What does success look like?</h4>
-                <textarea name="Goal" placeholder="What does success look like?" id="" cols="30" rows="10"></textarea>
-              </div>
-            </div>
-            <div class="goal">
-              <div class="left">
-                <h4>Potential Challenges</h4>
-                <textarea name="Potential Challenges" placeholder="Potential Challenges" id="" cols="30" rows="10"></textarea>
-              </div>
-              <div class="right">
-                <h4 class="">Solution</h4>
-                <textarea name="Goal" placeholder="Solution" id="" cols="30" rows="10"></textarea>
-              </div>
-            </div>
-            <div class="type mt-3">
-              <h3>Target Date for Completion</h3>
-              <input type="date">
-            </div>
-          </div>
-          <div class="modal-footer">
 
-            <button type="button" class="btn">Submit Request</button>
+          <div class="modal-body">
+            <v-card style="background:#eee;width:700px">
+              <v-tabs v-model="tab" bg-color="white" color="#227cbf" style="border-radius:50px">
+                <v-tab value="one">My Request</v-tab>
+                <v-tab value="two">Team Member</v-tab>
+                <v-tab value="three">Requests pending approval</v-tab>
+              </v-tabs>
+
+              <v-card-text>
+                <v-window v-model="tab">
+                  <v-window-item value="one">
+                    <form method="post" action="" @submit.prevent="handleSubmit">
+                      <div class="modal-body">
+
+                        <div class="type">
+
+                          <h3>Development plan type</h3>
+                          <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="plan">
+                            <option class="opt" selected>Career Goals and Aspirations</option>
+                            <option class="opt" value="Area of Interest">Area of Interest</option>
+                            <option class="opt" value="Career Goals and Aspirations">Career Goals and Aspirations</option>
+                            <option class="opt" value="Mentorship and Skill Build">Mentorship and Skill Build</option>
+                          </select>
+
+                        </div>
+                        <div class="goal">
+                          <div class="left">
+                            <h4>Goal</h4>
+                            <textarea v-model="goal" name="Goal" placeholder="Goal" id="" cols="30" rows="10"></textarea>
+                          </div>
+                          <div class="right">
+                            <h4 class="">What I will do to achieve this</h4>
+                            <textarea v-model="achieve" name="Achieve" placeholder="What I will do to achieve this" id="" cols="30" rows="10"></textarea>
+                          </div>
+                        </div>
+                        <div class="goal">
+                          <div class="left">
+                            <h4>Resources and Support Needed</h4>
+                            <textarea v-model="resource" name="Resources and Support Needed" placeholder="Resources and Support Needed" id="" cols="30" rows="10"></textarea>
+                          </div>
+                          <div class="right">
+                            <h4 class="">What does success look like?</h4>
+                            <textarea v-model="success" name="Goal" placeholder="What does success look like?" id="" cols="30" rows="10"></textarea>
+                          </div>
+                        </div>
+                        <div class="goal">
+                          <div class="left">
+                            <h4>Potential Challenges</h4>
+                            <textarea v-model="potential" name="Potential Challenges" placeholder="Potential Challenges" id="" cols="30" rows="10"></textarea>
+                          </div>
+                          <div class="right">
+                            <h4 class="">Solution</h4>
+                            <textarea v-model="solution" name="Goal" placeholder="Solution" id="" cols="30" rows="10"></textarea>
+                          </div>
+                        </div>
+                        <div class="type mt-3">
+                          <h3>Target Date for Completion</h3>
+                          <input type="date" v-model="date">
+                        </div>
+
+                      </div>
+
+                      <div class="modal-footer">
+
+                        <button type="submit" class="btn">Submit Request</button>
+                      </div>
+                    </form>
+                  </v-window-item>
+
+                  <v-window-item value="two">
+                    <form method="post" action="" @submit.prevent="handleSubmit">
+                      <div class="modal-bodys">
+                        <div class="type">
+                          <div class="dynamic d-flex">
+                            <div class="member">
+                              <h3>Select Team Member</h3>
+                              <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="name">
+                                <option class="opt" selected>Lola Oyebola</option>
+                                <option class="opt" value="Lola Oyebola">Lola Oyebola</option>
+                                <option class="opt" value="Mark Dean">Mark Dean</option>
+                                <option class="opt" value="Uzo Okoro">Uzo Okoro</option>
+                                <option class="opt" value="Daniel Muller">Daniel Muller</option>
+                                <option class="opt" value="Jane Doe">Jane Doe</option>
+                              </select>
+                            </div>
+                            <div class="plan">
+                              <h3>Development plan type</h3>
+                              <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="plan">
+                                <option class="opt" selected>Career Goals and Aspirations</option>
+                                <option class="opt" value="Area of Interest">Area of Interest</option>
+                                <option class="opt" value="Career Goals and Aspirations">Career Goals and Aspirations</option>
+                                <option class="opt" value="Mentorship and Skill Build">Mentorship and Skill Build</option>
+                              </select>
+                            </div>
+                          </div>
+
+                        </div>
+                        <div class="goal">
+                          <div class="left">
+                            <h4>Goal</h4>
+                            <textarea v-model="goal" name="Goal" placeholder="Goal" id="" cols="30" rows="10"></textarea>
+                          </div>
+                          <div class="right">
+                            <h4 class="">What I will do to achieve this</h4>
+                            <textarea v-model="achieve" name="Goal" placeholder="What I will do to achieve this" id="" cols="30" rows="10"></textarea>
+                          </div>
+                        </div>
+                        <div class="goal">
+                          <div class="left">
+                            <h4>Resources and Support Needed</h4>
+                            <textarea v-model="resource" name="Resources and Support Needed" placeholder="Resources and Support Needed" id="" cols="30" rows="10"></textarea>
+                          </div>
+                          <div class="right">
+                            <h4 class="">What does success look like?</h4>
+                            <textarea v-model="success" name="Goal" placeholder="What does success look like?" id="" cols="30" rows="10"></textarea>
+                          </div>
+                        </div>
+                        <div class="goal">
+                          <div class="left">
+                            <h4>Potential Challenges</h4>
+                            <textarea v-model="potential" name="Potential Challenges" placeholder="Potential Challenges" id="" cols="30" rows="10"></textarea>
+                          </div>
+                          <div class="right">
+                            <h4 class="">Solution</h4>
+                            <textarea v-model="solution" name="Goal" placeholder="Solution" id="" cols="30" rows="10"></textarea>
+                          </div>
+                        </div>
+                        <div class="type mt-3">
+                          <h3>Target Date for Completion</h3>
+                          <input type="date" v-model="date">
+                        </div>
+                      </div>
+
+                      <div class="modal-footer">
+
+                        <button type="submit" class="btn">Submit Request</button>
+                      </div>
+                    </form>
+                  </v-window-item>
+
+                  <v-window-item value="three">
+                    <div class="pending">
+                      <Table />
+                    </div>
+                  </v-window-item>
+                </v-window>
+              </v-card-text>
+            </v-card>
           </div>
+
         </div>
       </div>
     </div>
     <div class="development mt-5">
       <div class="dev">
         <h3>Development Plan</h3>
-        <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Development Plan Request</button>
+        <button data-bs-toggle="modal" data-bs-target="#myModal1" type="button">Development Plan Request</button>
       </div>
       <hr>
-      <div class="goal">
+      <div class="goals">
         <div class="short">
           <h5>Short term goals (3 - 6 Months)</h5>
         </div>
@@ -159,12 +286,39 @@ hr {
 .chart {
   width: 100%;
 }
+.dynamic {
+  justify-content: space-between;
+  gap: 35px;
+}
+.member .form-select,
+.plan .form-select {
+  width: 310px;
+}
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
   height: 30px !important;
+}
+.goals {
+  display: flex;
+  width: 1160px;
+  padding: 10px 15px;
+  align-items: flex-start;
+  gap: 30px;
+  border-radius: 50px;
+  background: var(--Grey-Light, #eee);
+}
+.short {
+  display: flex;
+  color: #fff;
+  padding: 5px 15px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 20px;
+  background: var(--Primary, #227cbf);
 }
 .request {
   display: flex;
@@ -200,12 +354,25 @@ hr {
   font-weight: 400;
   line-height: 19.2px;
 }
+form {
+  height: 580px;
+}
 .modal-body {
+  width: 700px;
   gap: 20px;
   background: #fff;
   margin-top: 0px !important;
   border: 1px solid var(--Grey-Light, #fff);
   border-radius: 10px;
+  padding: 0px;
+}
+.modal-bodys {
+  gap: 10px;
+  background: #fff;
+  margin-top: 0px !important;
+  border: 1px solid var(--Grey-Light, #fff);
+  border-radius: 10px;
+  padding: 3px;
 }
 .modal-dialog {
   width: 900px;
@@ -220,7 +387,7 @@ hr {
 }
 .modal-content {
   display: flex;
-  padding: 30px;
+  padding: 20px;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
@@ -255,7 +422,7 @@ hr {
 }
 .goal {
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
   align-items: flex-start;
   gap: 20px;
   margin-top: 20px;

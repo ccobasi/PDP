@@ -63,7 +63,7 @@ onMounted(() => {
             <!-- Modal Header -->
             <div class="modal-header">
               <h4 class="modal-title">Training request form</h4>
-              <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Modal body -->
