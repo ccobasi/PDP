@@ -143,7 +143,7 @@ const router = createRouter({
     },
     {
     path: "/m/alltrainingschedule",
-    name: "Manager Training Schedule",
+    name: "All Manager Training Schedule",
     component: MAllTrainingSchedule,
     },
     {
