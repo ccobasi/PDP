@@ -25,6 +25,7 @@ import MProfileTrainingSchedule from '../views/Manager/ProfileTrainingSchedule.v
 import HODDevelopmentPlan from '../views/HOD/DevelopmentPlan.vue'
 import HODSkillAssessment from '../views/HOD/SkillAssessment.vue'
 import HODTrainingSchedule from '../views/HOD/TrainingSchedule.vue'
+import AllHODTrainingSchedule from '../views/HOD/AllTrainingSchedule.vue'
 import HODTaskDeliverables from '../views/HOD/TaskDeliverables.vue'
 import HODProfile from '../views/HOD/MyProfile.vue'
 import HODProfileSkillAssessment from '../views/HOD/ProfileSkillAssessment.vue'
@@ -180,6 +181,11 @@ const router = createRouter({
     path: "/hod/trainingschedule",
     name: "HOD Training Schedule",
     component: HODTrainingSchedule,
+    },
+    {
+    path: "/hod/alltrainingschedule",
+    name: "All HOD Training Schedule",
+    component: AllHODTrainingSchedule,
     },
     {
     path: "/hod/taskdeliverables",
