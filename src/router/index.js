@@ -33,7 +33,6 @@ import HODProfileTrainingSchedule from '../views/HOD/ProfileTrainingSchedule.vue
 import ITDevelopmentPlan from '../views/IT/DevelopmentPlan.vue'
 import ITSkillAssessment from '../views/IT/SkillAssessment.vue'
 import ITTrainingSchedule from '../views/IT/TrainingSchedule.vue'
-import ITTrainSchedule from '../views/IT/TrainSchedule.vue'
 import ITAllTrainingSchedule from '../views/IT/AllTrainingSchedule.vue'
 import ITTaskDeliverables from '../views/IT/TaskDeliverables.vue'
 import ITProfile from '../views/IT/MyProfile.vue'
@@ -224,7 +223,7 @@ const router = createRouter({
     },
     {
     path: "/it/alltrainingschedule",
-    name: "IT Training Schedule",
+    name: "All IT Training Schedule",
     component: ITAllTrainingSchedule,
     },
     {
@@ -247,11 +246,7 @@ const router = createRouter({
     name: "IT Profile Training Schedule",
     component: ITProfileTrainingSchedule,
     },
-    {
-    path: "/it/training",
-    name: "IT Training Schedule",
-    component: ITTrainSchedule,
-    },
+
   ]
 })
 

@@ -169,8 +169,8 @@ import { computed } from 'vue';
           </router-link>
         </li>
 
-        <li :class="{ 'nav-item': true, 'active': $route.path === '/it/training' }">
-          <router-link to="/it/training" class="nav-link">
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/it/trainingschedule' }">
+          <router-link to="/it/trainingschedule" class="nav-link">
             Training Schedule
           </router-link>
         </li>
