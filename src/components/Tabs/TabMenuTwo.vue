@@ -160,8 +160,8 @@
           </router-link>
         </li>
 
-        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/training' }">
-          <router-link to="/km/training" class="nav-link">
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/trainingschedule' }">
+          <router-link to="/km/trainingschedule" class="nav-link">
             Training Schedule
           </router-link>
         </li>

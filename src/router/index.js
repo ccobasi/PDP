@@ -103,7 +103,7 @@ const router = createRouter({
     },
     {
     path: "/km/alltrainingschedule",
-    name: "Knowledge Manager Training Schedule",
+    name: "All Knowledge Manager Training Schedule",
     component: KMAllTrainingSchedule,
     },
     {
