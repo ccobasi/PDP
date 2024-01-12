@@ -30,6 +30,10 @@ const goals = ref([])
   const potential = ref('')
   const solution = ref('')
   const date = ref('')
+  const progress = ref('')
+  const status = ref('')
+  const feedback = ref('')
+  // const evidence = ref('')
   const selectedValue = ref('')
  
 
@@ -108,11 +112,37 @@ onMounted(() => {
                   <textarea name="Goal" placeholder="Solution" id="" cols="30" rows="10" v-model="solution"></textarea>
                 </div>
               </div>
-              <div class="type mt-3">
-                <h3>Target Date for Completion</h3>
-                <input type="date" v-model="date">
-              </div>
+              <div class="goal">
+                <div class="lefts mt-1">
+                  <h4>Target Date for Completion</h4>
+                  <input type="date" v-model="date">
+                </div>
+                <div class="wright">
+                  <h4>Progress Metrics(Outcome Based)</h4>
+                  <textarea name="Progress" placeholder="Progress Metrics" id="" cols="30" rows="10" v-model="progress"></textarea>
+                </div>
 
+              </div>
+              <div class="goal">
+                <div class="lefts">
+                  <h4>Status</h4>
+                  <select v-model="status" class="form-selects" aria-label="Default select example">
+                    <option class="opt" selected>Status</option>
+                    <option class="opt" value="1">Completed</option>
+                    <option class="opt" value="2">On-going</option>
+                    <option class="opt" value="3">Not started</option>
+                  </select>
+                </div>
+                <div class="wright">
+                  <h4>Feedback</h4>
+                  <textarea name="Progress" placeholder="Feedback" id="" cols="30" rows="10" v-model="feedback"></textarea>
+                </div>
+
+              </div>
+              <div class="types">
+                <input type="file">
+                <button>Save Changes</button>
+              </div>
             </div>
             <div class="modal-footer">
 
@@ -236,7 +266,7 @@ hr {
 }
 .modal-dialog {
   width: 900px;
-  height: 800px;
+  height: 1025px;
   margin-left: 20%;
   display: inline-flex;
   padding: 30px;
@@ -302,7 +332,9 @@ hr {
   gap: 5px;
 }
 .left h4,
-.right h4 {
+.right h4,
+.wright h4,
+.lefts h4 {
   color: var(--Black, #000);
   font-family: Roboto;
   font-size: 16px;
@@ -323,7 +355,7 @@ hr {
 }
 .type input {
   display: flex;
-  width: 400px;
+  width: 320px;
   height: 40px;
   padding: 10px;
   justify-content: space-between;
@@ -345,5 +377,39 @@ hr {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: #fff;
+}
+.wright textarea {
+  width: 320px;
+  height: 70px;
+}
+.lefts input {
+  width: 320px;
+  height: 40px;
+  border: 1px solid var(--Grey-Light, #eee);
+  background: var(--White, #fff);
+  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
+}
+.form-selects {
+  display: flex;
+  width: 320px;
+  height: 40px;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 5px;
+  border: 1px solid var(--Grey-Light, #eee);
+  background: var(--White, #fff);
+  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
+}
+.types button {
+  display: flex;
+  padding: 10px 50px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+  color: #fff;
+  margin-top: 10px;
 }
 </style>
