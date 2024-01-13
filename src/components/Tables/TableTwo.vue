@@ -1,58 +1,13 @@
 <script setup>
     import { ref } from 'vue';
     import AccordionCardTwo from '../Cards/AccordionCardTwo.vue'
+    import {useSkillsStore} from "@/store/skills"
 
-const items = ref([
-  { 
-    id: '1',
-    skill: 'Public speaking', 
-    currentState: 'Beginner',
-    desiredState: 'Expert',
-    status: 'On going',
-    feedback: 'Satisfactory',
-   },
-   { 
-    id: '2',
-    skill: 'Public speaking', 
-    currentState: 'Beginner',
-    desiredState: 'Expert',
-    status: 'On going',
-    feedback: 'Satisfactory',
-   },
-   { 
-    id: '3',
-    skill: 'Public speaking', 
-    currentState: 'Beginner',
-    desiredState: 'Expert',
-    status: 'On going',
-    feedback: 'Satisfactory',
-   },
-   { 
-    id: '4',
-    skill: 'Public speaking', 
-    currentState: 'Beginner',
-    desiredState: 'Expert',
-    status: 'On going',
-    feedback: 'Satisfactory',
-   },
-   { 
-    id: '5',
-    skill: 'Public speaking', 
-    currentState: 'Beginner',
-    desiredState: 'Expert',
-    status: 'On going',
-    feedback: 'Satisfactory',
-   },
-   { 
-    id: '6',
-    skill: 'Public speaking', 
-    currentState: 'Beginner',
-    desiredState: 'Expert',
-    status: 'On going',
-    feedback: 'Satisfactory',
-   },
 
-]);
+const store = useSkillsStore();
+const skills = store.skills;
+
+console.log(store.skills);
 
 const selectedItem = ref(null);
 
@@ -103,6 +58,17 @@ const selectItem = (item) => {
           </th>
           <th scope="col">
             <div class="d-flex align-center gap-1">
+              <span class="noshrink"> Gap</span>
+
+              <span class="d-flex flex-column align-center">
+                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+              </span>
+
+            </div>
+          </th>
+          <th scope="col">
+            <div class="d-flex align-center gap-1">
               <span class="noshrink"> Desired State</span>
 
               <span class="d-flex flex-column align-center">
@@ -138,10 +104,11 @@ const selectItem = (item) => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in items" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})">
+        <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})">
           <td>{{item.id}}</td>
           <td>{{item.skill}}</td>
           <td>{{item.currentState}}</td>
+          <td>{{item.gap}}</td>
           <td>{{item.desiredState}}</td>
           <td>{{item.status}}</td>
           <td>{{item.feedback}}</td>

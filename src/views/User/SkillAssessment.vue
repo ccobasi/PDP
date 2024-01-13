@@ -12,8 +12,10 @@ console.log(store.skills);
 const addSkill = () => {
   if (skill.value.trim() !== '' || currentState.value.trim() !== '' || gap.value.trim() !== ''
       || desiredState.value.trim() !== ''
-      || initiative.value.trim() !== '' ) {
-    store.addSkill(skill.value.trim(), currentState.value.trim(), gap.value.trim(), desiredState.value.trim(), initiative.value.trim());
+      || initiative.value.trim() !== '' || status.value.trim() !== '' 
+      || evidence.value.trim() !== '') {
+    store.addSkill(skill.value.trim(), currentState.value.trim(), gap.value.trim(), desiredState.value.trim(), initiative.value.trim(), status.value.trim(), 
+    feedback.value.trim(), evidence.value.trim(),);
   
   }
 }
@@ -25,6 +27,9 @@ const skills = ref([])
   const gap = ref('')
   const desiredState = ref('')
   const initiative  = ref('')
+  const status = ref('')
+  const feedback = ref('')
+  const evidence = ref('')
   const selectedValue = ref('')
 
 const handleSubmit = () => {
@@ -57,7 +62,7 @@ const onSelectChange = () => {
             <!-- Modal Header -->
             <div class="modal-header">
               <h4 class="modal-title">Skill Request Form</h4>
-              <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <!-- Modal body -->
@@ -96,6 +101,24 @@ const onSelectChange = () => {
               <div class="frame">
                 <h6>Initiatives</h6>
                 <textarea v-model="initiative" name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
+              </div>
+              <div class="frame">
+                <h6>Status</h6>
+                <select v-model="status" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                  <option class="opt" selected>Status</option>
+                  <option class="opt" value="Completed">Completed</option>
+                  <option class="opt" value="On-going">On-going</option>
+                  <option class="opt" value="Not started">Not started</option>
+                </select>
+              </div>
+              <div class="frame">
+                <h6>Feedback</h6>
+                <textarea name="Feedback" placeholder="Feedback" id="" cols="30" rows="10" v-model="feedback"></textarea>
+              </div>
+              <div class="frame">
+                <h6>Evidence</h6>
+                <input type="file" @change="handleFileChange">
+                <button>Save Changes</button>
               </div>
             </div>
 
@@ -190,7 +213,7 @@ main {
 }
 .modal-dialog {
   width: 500px;
-  height: 700px;
+  height: 900px;
   display: inline-flex;
   padding: 20px;
   flex-direction: column;
@@ -267,7 +290,7 @@ main {
 }
 .modal-footer {
   display: flex;
-  height: 50px;
+  height: 60px;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
@@ -275,7 +298,7 @@ main {
 }
 .modal-footer button {
   display: flex;
-  padding: 10px 30px;
+  padding: 8px 30px;
   align-items: center;
   gap: 10px;
   border-radius: 5px;
@@ -286,5 +309,18 @@ main {
   font-style: normal;
   font-weight: 400;
   line-height: 19.2px;
+  border: none;
+}
+.frame button {
+  width: 190px;
+  display: flex;
+  padding: 5px 40px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+  color: #fff;
+  margin-top: 10px;
 }
 </style>

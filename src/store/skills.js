@@ -12,7 +12,7 @@ export const useSkillsStore = defineStore('skills', {
   },
  
   actions: {
-    addSkill(skill, currentState, gap, desiredState, initiative) {
+    addSkill(skill, currentState, gap, desiredState, initiative, status, feedback, evidence) {
       try {
         this.getSkills.push({
           id: Date.now(),
@@ -21,7 +21,9 @@ export const useSkillsStore = defineStore('skills', {
           gap: gap,
           desiredState: desiredState,
           initiative: initiative,
-          
+          status: status,
+          feedback: feedback,
+          evidence: evidence,
         });
 
         this.saveSkills();
