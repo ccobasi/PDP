@@ -4,6 +4,8 @@
     import AccordionCard from "../Cards/AccordionCard.vue"
     import { useRoute } from 'vue-router';
 
+
+
 const items = ref([
   { 
     id: '1',
@@ -97,7 +99,7 @@ const selectItem = (item) => {
       </thead>
       <tbody>
 
-        <tr v-for="item in items" :key="item.id" @click="selectItem(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})">
+        <tr v-for="item in goals" :key="item.id" @click="selectItem(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})">
           <td>{{item.id}}</td>
           <td>{{item.goal}}</td>
           <td>{{item.date}}</td>

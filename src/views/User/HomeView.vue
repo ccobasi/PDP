@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/valid-v-model -->
 <script setup>
 import TabMenu from '../../components/Tabs/TabMenu.vue';
 import DoughNut from '../../components/DoughNut.vue'
@@ -8,17 +9,6 @@ import {useGoalsStore} from "@/store/goals"
 
 const store = useGoalsStore();
 console.log(store.goals);
-
-const addGoal = () => {
-  if (plan.value.trim() !== '' || goal.value.trim() !== '' || achieve.value.trim() !== ''
-      || resource.value.trim() !== ''
-      || success.value.trim() !== '' || date.value.trim() !== '') {
-    store.addGoal(plan.value.trim(), goal.value.trim(), achieve.value.trim(),
-      achieve.value.trim(), resource.value.trim(), success.value.trim(), date.value.trim());
-  
-  }
-};
-
 
 // eslint-disable-next-line no-unused-vars
 const goals = ref([])
@@ -33,9 +23,40 @@ const goals = ref([])
   const progress = ref('')
   const status = ref('')
   const feedback = ref('')
-  // const evidence = ref('')
+  const evidence = ref('')
   const selectedValue = ref('')
- 
+
+const addGoal = async () => {
+  if (
+    plan.value.trim() !== '' || goal.value.trim() !== '' || achieve.value.trim() !== '' ||
+    resource.value.trim() !== '' || success.value.trim() !== '' || potential.value.trim() !== '' ||
+    solution.value.trim() !== '' || date.value.trim() !== '' || progress.value.trim() !== '' ||
+    status.value.trim() !== '' || feedback.value.trim() !== '' || evidence.value.trim() !== ''
+  ) {
+    await store.addGoal(
+      plan.value.trim(), goal.value.trim(), achieve.value.trim(),
+      resource.value.trim(), success.value.trim(), potential.value.trim(), solution.value.trim(),
+      date.value.trim(), progress.value.trim(), status.value.trim(), feedback.value.trim(), evidence.value.trim()
+    );
+
+    // Clear form inputs after submission
+    plan.value = '';
+    goal.value = '';
+    achieve.value = '';
+    resource.value = '';
+    success.value = '';
+    potential.value = '';
+    solution.value = '';
+    date.value = '';
+    progress.value = '';
+    status.value = '';
+    feedback.value = '';
+    evidence.value = '';
+
+    console.log("Goal added");
+  }
+};
+
 
 const handleSubmit = () => {
   addGoal();
@@ -46,6 +67,7 @@ const handleSubmit = () => {
 onMounted(() => {
   
   store.fetchGoals();
+  console.log("Fetch goals")
 });
 
  
@@ -54,6 +76,14 @@ onMounted(() => {
   // eslint-disable-next-line no-self-assign
   selectedValue.value = selectedValue.value
 }
+
+const selectedFile = ref(null);
+
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  
+  selectedFile.value = file;
+};
 
 
 </script>
@@ -126,21 +156,22 @@ onMounted(() => {
               <div class="goal">
                 <div class="lefts">
                   <h4>Status</h4>
-                  <select v-model="status" class="form-selects" aria-label="Default select example">
+                  <select v-model="status" v-on:change="onSelectChange(e)" class="form-selects" aria-label="Default select example">
                     <option class="opt" selected>Status</option>
-                    <option class="opt" value="1">Completed</option>
-                    <option class="opt" value="2">On-going</option>
-                    <option class="opt" value="3">Not started</option>
+                    <option class="opt" value="Completed">Completed</option>
+                    <option class="opt" value="On-going">On-going</option>
+                    <option class="opt" value="Not started">Not started</option>
                   </select>
                 </div>
                 <div class="wright">
                   <h4>Feedback</h4>
-                  <textarea name="Progress" placeholder="Feedback" id="" cols="30" rows="10" v-model="feedback"></textarea>
+                  <textarea name="Feedback" placeholder="Feedback" id="" cols="30" rows="10" v-model="feedback"></textarea>
                 </div>
 
               </div>
               <div class="types">
-                <input type="file">
+
+                <input type="file" @change="handleFileChange">
                 <button>Save Changes</button>
               </div>
             </div>
