@@ -5,17 +5,6 @@
     import { useRoute } from 'vue-router';
 
 
-
-const items = ref([
-  { 
-    id: '1',
-    goal: 'Learn to improve content writing skill', 
-    date: '12/10/2023',
-    status: 'On going',
-    feedback: 'Satisfactory' },
-
-]);
-
 const selectedItem = ref(null);
 
 const selectItem = (item) => {

@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Create a canvas element for the chart -->
-    <canvas ref="barChart" width="400" height="200"></canvas>
+    <canvas ref="barChart" width="1000" height="300"></canvas>
   </div>
 </template>
 
@@ -20,7 +20,7 @@ export default {
           borderColor: '#FFBF1A',
           borderWidth: 1,
           data: [0.4, 2, 2.85, 1.5, 2.4, 2.7], // Values mapped to 'Beginner', 'Intermediate', 'Proficient', 'Advanced', 'Professional'
-          barThickness: 6,
+          barThickness: 30,
           borderRadius: 10
         },
         {
@@ -29,7 +29,7 @@ export default {
           borderColor: '#47B65C',
           borderWidth: 1,
           data: [2, 2.8, 4.3, 2.6, 2.9, 4.3], // Values mapped to 'Beginner', 'Intermediate', 'Proficient', 'Advanced', 'Professional'
-          barThickness: 6,
+          barThickness: 30,
           borderRadius: 10
         },
       ],
