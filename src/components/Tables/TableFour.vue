@@ -2,18 +2,16 @@
 import GradeButton from '../GradeButton.vue';
 import { computed } from 'vue'
 import { useRoute } from 'vue-router';
-// const props = defineProps({
-//     variation: {
-//         type: Boolean,
-//         default: false
-//     }
-// })
+import {useTasksStore} from "@/store/tasks"
+
 
  const isUserRoute = computed(() => {
   const route = useRoute();
   return route.path !== '/taskdeliverables';
 });
 
+const store = useTasksStore();
+    const tasks = store.tasks;
 </script>
 <template>
   <div class="table-responsive">
@@ -56,7 +54,7 @@ import { useRoute } from 'vue-router';
           </th>
           <th scope="col">
             <div class="d-flex align-center gap-1">
-              <span> Timeline</span>
+              <span> Start Time</span>
 
               <span class="d-flex flex-column align-center">
                 <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
@@ -67,7 +65,18 @@ import { useRoute } from 'vue-router';
           </th>
           <th scope="col">
             <div class="d-flex align-center gap-1">
-              <span>Update </span>
+              <span> End Time</span>
+
+              <span class="d-flex flex-column align-center">
+                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+              </span>
+
+            </div>
+          </th>
+          <th scope="col">
+            <div class="d-flex align-center gap-1">
+              <span>Comment </span>
 
               <span class="d-flex flex-column align-center">
                 <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
@@ -104,14 +113,13 @@ import { useRoute } from 'vue-router';
         </tr>
       </thead>
       <tbody>
-        <tr @click="$router.push('pipelinedeals/detail')" v-for="(item, index) in ['amber','amber','blue','amber','red','green','blue', 'red','red']">
-          <td scope="row">{{ index + 1 }}</td>
-          <td>Attach evidence to skill</td>
-          <td>
-            <GradeButton :grade="item" />
-          </td>
-          <td>30/10/20231</td>
-          <td>In-Progress </td>
+        <tr v-for="item in tasks">
+          <td scope="row">{{ item.id }}</td>
+          <td>{{item.task}}</td>
+          <td>{{item.status}}</td>
+          <td>{{item.startDate}}</td>
+          <td>{{item.endDate}}</td>
+          <td>{{item.comment}}</td>
           <td>
             <input type="file">
           </td>
