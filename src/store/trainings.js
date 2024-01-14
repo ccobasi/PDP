@@ -3,8 +3,14 @@ import {defineStore} from 'pinia';
 export const useTrainingsStore = defineStore('trainings', {
   state: () => ({
     trainings: JSON.parse(localStorage.getItem('trainings')) || [],
+    selectedFile: null,
   }),
 
+  mutations: {
+    setTrainings(trainings) {
+      this.trainings = trainings;
+    },
+  },
   getters: {
     getTrainings() {
       return this.trainings;
@@ -12,7 +18,7 @@ export const useTrainingsStore = defineStore('trainings', {
   },
  
   actions: {
-    addTraining(month, trainingTopic, learningOutcome, trainingMethod, trainingInitiator,skillMatrixMapping) {
+    addTraining(month, trainingTopic, learningOutcome, trainingMethod, trainingInitiator,skillMatrixMapping, dueDate, status, selectedRating, evidence) {
       try {
         this.getTrainings.push({
           id: Date.now(),
@@ -22,13 +28,20 @@ export const useTrainingsStore = defineStore('trainings', {
           trainingMethod: trainingMethod,
           trainingInitiator: trainingInitiator,
           skillMatrixMapping:skillMatrixMapping,
-          
+          dueDate: dueDate,
+          status: status,
+          selectedRating: selectedRating,
+          evidence: evidence,
         });
 
         this.saveTrainings();
       } catch (error) {
         console.error('Error adding training:', error);
       }
+    },
+
+    setSelectedFile(file) {
+      this.selectedFile = file;
     },
 
     fetchTrainings() {

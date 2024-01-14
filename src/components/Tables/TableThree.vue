@@ -2,53 +2,10 @@
     // import { useGoalsStore } from "@/store/goals";
     import { ref } from 'vue';
     import AccordionCardThree from '../Cards/AccordionCardThree.vue'
-
-const items = ref([
-  { 
-    id: '1',
-    month: '12/10/2023', 
-    trainingTopic: 'Digital Marketing',
-    trainingMethod: 'Online',
-    status: 'On going',
-    
-   },
-   { 
-    id: '2',
-     month: '12/10/2023', 
-    trainingTopic: 'Digital Marketing',
-    trainingMethod: 'Online',
-    status: 'On going',
-   },
-   { 
-    id: '3',
-     month: '12/10/2023', 
-    trainingTopic: 'Digital Marketing',
-    trainingMethod: 'Online',
-    status: 'On going',
-   },
-   { 
-    id: '4',
-     month: '12/10/2023', 
-    trainingTopic: 'Digital Marketing',
-    trainingMethod: 'Online',
-    status: 'On going',
-   },
-   { 
-    id: '5',
-     month: '12/10/2023', 
-    trainingTopic: 'Digital Marketing',
-    trainingMethod: 'Online',
-    status: 'On going',
-   },
-   { 
-    id: '6',
-     month: '12/10/2023', 
-    trainingTopic: 'Digital Marketing',
-    trainingMethod: 'Online',
-    status: 'On going',
-   },
-
-]);
+    import {useTrainingsStore} from "@/store/trainings"
+  
+const store = useTrainingsStore();
+const trainings = store.trainings;
 
 const selectedItem = ref(null);
 
@@ -134,7 +91,7 @@ const selectItem = (item) => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in items" @click="selectItem(item)" @dblclick="$router.push({name: 'Training Schedule Details', params: {id: item.id}})">
+        <tr v-for="item in trainings" @click="selectItem(item)" @dblclick="$router.push({name: 'Training Schedule Details', params: {id: item.id}})">
           <td scope="row">{{item.id}}</td>
           <td>{{item.month}}</td>
           <td>{{item.trainingTopic}}</td>

@@ -79,8 +79,8 @@ onMounted(() => {
 
 const selectedFile = ref(null);
 
-const handleFileChange = (event) => {
-  const file = event.target.files[0];
+const handleFileChange = (goal) => {
+  const file = goal.target.files[0];
   
   selectedFile.value = file;
 };
