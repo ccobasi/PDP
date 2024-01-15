@@ -35,6 +35,17 @@ export const useMentorshipStore = defineStore('mentorship', {
       }
     },
 
+    updateMentorship(mentorshipId, updatedData) {
+  const index = this.getMentorship.findIndex(mentorship => mentorship.id === mentorshipId);
+  
+  if (index !== -1) {
+    // Update the mentorship with the new data
+    this.getMentorship[index] = { ...this.getMentorship[index], ...updatedData };
+    this.saveMentorship(); // Save the updated mentorships to localStorage
+  } else {
+    console.error('Mentorship not found for ID:', mentorshipId);
+  }
+},
 
     fetchMentorship() {
       return this.getMentorship();

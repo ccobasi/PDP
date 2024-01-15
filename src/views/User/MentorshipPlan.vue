@@ -1,8 +1,8 @@
 <script setup>
 import TabMenu from '../../components/Tabs/TabMenu.vue';
 import DoughnutChart from '../../components/Charts/DoughnutChart.vue'
-import TrainingTable from '../../components/TrainingTable.vue'
-import {useMentorshipStore} from "@/store/trainings"
+import TableSix from '../../components/Tables/TableSix.vue'
+import {useMentorshipStore} from "@/store/mentorship"
 import { ref, onMounted} from 'vue'
 
 const store = useMentorshipStore();
@@ -147,14 +147,8 @@ onMounted(() => {
         <div class="lines"></div>
       </div>
 
-      <div class="chart">
-        <div class="auto">
-          <DoughnutChart chart-id="regions" :doughnut="true" />
-        </div>
-      </div>
-
       <div class="table">
-        <TrainingTable />
+        <TableSix />
       </div>
 
     </div>
