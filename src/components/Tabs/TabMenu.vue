@@ -23,6 +23,9 @@
           <router-link to="/taskdeliverables" class="nav-link">Tasks/Deliverables</router-link>
         </li>
 
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/mentorshipplan' }">
+          <router-link to="/mentorshipplan" class="nav-link">Mentorship Plan</router-link>
+        </li>
       </ul>
 
     </nav>

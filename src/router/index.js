@@ -6,6 +6,7 @@ import TaskDeliverables from '../views/User/TaskDeliverables.vue'
 import CareerGoalDetail from '../components/CareerGoalDetail.vue'
 import SkillAssessmentDetails from '../components/SkillAssessmentDetails.vue'
 import TrainingScheduleDetails from '../components/TrainingScheduleDetails.vue'
+import TasksDetails from '../components/TasksDetails.vue'
 import DevelopmentPlan from '../views/KnowledgeManager/DevelopmentPlan.vue'
 import KMSkillAssessment from '../views/KnowledgeManager/SkillAssessment.vue'
 import KMTrainingSchedule from '../views/KnowledgeManager/TrainingSchedule.vue'
@@ -84,6 +85,12 @@ const router = createRouter({
       path: '/trainingscheduledetails/:id',
       name: 'Training Schedule Details',
       component: TrainingScheduleDetails,
+     
+    },
+    {
+      path: '/tasksdetails/:id',
+      name: 'Tasks Details',
+      component: TasksDetails,
      
     },
     {

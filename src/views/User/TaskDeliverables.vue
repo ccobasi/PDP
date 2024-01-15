@@ -1,9 +1,8 @@
 <script setup>
 import TabMenu from '../../components/Tabs/TabMenu.vue';
 import TableFour from '../../components/Tables/TableFour.vue';
-// import { computed } from 'vue'
-// import { useRoute } from 'vue-router';
-import { ref, onMounted} from 'vue'
+import { useRoute } from 'vue-router';
+import { ref, onMounted, computed} from 'vue'
 import {useTasksStore} from "@/store/tasks"
 
 
@@ -73,11 +72,10 @@ const handleFileChange = (task) => {
 
 
 // const tab = null;
-//  const isUserRoute = computed(() => {
-//   const route = useRoute();
-//   return route.path !== '/taskdeliverables';
-// });
-// v-if="isUserRoute" 
+ const isUserRoute = computed(() => {
+  const route = useRoute();
+  return route.path !== '/taskdeliverables';
+});
 
 </script>
 
@@ -149,7 +147,7 @@ const handleFileChange = (task) => {
       <div class="header">
         <div class="title mb-4">
           <h3>Task Deliverables</h3>
-          <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Add Task/Deliverables</button>
+          <button data-bs-toggle="modal" data-bs-target="#myModal" type="button" v-if="isUserRoute">Add Task/Deliverables</button>
 
         </div>
 

@@ -40,6 +40,17 @@ export const useTasksStore = defineStore('tasks', {
         console.error('Error adding task:', error);
       }
     },
+    updateTask(taskId, updatedData) {
+      const index = this.tasks.findIndex(task => task.id === taskId);
+      
+      if (index !== -1) {
+        // Update the task with the new data
+        this.tasks[index] = { ...this.tasks[index], ...updatedData };
+        this.saveTasks(); // Save the updated tasks to localStorage
+      } else {
+        console.error('Task not found for ID:', taskId);
+      }
+    },
 
     setSelectedFile(file) {
       this.selectedFile = file;
