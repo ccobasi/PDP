@@ -2,57 +2,45 @@
 import TabMenu from '../../components/Tabs/TabMenu.vue';
 import DoughnutChart from '../../components/Charts/DoughnutChart.vue'
 import TrainingTable from '../../components/TrainingTable.vue'
-import {useTrainingsStore} from "@/store/trainings"
+import {useMentorshipStore} from "@/store/trainings"
 import { ref, onMounted} from 'vue'
 
-const store = useTrainingsStore();
-console.log(store.trainings);
+const store = useMentorshipStore();
+console.log(store.mentorship);
 
-const addTraining = () => {
-  if (month.value.trim() !== '' || trainingTopic.value.trim() !== '' || learningOutcome.value.trim() !== ''
-    || trainingMethod.value.trim() !== ''
-    || trainingInitiator.value.trim() !== '' || skillMatrixMapping.value.trim() !== '' || dueDate.value.trim() !== '' || status.value.trim() !== '' || selectedRating.value.trim() !== '' || evidence.value.trim() !== '') {
-    store.addTraining(month.value.trim(), trainingTopic.value.trim(), learningOutcome.value.trim(),
-       trainingMethod.value.trim(), trainingInitiator.value.trim(), skillMatrixMapping.value.trim(), dueDate.value.trim(), status.value.trim(),
-       selectedRating.value.trim(), evidence.value.trim());
+const addMentorship = () => {
+  if (financialYear.value.trim() !== '' || month.value.trim() !== '' || mentor.value.trim() !== ''
+    || goals.value.trim() !== ''
+    || actionPlan.value.trim() !== '' || timeLine.value.trim() !== '' || status.value.trim() !== '' ) {
+    store.addMentorship(financialYear.value.trim(), month.value.trim(), mentor.value.trim(),
+       goals.value.trim(), actionPlan.value.trim(), timeLine.value.trim(), status.value.trim());
   
   }
 };
 
 
 // eslint-disable-next-line no-unused-vars
-const trainings = ref([])
+const mentorship = ref([])
   const month = ref('')
-  const trainingTopic = ref('')
-  const learningOutcome = ref('')
-  const trainingMethod = ref('')
-  const trainingInitiator  = ref('')
-  const skillMatrixMapping = ref('')
-  const dueDate = ref('')
+  const financialYear = ref('')
+  const mentor = ref('')
+  const goals = ref('')
+  const actionPlan  = ref('')
+  const timeLine = ref('')
   const status = ref('')
-  const selectedRating = ref('')
-  const evidence = ref('')
   const selectedValue = ref('')
-  const selectedFile = ref(null)
- 
 
 const handleSubmit = () => {
-  addTraining();
-  console.log("Training added")
+  addMentorship();
+  console.log("Mentorship added")
 };
 
 
 onMounted(() => {
   
-  store.fetchTrainings();
+  store.fetchMentorship();
 });
 
-
-const handleFileChange = (training) => {
-  const file = training.target.files[0];
-  selectedFile.value = file;
-  store.setSelectedFile(file);
-};
 
  
 
@@ -74,7 +62,7 @@ const handleFileChange = (training) => {
 
             <!-- Modal Header -->
             <div class="modal-header">
-              <h4 class="modal-title">Training request form</h4>
+              <h4 class="modal-title">Mentorship request form</h4>
               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
@@ -83,90 +71,61 @@ const handleFileChange = (training) => {
 
               <div class="first">
                 <div class="frame">
-                  <h6>Month</h6>
-                  <input type="date" v-model="month">
+                  <h6>Financial Year</h6>
+                  <select v-model="financialYear" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                    <option selected>Select Financial Year</option>
+                    <option value="FY23">FY23</option>
+                    <option value="FY24">FY24</option>
+                    <option value="FY25">FY25</option>
+                    <option value="FY26">FY26</option>
+                  </select>
                 </div>
                 <div class="frame">
-                  <h6>Training Topic</h6>
+                  <h6>Month</h6>
 
-                  <textarea v-model="trainingTopic" name="training topic" id="" cols="30" rows="10" placeholder="Digital marketing"></textarea>
+                  <input v-model="month" id="bday-month" type="month" name="bday-month" min="2023-01" max="2026-12" />
                 </div>
               </div>
               <div class="second">
                 <div class="frame">
-                  <h6>Learning Outcome</h6>
-                  <textarea v-model="learningOutcome" name="Learning Outcome" id="" cols="30" rows="10" placeholder="Digital marketer"></textarea>
+                  <h6>Mentors</h6>
+                  <select v-model="mentor" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                    <option selected>Select Mentor</option>
+                    <option value="Isaac">Isaac</option>
+                    <option value="Chido">Chido</option>
+                    <option value="Lola">Lola</option>
+                  </select>
                 </div>
                 <div class="frame">
-                  <h6>Training Method</h6>
-                  <select v-model="trainingMethod" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
-                    <option selected>Online</option>
-                    <option value="Physical">Physical</option>
-                    <option value="Online">Online</option>
-                  </select>
+                  <h6>Goals</h6>
+                  <textarea v-model="goals" name="Goals" id="" cols="30" rows="10" placeholder="Goals"></textarea>
                 </div>
               </div>
+
               <div class="third">
                 <div class="frame">
-                  <h6>Training Initiator</h6>
-                  <select v-model="trainingInitiator" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
-                    <option selected>Self</option>
-                    <option value="Manager">Manager</option>
-                    <option value="Self">Self</option>
-                  </select>
+                  <h6>Action Plan</h6>
+                  <textarea v-model="actionPlan" name="Action Plan" id="" cols="30" rows="10" placeholder="Action Plan"></textarea>
+
                 </div>
                 <div class="frame">
-                  <h6>Skill Matrix Mapping</h6>
-                  <textarea v-model="skillMatrixMapping" name="Skill Matrix Mapping" id="" cols="30" rows="10" placeholder="Skill Matrix Mapping"></textarea>
+                  <h6>Timeline</h6>
+                  <input v-model="timeLine" type="date">
                 </div>
               </div>
               <div class="fourth">
                 <div class="frame">
-                  <h6>Due Date</h6>
-                  <input type="date" v-model="dueDate">
-                </div>
-                <div class="frame">
                   <h6>Status</h6>
                   <select v-model="status" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
-                    <option class="opt" selected>Status</option>
-                    <option class="opt" value="Completed">Completed</option>
-                    <option class="opt" value="On-going">On-going</option>
-                    <option class="opt" value="Not started">Not started</option>
+                    <option selected>Select Status</option>
+                    <option value="Not started">Not started</option>
+                    <option value="Ongoing">Ongoing</option>
+                    <option value="Completed">Completed</option>
                   </select>
                 </div>
+
               </div>
-              <div class="fifth">
-                <div class="frame">
-                  <h6>Rating</h6>
-                  <div class="rating">
 
-                    <input id="demo-1" type="radio" name="demo" value="1" v-model="selectedRating">
-                    <label for="demo-1">1 star</label>
-                    <input id="demo-2" type="radio" name="demo" value="2" v-model="selectedRating">
-                    <label for="demo-2">2 stars</label>
-                    <input id="demo-3" type="radio" name="demo" value="3" v-model="selectedRating">
-                    <label for="demo-3">3 stars</label>
-                    <input id="demo-4" type="radio" name="demo" value="4" v-model="selectedRating">
-                    <label for="demo-4">4 stars</label>
-                    <input id="demo-5" type="radio" name="demo" value="5" v-model="selectedRating">
-                    <label for="demo-5">5 stars</label>
-
-                    <div class="stars">
-                      <label for="demo-1" aria-label="1 star" title="1 star"></label>
-                      <label for="demo-2" aria-label="2 stars" title="2 stars"></label>
-                      <label for="demo-3" aria-label="3 stars" title="3 stars"></label>
-                      <label for="demo-4" aria-label="4 stars" title="4 stars"></label>
-                      <label for="demo-5" aria-label="5 stars" title="5 stars"></label>
-                    </div>
-
-                  </div>
-                </div>
-                <div class="frame">
-                  <h6>Evidence</h6>
-                  <input type="file" @change="handleFileChange">
-                  <button>Save Changes</button>
-                </div>
-              </div>
             </div>
 
             <!-- Modal footer -->
@@ -181,8 +140,8 @@ const handleFileChange = (training) => {
     <div class="skill mt-4">
       <div class="header">
         <div class="title mb-4">
-          <h3>Training Schedule</h3>
-          <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Training Request</button>
+          <h3>Mentorship Plan</h3>
+          <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Mentorship Request</button>
 
         </div>
         <div class="lines"></div>
