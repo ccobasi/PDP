@@ -25,7 +25,7 @@ export const useTasksStore = defineStore('tasks', {
           this.setTasks([]);
         }
 
-        this.getTasks.push({
+        this.tasks.push({
           id: Date.now(),
           task: task,
           status: status,
@@ -57,7 +57,7 @@ export const useTasksStore = defineStore('tasks', {
     },
 
     fetchTasks() {
-      return this.getTasks();
+      return this.tasks;
     },
 
     saveTasks() {

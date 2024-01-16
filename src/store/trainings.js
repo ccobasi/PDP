@@ -20,7 +20,7 @@ export const useTrainingsStore = defineStore('trainings', {
   actions: {
     addTraining(month, trainingTopic, learningOutcome, trainingMethod, trainingInitiator,skillMatrixMapping, dueDate, status, selectedRating, evidence) {
       try {
-        this.getTrainings.push({
+        this.trainings.push({
           id: Date.now(),
           month: month,
           trainingTopic: trainingTopic,
@@ -45,7 +45,7 @@ export const useTrainingsStore = defineStore('trainings', {
     },
 
     fetchTrainings() {
-      return this.getTrainings();
+      return this.trainings;
     },
 
     saveTrainings() {

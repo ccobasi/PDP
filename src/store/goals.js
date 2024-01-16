@@ -14,7 +14,7 @@ export const useGoalsStore = defineStore('goals', {
   actions: {
     addGoal(plan, goal, achieve, resource, success, potential, solution, date, progress,status,feedback,evidence) {
       try {
-        this.getGoals.push({
+        this.goals.push({
           id: Date.now(),
           plan: plan,
           goal: goal,
@@ -37,7 +37,7 @@ export const useGoalsStore = defineStore('goals', {
     },
 
     fetchGoals() {
-      return this.getGoals();
+      return this.goals;
     },
 
     saveGoals() {

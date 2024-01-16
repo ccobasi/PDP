@@ -19,7 +19,7 @@ export const useMentorshipStore = defineStore('mentorship', {
           this.setMentorship([]);
         }
 
-        this.getMentorship.push({
+        this.mentorship.push({
           id: Date.now(),
           financialYear: financialYear,
           month: month,
@@ -48,7 +48,7 @@ export const useMentorshipStore = defineStore('mentorship', {
 },
 
     fetchMentorship() {
-      return this.getMentorship();
+      return this.mentorship;
     },
 
     saveMentorship() {
