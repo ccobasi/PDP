@@ -14,6 +14,7 @@ import KMSkillAssessment from '../views/KnowledgeManager/SkillAssessment.vue'
 import KMTrainingSchedule from '../views/KnowledgeManager/TrainingSchedule.vue'
 import KMAllTrainingSchedule from '../views/KnowledgeManager/AllTrainingSchedule.vue'
 import KMTaskDeliverables from '../views/KnowledgeManager/TaskDeliverables.vue'
+import KMMentorship from '../views/KnowledgeManager/MentorshipPlan.vue'
 import MyProfile from '../views/KnowledgeManager/MyProfile.vue'
 import  ProfileSkillAssessment from '../views/KnowledgeManager/ProfileSkillAssessment.vue'
 import ProfileTrainingSchedule from '../views/KnowledgeManager/ProfileTrainingSchedule.vue'
@@ -131,6 +132,11 @@ const router = createRouter({
     path: "/km/taskdeliverables",
     name: "Knowledge Manager Task Deliverables",
     component: KMTaskDeliverables,
+    },
+    {
+    path: "/km/mentorshipplan",
+    name: "Knowledge Manager Mentorship",
+    component: KMMentorship,
     },
     {
     path: "/km/myprofile",

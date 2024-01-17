@@ -177,6 +177,9 @@
             Task/Deliverables
           </router-link>
         </li>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/mentorshipplan' }">
+          <router-link to="/km/mentorshipplan" class="nav-link">Mentorship Plan</router-link>
+        </li>
       </ul>
 
     </nav>

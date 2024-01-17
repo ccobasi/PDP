@@ -1,19 +1,11 @@
 <script setup>
-    import { useGoalsStore } from "@/store/goals";
+    import { useGoalsStore } from "@/store/kmgoals";
     import { ref, computed } from 'vue';
     import AccordionCard from "../Cards/AccordionCard.vue"
     import { useRoute } from 'vue-router';
 
 
 const selectedItem = ref(null);
-
-const props = defineProps({
-  filterOptions: Function, 
-});
-
-const filteredGoals = computed(() => {
-  return props.filterOptions ? props.filterOptions() : store.goals; 
-});
 
 const selectItem = (item) => {
   selectedItem.value = item;
@@ -96,7 +88,7 @@ const selectItem = (item) => {
       </thead>
       <tbody>
 
-        <tr v-for="item in filteredGoals" :key="item.id" @click="selectItem(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})">
+        <tr v-for="item in goals" :key="item.id" @click="selectItem(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})">
           <td>{{item.id}}</td>
           <td>{{item.goal}}</td>
           <td>{{item.date}}</td>
