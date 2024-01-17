@@ -2,6 +2,7 @@
     import { ref, computed } from 'vue';
     import AccordionCardTwo from '../Cards/AccordionCardTwo.vue'
     import {useSkillsStore} from "@/store/skills"
+    import html2pdf from 'html2pdf.js';
 
 
 const store = useSkillsStore();
@@ -27,7 +28,17 @@ const paginatedSkills = computed(() => {
   return skills.slice(startIndex, endIndex);
 });
 
+const downloadPDF = () => {
+  const table = document.querySelector('.table-responsive');
 
+  html2pdf(table, {
+    margin: 10,
+    filename: 'table-data.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+  });
+};
 </script>
 <template>
   <div class="title">
@@ -166,6 +177,7 @@ const paginatedSkills = computed(() => {
                 </tbody>
               </table>
               <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+              <v-btn @click="downloadPDF">Download as PDF</v-btn>
 
             </div>
           </div>
