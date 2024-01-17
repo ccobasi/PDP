@@ -1,5 +1,5 @@
 <script setup>
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import AccordionCardTwo from '../Cards/AccordionCardTwo.vue'
     import {useSkillsStore} from "@/store/skills"
 
@@ -16,6 +16,18 @@ const selectItem = (item) => {
   console.log(selectedItem)
 };
 
+const itemsPerPage = 15; 
+const currentPage = ref(1);
+
+const totalPages = computed(() => Math.ceil(skills.length / itemsPerPage));
+
+const paginatedSkills = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return skills.slice(startIndex, endIndex);
+});
+
+
 </script>
 <template>
   <div class="title">
@@ -31,7 +43,7 @@ const selectItem = (item) => {
 
           <!-- Modal body -->
           <div class="modal-body">
-            <div class="table-responsive d-flex">
+            <div class="table-responsive d-flex flex-column">
 
               <table class="full">
                 <thead>
@@ -138,7 +150,9 @@ const selectItem = (item) => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})">
+                  <tr v-for="(item, index) in paginatedSkills" :key="index" @click="selectItem(item)" @dblclick="$router.push({ name: 'Skill Assessment Details', params: { id: item.id } })">
+
+                    <!-- <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
                     <td>{{item.id}}</td>
                     <td>{{item.skill}}</td>
                     <td>{{item.currentState}}</td>
@@ -151,6 +165,8 @@ const selectItem = (item) => {
                   </tr>
                 </tbody>
               </table>
+              <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+
             </div>
           </div>
 
