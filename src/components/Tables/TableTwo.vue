@@ -18,6 +18,148 @@ const selectItem = (item) => {
 
 </script>
 <template>
+  <div class="title">
+    <div class="modal" id="myModal1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Skill Assessment Table</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="table-responsive d-flex">
+
+              <table class="full">
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink">S/N</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Skills</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Current State</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Gap</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Desired State</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Initiatives</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Status </span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Feedbacks </span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Evidence</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})">
+                    <td>{{item.id}}</td>
+                    <td>{{item.skill}}</td>
+                    <td>{{item.currentState}}</td>
+                    <td>{{item.gap}}</td>
+                    <td>{{item.desiredState}}</td>
+                    <td>{{item.initiative}}</td>
+                    <td>{{item.status}}</td>
+                    <td>{{item.feedback}}</td>
+                    <td>{{item.evidence}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <button class="view" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
+  </div>
   <div class="table-responsive d-flex">
 
     <table class="table">
@@ -78,6 +220,7 @@ const selectItem = (item) => {
 
             </div>
           </th>
+
           <th scope="col">
             <div class="d-flex align-center gap-1">
               <span class="noshrink"> Status </span>
@@ -112,6 +255,7 @@ const selectItem = (item) => {
           <td>{{item.desiredState}}</td>
           <td>{{item.status}}</td>
           <td>{{item.feedback}}</td>
+
         </tr>
       </tbody>
     </table>
@@ -125,12 +269,36 @@ const selectItem = (item) => {
 </template>
 
 <style scoped>
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+}
+.view {
+  display: flex;
+  padding: 10px 30px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+
+  color: var(--White, #fff);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
 .table-responsive {
   width: 100%;
 }
 
 table {
   width: 780px;
+}
+.full {
+  width: 1080px;
 }
 thead tr th {
   font-size: 12px;
@@ -169,5 +337,42 @@ tr {
   font-style: normal;
   font-weight: 500;
   line-height: 28.8px;
+}
+.modal {
+  margin-left: 5%;
+}
+.modal-dialog {
+  --bs-modal-width: 1280px;
+  width: 1200px;
+  height: 550px;
+  display: inline-flex;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--Grey-Light, #eee);
+  background: var(--Grey-Light, #eee);
+}
+.modal-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  color: var(--Black, #000);
+  font-family: Roboto;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.modal-body {
+  display: flex;
+  padding: 20px 30px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 10px;
+  background: #fff;
 }
 </style>
