@@ -1,6 +1,5 @@
 <script setup>
 import TabMenu from '../../components/Tabs/TabMenu.vue';
-import DoughnutChart from '../../components/Charts/DoughnutChart.vue'
 import TableSix from '../../components/Tables/TableSix.vue'
 import {useMentorshipStore} from "@/store/mentorship"
 import { ref, onMounted} from 'vue'
@@ -83,7 +82,27 @@ onMounted(() => {
                 <div class="frame">
                   <h6>Month</h6>
 
-                  <input v-model="month" id="bday-month" type="month" name="bday-month" min="2023-01" max="2026-12" />
+                  <!-- <input v-model="month" id="bday-month" type="month" name="bday-month" min="2023-01" max="2026-12" /> -->
+                  <div class="fallbackDatePicker">
+                    <div>
+                      <span>
+                        <select class="form-select" v-model="month" id="month" name="month">
+                          <option selected>January</option>
+                          <option>February</option>
+                          <option>March</option>
+                          <option>April</option>
+                          <option>May</option>
+                          <option>June</option>
+                          <option>July</option>
+                          <option>August</option>
+                          <option>September</option>
+                          <option>October</option>
+                          <option>November</option>
+                          <option>December</option>
+                        </select>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="second">
@@ -291,7 +310,7 @@ main {
 .frame textarea {
   display: flex;
   width: 320px;
-  height: 50px;
+  height: 90px;
   padding: 10px;
   flex-direction: column;
   align-items: flex-start;

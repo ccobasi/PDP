@@ -1,6 +1,7 @@
 <script setup>
     import { useMentorshipStore } from "@/store/mentorship";
-    // import { ref, computed } from 'vue';
+    import html2pdf from 'html2pdf.js';
+    import { ref, computed } from 'vue';
     // import { useRoute } from 'vue-router';
 
 
@@ -11,9 +12,32 @@
 
     console.log(mentorship);
 
+    const itemsPerPage = 15; 
+const currentPage = ref(1);
+
+const totalPages = computed(() => Math.ceil(mentorship.length / itemsPerPage));
+
+const paginatedMentorship = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return mentorship.slice(startIndex, endIndex);
+});
+
+const downloadPDF = () => {
+  const table = document.querySelector('.table-responsive');
+
+  html2pdf(table, {
+    margin: 10,
+    filename: 'table-data.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+  });
+};
+
 </script>
 <template>
-  <div class="table-responsive d-flex flex-row">
+  <div class="table-responsive d-flex flex-column">
     <table class="table">
       <thead>
         <tr>
@@ -109,7 +133,8 @@
       </thead>
       <tbody>
 
-        <tr v-for="item in mentorship" :key="item.id" @dblclick="$router.push({name: 'Mentorship Details', params: {id: item.id}})">
+        <!-- <tr v-for="item in mentorship" :key="item.id" @dblclick="$router.push({name: 'Mentorship Details', params: {id: item.id}})"> -->
+        <tr v-for="(item, index) in paginatedMentorship" :key="index" @dblclick="$router.push({name: 'Mentorship Details', params: {id: item.id}})">
           <td>{{item.id}}</td>
           <td>{{item.financialYear}}</td>
           <td>{{item.month}}</td>
@@ -122,12 +147,14 @@
 
       </tbody>
     </table>
+    <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+    <v-btn @click="downloadPDF">Download as PDF</v-btn>
   </div>
 </template>
 
 <style scoped>
 table {
-  width: 1200px;
+  width: 1150px;
 }
 thead tr th {
   font-size: 12px;
