@@ -4,6 +4,7 @@ import SkillAssessment from '../views/User/SkillAssessment.vue'
 import TrainingSchedule from '../views/User/TrainingSchedule.vue'
 import TaskDeliverables from '../views/User/TaskDeliverables.vue'
 import MentorshipPlan from '../views/User/MentorshipPlan.vue'
+import Settings from '../views/User/SettingsView.vue'
 import CareerGoalDetail from '../components/CareerGoalDetail.vue'
 import SkillAssessmentDetails from '../components/SkillAssessmentDetails.vue'
 import TrainingScheduleDetails from '../components/TrainingScheduleDetails.vue'
@@ -75,6 +76,12 @@ const router = createRouter({
       path: '/mentorshipplan',
       name: 'Mentorship Plan',
       component: MentorshipPlan,
+     
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: Settings,
      
     },
     {

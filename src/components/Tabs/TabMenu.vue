@@ -26,6 +26,9 @@
         <li :class="{ 'nav-item': true, 'active': $route.path === '/mentorshipplan' }">
           <router-link to="/mentorshipplan" class="nav-link">Mentorship Plan</router-link>
         </li>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/settings' }">
+          <router-link to="/settings" class="nav-link">Settings</router-link>
+        </li>
       </ul>
 
     </nav>
