@@ -1,8 +1,9 @@
 <script setup>
     // import { useGoalsStore } from "@/store/goals";
-    import { ref } from 'vue';
+    import { ref, computed } from 'vue';
     import AccordionCardThree from '../Cards/AccordionCardThree.vue'
     import {useTrainingsStore} from "@/store/trainings"
+    import html2pdf from 'html2pdf.js';
   
 const store = useTrainingsStore();
 const trainings = store.trainings;
@@ -14,10 +15,202 @@ const selectItem = (item) => {
   console.log(selectedItem)
 };
 
+const itemsPerPage = 15; 
+const currentPage = ref(1);
+
+const totalPages = computed(() => Math.ceil(trainings.length / itemsPerPage));
+
+const paginatedTrainings = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return trainings.slice(startIndex, endIndex);
+});
+
+const downloadPDF = () => {
+  const table = document.querySelector('.table-responsive');
+
+  html2pdf(table, {
+    margin: 10,
+    filename: 'table-data.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+  });
+};
 </script>
 <template>
-  <div class="table-responsive d-flex">
+  <div class="title">
+    <div class="modal" id="myModal1">
+      <div class="modal-dialog">
+        <div class="modal-content">
 
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Training Schedule Table</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="table-responsive d-flex flex-column">
+
+              <table class="full">
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink">S/N</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Month</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Training Topic</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Learning Outcome</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Training Method</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Training Initiator</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Skill Matrix Mapping </span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Due Date </span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Status</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Rating</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Evidence</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in paginatedTrainings" :key="index">
+
+                    <!-- <tr v-for="item in trainings" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
+                    <td>{{item.id}}</td>
+                    <td>{{item.month}}</td>
+                    <td>{{item.trainingTopic}}</td>
+                    <td>{{item.learnOutcome}}</td>
+                    <td>{{item.trainingMethod}}</td>
+                    <td>{{item.initiator}}</td>
+                    <td>{{item.skillMatrixMapping}}</td>
+                    <td>{{item.dueDate}}</td>
+                    <td>{{item.status}}</td>
+                    <td>{{item.selectedRating}}</td>
+                    <td>{{item.evidence}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+              <v-btn @click="downloadPDF">Download as PDF</v-btn>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <button class="view" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
+  </div>
+  <div class="table-responsive d-flex">
     <table class="table">
       <thead>
         <tr>
@@ -116,6 +309,30 @@ const selectItem = (item) => {
 </template>
 
 <style scoped>
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+}
+.view {
+  display: flex;
+  padding: 10px 30px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+
+  color: var(--White, #fff);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
+.full {
+  width: 1120px;
+}
 table {
   width: 900px;
 }
@@ -156,5 +373,21 @@ tr {
   font-style: normal;
   font-weight: 500;
   line-height: 28.8px;
+}
+.modal {
+  margin-left: 5%;
+}
+.modal-dialog {
+  --bs-modal-width: 1280px;
+  width: 1200px;
+  height: 550px;
+  display: inline-flex;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--Grey-Light, #eee);
+  background: var(--Grey-Light, #eee);
 }
 </style>
