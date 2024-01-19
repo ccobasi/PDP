@@ -10,7 +10,7 @@
       <img src="../assets/Group.png" alt="brand_logo">
     </div>
     <div class="brand">
-      Personalized Development Plan
+      People Development Platform
 
     </div>
     <div class="subheader d-flex align-center gap-4">
