@@ -1,6 +1,95 @@
 <script setup>
 import TabMenu from '../../components/Tabs/TabMenu.vue';
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import {useUsersStore} from "@/store/users"
+import {useDepartmentsStore} from "@/store/departments"
+
+
+const store = useUsersStore();
+console.log(store.users);
+const users = store.users;
+
+const stores = useDepartmentsStore();
+console.log(stores.departments);
+const departments = stores.departments;
+
+
+  const user = ref('')
+  const department = ref('')
+  const manager = ref('')
+  const resource = ref('')
+  const email  = ref('')
+  const level = ref('')
+  const status = ref('')
+  const role = ref('')
+  const selectedValue = ref('')
+
+  const dept = ref('')
+
+const addUser = async () => {
+  if (
+    user.value.trim() !== '' || department.value.trim() !== '' || manager.value.trim() !== '' ||
+    resource.value.trim() !== '' || email.value.trim() !== '' || level.value.trim() !== '' ||
+    status.value.trim() !== '' || role.value.trim() !== '' 
+  ) {
+    await store.addUser(
+      user.value.trim(), department.value.trim(), manager.value.trim(),
+      resource.value.trim(), email.value.trim(), level.value.trim(), status.value.trim(), role.value.trim()
+    );
+
+    // Clear form inputs after submission
+    user.value = '';
+    department.value = '';
+    manager.value = '';
+    email.value = '';
+    level.value = '';
+    status.value = '';
+    role.value = '';
+    
+
+    console.log("User added");
+  }
+};
+
+const addDepartment = async () => {
+  if (
+    dept.value.trim() !== '' 
+  ) {
+    await stores.addDepartment(
+      dept.value.trim()
+    );
+    
+
+    console.log("Department added");
+  }
+};
+
+
+const handleSubmit = () => {
+  addUser();
+  console.log("User added")
+};
+
+const handleSubmit1 = () => {
+  addDepartment();
+  console.log("Department added")
+};
+
+onMounted(() => {
+  
+  store.fetchUsers();
+  console.log("Fetch users")
+  stores.fetchDepartments();
+  console.log("Fetch departments")
+});
+
+ 
+
+ const onSelectChange = () => {
+  // eslint-disable-next-line no-self-assign
+  selectedValue.value = selectedValue.value
+}
+
 
 const tab = ref(1);
 
@@ -24,36 +113,66 @@ const tab = ref(1);
               <div class="goal">
                 <div class="left">
                   <h4>Name</h4>
-                  <textarea name="Goal" placeholder="Name" id="" cols="30" rows="10" v-model="goal"></textarea>
+                  <textarea name="Name" placeholder="Name" id="" cols="30" rows="10" v-model="name"></textarea>
                 </div>
                 <div class="right">
                   <h4 class="">Department</h4>
-                  <textarea name="Department" placeholder="Department" id="" cols="30" rows="10" v-model="achieve"></textarea>
+                  <textarea name="Department" placeholder="Department" id="" cols="30" rows="10" v-model="department"></textarea>
                 </div>
               </div>
               <div class="goal">
                 <div class="left">
                   <h4>Manager</h4>
-                  <textarea name="Manager" placeholder="Manager" id="" cols="30" rows="10" v-model="resource"></textarea>
+                  <textarea name="Manager" placeholder="Manager" id="" cols="30" rows="10" v-model="manager"></textarea>
                 </div>
                 <div class="right">
                   <h4 class="">Email</h4>
-                  <textarea name="Email" placeholder="Email" id="" cols="30" rows="10" v-model="potential"></textarea>
+                  <textarea name="Email" placeholder="Email" id="" cols="30" rows="10" v-model="email"></textarea>
                 </div>
               </div>
               <div class="goal">
                 <div class="left">
                   <h4>Level</h4>
-                  <textarea name="Level" placeholder="Level" id="" cols="30" rows="10" v-model="potential"></textarea>
+                  <textarea name="Level" placeholder="Level" id="" cols="30" rows="10" v-model="level"></textarea>
                 </div>
                 <div class="right">
                   <h4 class="">Status</h4>
-                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="plan">
+                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="status">
 
                     <option class="opt" value="Active">Active</option>
                     <option class="opt" value="In-Active">In-Active</option>
                   </select>
                 </div>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal" @click="$router.push('/settings')">Submit Request</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </form>
+    <form method="post" action="" @submit.prevent="handleSubmit1">
+      <div class="modal" id="myModal1" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Department Form</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+              <div class="goal">
+                <div class="leftt">
+                  <h4>Department</h4>
+                  <!-- <textarea name="Department" placeholder="Department" id="" cols="30" rows="10" v-model="department"></textarea> -->
+                  <input type="text" v-model="dept" placeholder="Department">
+                </div>
+
               </div>
 
             </div>
@@ -83,7 +202,7 @@ const tab = ref(1);
             <v-tabs-items v-model="tab">
               <!-- Users Tab -->
               <v-tab-item :value="1">
-                <v-container fluid>
+                <v-container fluid v-if="tab === 1">
                   <div class="dev">
                     <h3>Roles</h3>
                     <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Add Role</button>
@@ -182,12 +301,15 @@ const tab = ref(1);
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="item in events" :key="item.id" @click="$router.push({ name: 'details', params: { id: item.id } })">
+                      <tr v-for="item in users" :key="item.id">
                         <td>{{ item.id }}</td>
-                        <td>{{ item.transaction }}</td>
-                        <td>{{ item.venue }}</td>
-                        <td>{{ item.date }}</td>
-
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.department }}</td>
+                        <td>{{ item.manager }}</td>
+                        <td>{{ item.email }}</td>
+                        <td>{{ item.level }}</td>
+                        <td>{{ item.status }}</td>
+                        <td>{{ item.role }}</td>
                       </tr>
                     </tbody>
                   </v-table>
@@ -196,14 +318,53 @@ const tab = ref(1);
 
               <!-- Department and Levels Tab -->
               <v-tab-item :value="2">
-                <v-container fluid>
+                <v-container fluid v-if="tab === 2">
+                  <div class="dev">
+                    <h3>Department</h3>
+                    <button data-bs-toggle="modal" data-bs-target="#myModal1" type="button">Add Department</button>
+                  </div>
+                  <v-table>
+                    <thead>
+                      <tr>
+                        <th class="text-left">
+                          <div class="d-flex align-center gap-1">
+                            <span> S/N </span>
 
+                            <span class="d-flex flex-column align-center">
+                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                            </span>
+
+                          </div>
+                        </th>
+                        <th class="text-left">
+                          <div class="d-flex align-center gap-1">
+                            <span> Department </span>
+
+                            <span class="d-flex flex-column align-center">
+                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                            </span>
+
+                          </div>
+                        </th>
+
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="item in departments" :key="item.id">
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.dept }}</td>
+
+                      </tr>
+                    </tbody>
+                  </v-table>
                 </v-container>
               </v-tab-item>
 
               <!-- Log Tab -->
               <v-tab-item :value="3">
-                <v-container fluid>
+                <v-container fluid v-if="tab === 3">
 
                 </v-container>
               </v-tab-item>
@@ -401,5 +562,16 @@ main {
   background: var(--Secondary, #47b65c);
   color: #fff;
   margin-top: 10px;
+}
+.leftt {
+  width: 400px;
+}
+.leftt input {
+  width: 100%;
+  height: 40px;
+  border: 1px solid #ddd;
+}
+#myModal1 .modal-dialog {
+  height: 370px;
 }
 </style>
