@@ -118,13 +118,22 @@ const tab = ref(1);
                 </div>
                 <div class="right">
                   <h4 class="">Department</h4>
-                  <textarea name="Department" placeholder="Department" id="" cols="30" rows="10" v-model="department"></textarea>
+                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="department">
+
+                    <option class="opt" value="Knowledge Management">Knowledge Management</option>
+                    <option class="opt" value="Credit Risk Management">Credit Risk Management</option>
+                  </select>
                 </div>
               </div>
               <div class="goal">
                 <div class="left">
                   <h4>Manager</h4>
-                  <textarea name="Manager" placeholder="Manager" id="" cols="30" rows="10" v-model="manager"></textarea>
+                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="manager">
+
+                    <option class="opt" value="Tope">Tope</option>
+                    <option class="opt" value="Stephen">Stephen</option>
+                    <option class="opt" value="Victory">Victory</option>
+                  </select>
                 </div>
                 <div class="right">
                   <h4 class="">Email</h4>
@@ -134,7 +143,12 @@ const tab = ref(1);
               <div class="goal">
                 <div class="left">
                   <h4>Level</h4>
-                  <textarea name="Level" placeholder="Level" id="" cols="30" rows="10" v-model="level"></textarea>
+                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="level">
+
+                    <option class="opt" value="Associates">Associates</option>
+                    <option class="opt" value="Senior Associates">Senior Associates</option>
+                    <option class="opt" value="AVP">AVP</option>
+                  </select>
                 </div>
                 <div class="right">
                   <h4 class="">Status</h4>
@@ -170,8 +184,7 @@ const tab = ref(1);
               <div class="goal">
                 <div class="leftt">
                   <h4>Department</h4>
-                  <!-- <textarea name="Department" placeholder="Department" id="" cols="30" rows="10" v-model="department"></textarea> -->
-                  <input type="text" v-model="dept" placeholder="Department">
+                  <textarea name="Department" placeholder="Department" v-model="dept" id="" cols="30" rows="10"></textarea>
                 </div>
 
               </div>

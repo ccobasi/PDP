@@ -4,13 +4,15 @@ import TableFour from '../../components/Tables/TableFour.vue';
 import { useRoute } from 'vue-router';
 import { ref, onMounted, computed} from 'vue'
 import {useTasksStore} from "@/store/tasks"
+ import html2pdf from 'html2pdf.js';
 
 
 const store = useTasksStore();
+const tasks = store.tasks;
+
 console.log(store.tasks);
 
-// eslint-disable-next-line no-unused-vars
-const tasks = ref([])
+
   const task = ref('')
   const status = ref('')
   const startDate = ref('')
@@ -77,6 +79,29 @@ const handleFileChange = (task) => {
   return route.path !== '/taskdeliverables';
 });
 
+const itemsPerPage = 15; 
+const currentPage = ref(1);
+
+const totalPages = computed(() => Math.ceil(tasks.length / itemsPerPage));
+
+const paginatedTasks = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return tasks.slice(startIndex, endIndex);
+});
+
+const downloadPDF = () => {
+  const table = document.querySelector('.table-responsive');
+
+  html2pdf(table, {
+    margin: 10,
+    filename: 'table-data.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+  });
+};
+
 </script>
 
 
@@ -84,6 +109,131 @@ const handleFileChange = (task) => {
 <template>
   <main class="wrapper">
     <TabMenu />
+    <div class="titles mt-3">
+      <div class="modal" id="myModal1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Tasks/Deliverables Table</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+              <div class="table-responsive d-flex flex-column">
+
+                <table class="full">
+                  <thead>
+                    <tr>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink">S/N</span>
+
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Tasks/Deliverables</span>
+
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Status</span>
+
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Start date</span>
+
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> End Date</span>
+
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Comment</span>
+
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Evidence of Completion </span>
+
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+
+                        </div>
+                      </th>
+
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in paginatedTasks" :key="index" @click="selectItem(item)" @dblclick="$router.push({ name: 'Skill Assessment Details', params: { id: item.id } })">
+
+                      <!-- <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
+                      <td>{{item.id}}</td>
+                      <td>{{item.task}}</td>
+                      <td>{{item.status}}</td>
+                      <td>{{item.startDate}}</td>
+                      <td>{{item.endDate}}</td>
+                      <td>{{item.comment}}</td>
+                      <td>{{item.evidence}}</td>
+
+                    </tr>
+                  </tbody>
+                </table>
+                <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+                <v-btn @click="downloadPDF">Download as PDF</v-btn>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <button class="view" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
+    </div>
     <form method="post" action="" @submit.prevent="handleSubmit">
       <div class="modal" id="myModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -162,6 +312,30 @@ const handleFileChange = (task) => {
 main {
   height: 800px;
 }
+.titles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+}
+.view {
+  display: flex;
+  padding: 10px 30px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+
+  color: var(--White, #fff);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
+.full {
+  width: 1080px;
+}
 .header {
   display: flex;
   flex-direction: column;
@@ -193,11 +367,11 @@ main {
   background: #808080;
 }
 .modal {
-  margin-left: 21%;
+  margin-left: 7%;
 }
 .modal-dialog {
-  --bs-modal-width: 800px;
-  width: 800px;
+  --bs-modal-width: 1200px;
+  width: 1200px;
   height: 500px;
   display: inline-flex;
   padding: 20px;
