@@ -2,19 +2,30 @@
 import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
 import BarChart from '../../components/Charts/BarChart.vue'
 import SkillMetrics from '../../components/SkillMetrics.vue'
-import Table from '../../components/Tables/TableFive.vue'
 import { ref, /*onMounted*/} from 'vue'
 import {useSkillsStore} from "@/store/skills"
+import {useKMSkillsStore} from "@/store/skills"
 
 
 const store = useSkillsStore();
 console.log(store.skills);
+const stores = useKMSkillsStore();
+console.log(stores.skills);
 
 const addSkill = () => {
   if (skill.value.trim() !== '' || currentState.value.trim() !== '' || gap.value.trim() !== ''
       || desiredState.value.trim() !== ''
       || initiative.value.trim() !== '' ) {
     store.addSkill(skill.value.trim(), currentState.value.trim(), gap.value.trim(), desiredState.value.trim(), initiative.value.trim());
+  
+  }
+}
+
+const addKmSkill = () => {
+  if (skill.value.trim() !== '' || currentState.value.trim() !== '' || gap.value.trim() !== ''
+      || desiredState.value.trim() !== ''
+      || initiative.value.trim() !== '' ) {
+    stores.addKmSkill(skill.value.trim(), currentState.value.trim(), gap.value.trim(), desiredState.value.trim(), initiative.value.trim());
   
   }
 }
@@ -30,7 +41,9 @@ const skills = ref([])
 
 const handleSubmit = () => {
   addSkill();
+  addKmSkill();
   console.log("Skill added")
+  console.log("KM Skill added")
 };
 
 
@@ -44,145 +57,90 @@ const onSelectChange = () => {
   selectedValue.value = selectedValue.value
 }
 
-const tab = ref(null);
+// const tab = ref(null);
 </script>
 
 
 <template>
   <main class="wrapper">
     <TabMenu />
-    <div class="modal" id="myModal1" tabindex="-1">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Development Plan Request</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <form method="post" action="" @submit.prevent="handleSubmit">
+      <div class="modal" id="myModal1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Skill Request Form</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+
+              <div class="frame">
+                <h6>Skill</h6>
+                <textarea v-model="skill" name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
+              </div>
+              <div class="frame">
+                <h6>Current state</h6>
+                <select v-model="currentState" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                  <option selected>Beginner</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Proficient">Proficient</option>
+                  <option value="Advanced">Advanced</option>
+                  <option value="Expert">Expert</option>
+                </select>
+              </div>
+              <div class="frame">
+                <h6>Gap</h6>
+                <textarea v-model="gap" name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
+              </div>
+              <div class="frame">
+                <h6>Desired state</h6>
+                <select v-model="desiredState" class="form-select" aria-label="Default select example">
+                  <option selected>Expert</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Proficient">Proficient</option>
+                  <option value="Advanced">Advanced</option>
+                  <option value="Expert">Expert</option>
+                </select>
+              </div>
+              <div class="frame">
+                <h6>Initiatives</h6>
+                <textarea v-model="initiative" name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
+              </div>
+              <div class="frame">
+                <h6>Status</h6>
+                <select v-model="status" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                  <option class="opt" selected>Status</option>
+                  <option class="opt" value="Completed">Completed</option>
+                  <option class="opt" value="On-going">On-going</option>
+                  <option class="opt" value="Not started">Not started</option>
+                </select>
+              </div>
+              <div class="frame">
+                <h6>Feedback</h6>
+                <textarea name="Feedback" placeholder="Feedback" id="" cols="30" rows="10" v-model="feedback"></textarea>
+              </div>
+              <div class="frame">
+                <h6>Evidence</h6>
+                <input type="file" @change="handleFileChange">
+                <button>Save Changes</button>
+              </div>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="submit" @click="$router.push('/skillassessment')" data-bs-dismiss="modal">Submit Request</button>
+            </div>
+
           </div>
-          <v-card style="background-color: #eee;">
-            <v-tabs v-model="tab" bg-color="white" color="#227cbf" class="custom-tabs">
-              <v-tab style="font-size: 10px;" value="one">My Request</v-tab>
-              <v-tab style="font-size: 10px;" value="two">Team Member</v-tab>
-              <v-tab style="font-size: 10px;" value="three">Requests pending approval</v-tab>
-            </v-tabs>
-
-            <v-card-text style="background-color: #eee;">
-              <v-window v-model="tab">
-                <v-window-item value="one">
-                  <form method="post" action="" @submit.prevent="handleSubmit">
-                    <div class="modal-body">
-
-                      <div class="frame">
-                        <h6>Skill</h6>
-                        <textarea v-model="skill" name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
-                      </div>
-                      <div class="frame">
-                        <h6>Current state</h6>
-                        <select v-model="currentState" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
-                          <option selected>Beginner</option>
-                          <option value="Beginner">Beginner</option>
-                          <option value="Intermediate">Intermediate</option>
-                          <option value="Proficient">Proficient</option>
-                          <option value="Advanced">Advanced</option>
-                          <option value="Expert">Expert</option>
-                        </select>
-                      </div>
-                      <div class="frame">
-                        <h6>Gap</h6>
-                        <textarea v-model="gap" name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
-                      </div>
-                      <div class="frame">
-                        <h6>Desired state</h6>
-                        <select v-model="desiredState" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
-                          <option selected>Expert</option>
-                          <option value="Beginner">Beginner</option>
-                          <option value="Intermediate">Intermediate</option>
-                          <option value="Proficient">Proficient</option>
-                          <option value="Advanced">Advanced</option>
-                          <option value="Expert">Expert</option>
-                        </select>
-                      </div>
-                      <div class="frame">
-                        <h6>Initiatives</h6>
-                        <textarea v-model="initiative" name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
-                      </div>
-                    </div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                      <button type="submit" data-bs-dismiss="modal">Submit Request</button>
-                    </div>
-                  </form>
-                </v-window-item>
-
-                <v-window-item value="two">
-                  <form method="post" action="" @submit.prevent="handleSubmit">
-                    <div class="modal-body">
-                      <div class="frame">
-                        <h6>Select team member</h6>
-                        <select v-model="name" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
-                          <option selected>Lola</option>
-                          <option value="Lola">Lola</option>
-                          <option value="Mark">Mark</option>
-                          <option value="Uzo">Uzo</option>
-                          <option value="Daniel">Daniel</option>
-                          <option value="Jane">Jane</option>
-                        </select>
-                      </div>
-                      <div class="frame">
-                        <h6>Skill</h6>
-                        <textarea v-model="skill" name="skill" id="" cols="30" rows="10" placeholder="Skill"></textarea>
-                      </div>
-                      <div class="frame">
-                        <h6>Current state</h6>
-                        <select v-model="currentState" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
-                          <option selected>Beginner</option>
-                          <option value="Beginner">Beginner</option>
-                          <option value="Intermediate">Intermediate</option>
-                          <option value="Proficient">Proficient</option>
-                          <option value="Advanced">Advanced</option>
-                          <option value="Expert">Expert</option>
-                        </select>
-                      </div>
-                      <div class="frame">
-                        <h6>Gap</h6>
-                        <textarea v-model="gap" name="Gap" id="" cols="30" rows="10" placeholder="Gap"></textarea>
-                      </div>
-                      <div class="frame">
-                        <h6>Desired state</h6>
-                        <select v-model="desiredState" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
-                          <option selected>Expert</option>
-                          <option value="Beginner">Beginner</option>
-                          <option value="Intermediate">Intermediate</option>
-                          <option value="Proficient">Proficient</option>
-                          <option value="Advanced">Advanced</option>
-                          <option value="Expert">Expert</option>
-                        </select>
-                      </div>
-                      <div class="frame">
-                        <h6>Initiatives</h6>
-                        <textarea v-model="initiative" name="Initiatives" id="" cols="30" rows="10" placeholder="Initiatives"></textarea>
-                      </div>
-                    </div>
-
-                    <!-- Modal footer -->
-                    <div class="modal-footer">
-                      <button type="submit" data-bs-dismiss="modal">Submit Request</button>
-                    </div>
-                  </form>
-                </v-window-item>
-
-                <v-window-item value="three">
-                  <div class="pending">
-                    <Table />
-                  </div>
-                </v-window-item>
-              </v-window>
-            </v-card-text>
-          </v-card>
         </div>
-
       </div>
-    </div>
+    </form>
     <div class="skill mt-4">
       <div class="title">
         <h3>Skill Assessment</h3>
@@ -276,13 +234,15 @@ main {
 }
 .modal-dialog {
   width: 650px;
-  height: 700px;
+  height: 860px;
   display: inline-flex;
   padding: 30px;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
   background: var(--Grey-Light, #eee);
+  max-height: 100vh;
+  overflow-y: auto;
 }
 .modal-title {
   display: flex;
@@ -300,6 +260,7 @@ main {
   border-radius: 10px;
   background: #eee;
   border: none;
+  overflow-y: auto;
 }
 
 .team,
@@ -320,6 +281,7 @@ main {
   border-radius: 10px;
   background: #fff;
 }
+
 .frame {
   display: flex;
   flex-direction: column;

@@ -1,4 +1,12 @@
+<script setup>
+import { ref } from  'vue'
 
+const activeButton = ref('My Profile');
+
+const setActiveButton = (button) => {
+  activeButton.value = button;
+};
+</script>
 <template>
   <div class="menu">
     <div class="modal" id="myModal" tabindex="-1">
@@ -141,10 +149,14 @@
         </div>
       </div>
     </div>
+
     <div class="profile">
-      <button>My Profile</button>
-      <div class="btn" data-bs-toggle="modal" data-bs-target="#myModal" type="button"><span>Team Profile</span></div>
+      <button class="btn" :class="{ 'active': activeButton === 'My Profile' }" @click="setActiveButton('My Profile')">My Profile</button>
+      <button class="btn" data-bs-toggle="modal" data-bs-target="#myModal" type="button" :class="{ 'active': activeButton === 'Team Profile' }" @click="setActiveButton('Team Profile')">
+        <span>Team Profile</span>
+      </button>
     </div>
+
     <nav class="navbar navbar-expand-md ">
 
       <ul class="navbar-nav">
@@ -180,6 +192,7 @@
         <li :class="{ 'nav-item': true, 'active': $route.path === '/km/mentorshipplan' }">
           <router-link to="/km/mentorshipplan" class="nav-link">Mentorship Plan</router-link>
         </li>
+
       </ul>
 
     </nav>
@@ -195,21 +208,20 @@
 }
 .profile {
   display: flex;
-  width: 147px;
+  width: 157px;
   height: 40px;
   padding: 6px 0px;
-
   align-items: flex-start;
   gap: 5px;
-
   border-radius: 5px;
   border: 1px solid var(--gray-300, #d4d4d8);
   background: var(--Color-3, #fff);
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.06);
 }
-.profile button {
+
+.profile button.active {
   display: flex;
-  padding: 6px 5px;
+  padding: 6px 0px;
   align-items: flex-start;
   gap: 10px;
   border-radius: 6px;
@@ -290,7 +302,7 @@ label select {
   display: block;
 
   width: 100%;
-  height: 5px;
+  height: 0px;
   bottom: -8px;
   margin: auto;
   border: 5px;

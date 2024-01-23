@@ -3,6 +3,7 @@ import TabMenu from '../../components/Tabs/TabMenu.vue';
 import { ref, onMounted } from 'vue'
 import {useUsersStore} from "@/store/users"
 import {useDepartmentsStore} from "@/store/departments"
+import AdminLog from '../User/AdminLog.vue'
 
 
 const store = useUsersStore();
@@ -365,7 +366,7 @@ const tab = ref(1);
               <!-- Log Tab -->
               <v-tab-item :value="3">
                 <v-container fluid v-if="tab === 3">
-
+                  <AdminLog />
                 </v-container>
               </v-tab-item>
             </v-tabs-items>

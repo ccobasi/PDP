@@ -200,7 +200,6 @@ main {
   gap: 10px;
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
-
   color: var(--White, #fff);
   font-family: Roboto;
   font-size: 16px;

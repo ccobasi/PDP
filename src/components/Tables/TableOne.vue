@@ -3,28 +3,58 @@
     import { ref, computed } from 'vue';
     import AccordionCard from "../Cards/AccordionCard.vue"
     import { useRoute } from 'vue-router';
+    import html2pdf from 'html2pdf.js';
 
+
+const store = useGoalsStore();
+const goals = store.goals;
+
+    console.log(goals);
 
 const selectedItem = ref(null);
 
-const props = defineProps({
-  filterOptions: Function, 
-});
+// const props = defineProps(['filterOptions']);
 
-const filteredGoals = computed(() => {
-  return props.filterOptions ? props.filterOptions() : store.goals; 
-});
+// const props = defineProps({
+//   filterOptions: Function, 
+// });
+
+// const filteredGoals = computed(() => {
+//   return props.filterOptions ? props.filterOptions() : store.goals; 
+// });
+// const filteredGoals = computed(() => {
+//   console.log(props.filterOptions()); 
+//   return props.filterOptions ? props.filterOptions() : store.goals; 
+// });
 
 const selectItem = (item) => {
   selectedItem.value = item;
   console.log(selectedItem)
 };
 
+const itemsPerPage = 15; 
+const currentPage = ref(1);
 
-   const store = useGoalsStore();
-    const goals = store.goals;
+const totalPages = computed(() => Math.ceil(goals.length / itemsPerPage));
 
-    console.log(goals);
+const paginatedGoals = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return goals.slice(startIndex, endIndex);
+});
+
+const downloadPDF = () => {
+  const table = document.querySelector('.table-responsive');
+
+  html2pdf(table, {
+    margin: 10,
+    filename: 'table-data.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+  });
+};
+   
 
     const isUserRoute = computed(() => {
   const route = useRoute();
@@ -32,6 +62,189 @@ const selectItem = (item) => {
 });
 </script>
 <template>
+  <div class="title">
+    <div class="modal" id="myModal1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Deployment Plan Table</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="table-responsive d-flex flex-column">
+
+              <table class="full">
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink">S/N</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Plan</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Achieve</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Resources</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Success</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Potential</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Solution </span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Date </span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Progress</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Status</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Feedback</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Evidence</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in paginatedGoals" :key="index" @click="selectItem(item)" @dblclick="$router.push({ name: 'Skill Assessment Details', params: { id: item.id } })">
+
+                    <!-- <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
+                    <td>{{item.id}}</td>
+                    <td>{{item.plan}}</td>
+                    <td>{{item.goal}}</td>
+                    <td>{{item.achieve}}</td>
+                    <td>{{item.resource}}</td>
+                    <td>{{item.potential}}</td>
+                    <td>{{item.solution}}</td>
+                    <td>{{item.date}}</td>
+                    <td>{{item.progress}}</td>
+                    <td>{{item.status}}</td>
+                    <td>{{item.feedback}}</td>
+                    <td>{{item.evidence}}</td>
+                  </tr>
+                </tbody>
+              </table>
+              <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+              <v-btn @click="downloadPDF">Download as PDF</v-btn>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <button class="view" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
+  </div>
   <div class="table-responsive d-flex flex-row">
     <table class="table">
       <thead>
@@ -96,7 +309,7 @@ const selectItem = (item) => {
       </thead>
       <tbody>
 
-        <tr v-for="item in filteredGoals" :key="item.id" @click="selectItem(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})">
+        <tr v-for="item in goals" :key="item.id" @click="selectItem(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})">
           <td>{{item.id}}</td>
           <td>{{item.goal}}</td>
           <td>{{item.date}}</td>
@@ -117,6 +330,27 @@ const selectItem = (item) => {
 </template>
 
 <style scoped>
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+}
+.view {
+  display: flex;
+  padding: 10px 30px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+
+  color: var(--White, #fff);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
 table {
   width: 800px;
 }
@@ -133,7 +367,7 @@ tbody tr td {
   font-size: 12px;
   font-weight: 400;
   line-height: 14.4px;
-  padding: 20px;
+  padding: 10px;
 }
 
 thead,
@@ -225,5 +459,42 @@ tr {
   font-style: normal;
   font-weight: 400;
   line-height: 19.2px;
+}
+.modal {
+  margin-left: 5%;
+}
+.modal-dialog {
+  --bs-modal-width: 1280px;
+  width: 1200px;
+  height: 550px;
+  display: inline-flex;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 10px;
+  border: 1px solid var(--Grey-Light, #eee);
+  background: var(--Grey-Light, #eee);
+}
+.modal-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  color: var(--Black, #000);
+  font-family: Roboto;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.modal-body {
+  display: flex;
+  padding: 20px 30px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 10px;
+  background: #fff;
 }
 </style>

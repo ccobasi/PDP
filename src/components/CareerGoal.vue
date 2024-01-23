@@ -17,23 +17,40 @@
 
 const selectedOption = ref('1');
 
-const filteredOptions = computed(() => {
-  return options.value; 
-});
+// const filteredOptions = computed(() => {
+//   return options.value; 
+// });
+
+// const filterOptions = () => {
+  
+//   if (selectedOption.value === '1') {
+//     console.log('option 1');
+//     filteredOptions.value = options.value.filter((option) => option.value === '1');
+//   } else if (selectedOption.value === '2') {
+//     console.log('option 2');
+//     filteredOptions.value = options.value.filter((option) => option.value === '2');
+//   } else {
+//     filteredOptions.value = options.value.filter((option) => option.value === '3');
+//     console.log('option 3');
+//   }
+// };
 
 const filterOptions = () => {
-  
   if (selectedOption.value === '1') {
     console.log('option 1');
-    filteredOptions.value = options.value.filter((option) => option.value === '1');
+    return options.value.filter((option) => option.value === '1');
   } else if (selectedOption.value === '2') {
     console.log('option 2');
-    filteredOptions.value = options.value.filter((option) => option.value === '2');
+    return options.value.filter((option) => option.value === '2');
   } else {
-    filteredOptions.value = options.value.filter((option) => option.value === '3');
     console.log('option 3');
+    return options.value.filter((option) => option.value === '3');
   }
 };
+
+const filteredOptions = ref(options.value);
+
+
 </script>
 <template>
   <div class="career mt-3">
@@ -49,7 +66,7 @@ const filterOptions = () => {
       </div>
       <div class="d-flex justify-content-between mt-4">
         <div class="custom-table table-responsive-sm">
-          <TableOne :filterOptions="filterOptions" />
+          <TableOne />
           <!-- <KMTableOne v-if="isUserRoute" /> -->
         </div>
 

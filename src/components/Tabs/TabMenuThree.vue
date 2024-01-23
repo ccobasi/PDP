@@ -294,7 +294,6 @@ label select {
   content: '';
   position: absolute;
   display: block;
-
   width: 100%;
   height: 5px;
   bottom: -8px;
