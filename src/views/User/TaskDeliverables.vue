@@ -303,7 +303,7 @@ const downloadPDF = () => {
 
         <div class="lines"></div>
       </div>
-      <TableFour />
+      <TableFour :task="tasks" />
     </div>
   </main>
 </template>

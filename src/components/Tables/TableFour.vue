@@ -12,6 +12,32 @@ import {useTasksStore} from "@/store/tasks"
 
 const store = useTasksStore();
     const tasks = store.tasks;
+
+const getStatusColor = (status) => {
+  switch (status) {
+    case 'Not started':
+      return 'background-color: rgb(246, 180, 180); border-radius: 40px; width: 80%; padding: 10px;';
+    case 'On-going':
+      return 'background-color: rgb(254, 249, 195); border-radius: 40px; width: 80%; padding: 10px;';
+
+    case 'Completed':
+      return 'background-color: rgb(220, 252, 231); border-radius: 40px; width: 80%; padding: 10px;';
+
+    
+  }
+};
+
+const getStatusIcon = (status) => {
+  switch (status) {
+    case 'Not started':
+      return 'background-color: rgb(240, 15, 15); display: inline-block; border-radius: 50%; padding: 5px;';
+    case 'On-going':
+      return 'background-color: #ffbf1a; display: inline-block; border-radius: 50%; padding: 5px;';
+
+    case 'Completed':
+      return 'background-color: #47b65c; display: inline-block; border-radius: 50%; padding: 5px;';
+  }
+};
 </script>
 <template>
   <div class="table-responsive">
@@ -116,7 +142,12 @@ const store = useTasksStore();
         <tr v-for="item in tasks" @dblclick="$router.push({name: 'Tasks Details', params: {id: item.id}})">
           <td scope="row">{{ item.id }}</td>
           <td>{{item.task}}</td>
-          <td>{{item.status}}</td>
+          <td>
+            <p class="status" :style="getStatusColor(item.status)">
+              <i class="dot" :style="getStatusIcon(item.status)"></i>
+              {{ item.status }}
+            </p>
+          </td>
           <td>{{item.startDate}}</td>
           <td>{{item.endDate}}</td>
           <td>{{item.comment}}</td>
