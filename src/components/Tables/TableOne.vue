@@ -104,6 +104,17 @@ const downloadPDF = () => {
                     </th>
                     <th scope="col">
                       <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Term</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
                         <span class="noshrink"> Achieve</span>
 
                         <span class="d-flex flex-column align-center">
@@ -263,7 +274,29 @@ const downloadPDF = () => {
           </th>
           <th scope="col">
             <div class="d-flex align-center gap-1">
+              <span class="noshrink"> Plan</span>
+
+              <span class="d-flex flex-column align-center">
+                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+              </span>
+
+            </div>
+          </th>
+          <th scope="col">
+            <div class="d-flex align-center gap-1">
               <span class="noshrink"> Goals</span>
+
+              <span class="d-flex flex-column align-center">
+                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+              </span>
+
+            </div>
+          </th>
+          <th scope="col">
+            <div class="d-flex align-center gap-1">
+              <span class="noshrink"> Term</span>
 
               <span class="d-flex flex-column align-center">
                 <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
@@ -312,6 +345,8 @@ const downloadPDF = () => {
 
         <tr v-for="item in goals" :key="item.id" @click="selectItem(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})">
           <td>{{item.id}}</td>
+          <td>{{item.plan}}</td>
+          <td>{{item.term}}</td>
           <td>{{item.goal}}</td>
           <td>{{item.date}}</td>
           <td>{{item.status}}</td>

@@ -61,7 +61,7 @@ const onSelectChange = () => {
 
             <!-- Modal Header -->
             <div class="modal-header">
-              <h4 class="modal-title">Skill Request Form</h4>
+              <h4 class="modal-title">Add Skill Form</h4>
               <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
@@ -134,7 +134,7 @@ const onSelectChange = () => {
     <div class="skill mt-4">
       <div class="title">
         <h3>Skill Assessment</h3>
-        <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Request Skill</button>
+        <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Add Skill</button>
       </div>
       <div class="lines"></div>
       <div class="chart">

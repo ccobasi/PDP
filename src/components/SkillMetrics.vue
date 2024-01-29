@@ -31,11 +31,13 @@ const paginatedItems = computed(() => {
 
           <ul class="responsive-table">
             <li class="table-header">
+              <div class="col col-1">S/N</div>
               <div class="col col-1">Skill</div>
               <div class="col col-2">Gaps</div>
 
             </li>
             <li class="table-row" v-for="(skill, index) in paginatedItems" :key="index">
+              <div class="col col-1" data-label="Skill">{{ skill.id }}</div>
               <div class="col col-1" data-label="Skill">{{ skill.skill }}</div>
               <div class="col col-2" data-label="Gaps">{{ skill.gap }}</div>
             </li>
