@@ -12,11 +12,14 @@ export const useGoalsStore = defineStore('goals', {
   },
  
   actions: {
-    addGoal(plan, goal, achieve, resource, success, potential, solution, date, progress,status,feedback,evidence) {
+    addGoal(plan, term, goal, achieve, resource, success, potential, solution, date, progress,status,feedback,evidence) {
       try {
+        const nextId = this.goals.length + 1;
+
         this.goals.push({
-          id: Date.now(),
+          id: nextId,
           plan: plan,
+          term: term,
           goal: goal,
           achieve: achieve,
           resource: resource,

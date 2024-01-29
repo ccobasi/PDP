@@ -7,7 +7,7 @@
 
         <li :class="{ 'nav-item': true, 'active': $route.path === '/' }">
           <router-link to="/" class="nav-link">
-            Development Plan
+            Development Plans
           </router-link>
         </li>
 

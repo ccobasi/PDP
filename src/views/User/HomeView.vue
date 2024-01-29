@@ -13,6 +13,7 @@ console.log(store.goals);
 // eslint-disable-next-line no-unused-vars
 const goals = ref([])
   const plan = ref('')
+  const term = ref('')
   const goal = ref('')
   const achieve = ref('')
   const resource = ref('')
@@ -28,19 +29,20 @@ const goals = ref([])
 
 const addGoal = async () => {
   if (
-    plan.value.trim() !== '' || goal.value.trim() !== '' || achieve.value.trim() !== '' ||
+    plan.value.trim() !== '' || term.value.trim() !== '' || goal.value.trim() !== '' || achieve.value.trim() !== '' ||
     resource.value.trim() !== '' || success.value.trim() !== '' || potential.value.trim() !== '' ||
     solution.value.trim() !== '' || date.value.trim() !== '' || progress.value.trim() !== '' ||
     status.value.trim() !== '' || feedback.value.trim() !== '' || evidence.value.trim() !== ''
   ) {
     await store.addGoal(
-      plan.value.trim(), goal.value.trim(), achieve.value.trim(),
+      plan.value.trim(), term.value.trim(), goal.value.trim(), achieve.value.trim(),
       resource.value.trim(), success.value.trim(), potential.value.trim(), solution.value.trim(),
       date.value.trim(), progress.value.trim(), status.value.trim(), feedback.value.trim(), evidence.value.trim()
     );
 
     // Clear form inputs after submission
     plan.value = '';
+    term.value = '';
     goal.value = '';
     achieve.value = '';
     resource.value = '';
@@ -104,13 +106,27 @@ const handleFileChange = (goal) => {
             <div class="modal-body">
 
               <div class="type">
-                <h3>Development plan type</h3>
-                <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="plan">
-                  <option class="opt" selected>Career Goals and Aspirations</option>
-                  <option class="opt" value="Area of Interest">Area of Interest</option>
-                  <option class="opt" value="Care Goals and Aspirations">Care Goals and Aspirations</option>
-                  <option class="opt" value="Mentorship and Skill Building<">Mentorship and Skill Building</option>
-                </select>
+                <div class="wrap d-flex">
+                  <div class="plan">
+                    <h3>Development plan type</h3>
+                    <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="plan">
+                      <option class="opt" selected>Career Goals and Aspirations</option>
+                      <option class="opt" value="Area of Interest">Area of Interest</option>
+                      <option class="opt" value="Care Goals and Aspirations">Care Goals and Aspirations</option>
+                      <option class="opt" value="Mentorship and Skill Building<">Mentorship and Skill Building</option>
+                    </select>
+                  </div>
+                  <div class="term">
+                    <h3>Duration</h3>
+                    <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="term">
+                      <option class="opt" selected>Short Term Goal</option>
+                      <option class="opt" value="Short Term Goal">Short Term Goal</option>
+                      <option class="opt" value="Mid Term Goal">Mid Term Goal</option>
+                      <option class="opt" value="Long Term Goal<">Long Term Goal</option>
+                    </select>
+                  </div>
+                </div>
+
               </div>
               <div class="goal">
                 <div class="left">
@@ -172,7 +188,7 @@ const handleFileChange = (goal) => {
               <div class="types">
 
                 <input type="file" @change="handleFileChange">
-                <button>Save Changes</button>
+                <!-- <button>Save Changes</button> -->
               </div>
             </div>
             <div class="modal-footer">
@@ -186,7 +202,7 @@ const handleFileChange = (goal) => {
     </form>
     <div class="development mt-5">
       <div class="dev">
-        <h3>Development Plan</h3>
+        <h3>Development Plans</h3>
         <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Development Plan Request</button>
       </div>
       <hr>
@@ -250,6 +266,9 @@ hr {
   width: 100%;
   height: 1px;
   background: #808080;
+}
+.wrap {
+  gap: 10px;
 }
 .goals {
   display: flex;
@@ -333,7 +352,7 @@ hr {
 }
 .form-select {
   display: flex;
-  width: 400px;
+  width: 320px;
   height: 40px;
   padding: 10px;
   justify-content: space-between;

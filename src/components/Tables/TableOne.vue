@@ -220,6 +220,7 @@ const downloadPDF = () => {
                     <!-- <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
                     <td>{{item.id}}</td>
                     <td>{{item.plan}}</td>
+                    <td>{{item.term}}</td>
                     <td>{{item.goal}}</td>
                     <td>{{item.achieve}}</td>
                     <td>{{item.resource}}</td>
