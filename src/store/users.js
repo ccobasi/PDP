@@ -18,11 +18,12 @@ export const useUsersStore = defineStore('users', {
   },
  
   actions: {
-    addUser(name, department, manager, email,level, status, role) {
+    addUser(user, department, manager, email,level, status, role) {
       try {
+        const nextId = this.users.length + 1;
         this.users.push({
-          id: Date.now(),
-          name: name,
+          id: nextId,
+          user: user,
           department: department,
           manager: manager,
           email: email,

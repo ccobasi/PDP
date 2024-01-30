@@ -1,31 +1,20 @@
 <script setup>
     import { useGoalsStore } from "@/store/goals";
-    import { ref, computed } from 'vue';
+    import { ref, computed, /*onMounted, watchEffect*/ } from 'vue';
     import AccordionCard from "../Cards/AccordionCard.vue"
     import { useRoute } from 'vue-router';
     import html2pdf from 'html2pdf.js';
 
+    // import { options } from '@/store/filter';
+
 
 const store = useGoalsStore();
-const goals = store.goals;
-
-    console.log(goals);
+var goals = store.goals;
+const goals_ = ref([])
+goals_.value = store.goals
 
 const selectedItem = ref(null);
-
-// const props = defineProps(['filterOptions']);
-
-// const props = defineProps({
-//   filterOptions: Function, 
-// });
-
-// const filteredGoals = computed(() => {
-//   return props.filterOptions ? props.filterOptions() : store.goals; 
-// });
-// const filteredGoals = computed(() => {
-//   console.log(props.filterOptions()); 
-//   return props.filterOptions ? props.filterOptions() : store.goals; 
-// });
+// const selectedPlan = ref(1);
 
 const selectItem = (item) => {
   selectedItem.value = item;
@@ -60,16 +49,32 @@ const downloadPDF = () => {
   const route = useRoute();
   return route.path !== '/';
 });
+
+const options = ref([
+  { value: 'Career Goals and Aspirations', text: 'Career Goals and Aspirations' },
+  { value: 'Area of Interest', text: 'Areas of Interest' },
+  { value: 'Mentorship and Skill Building<', text: 'Mentorship and Skills Building' },
+]);
+
+const selectedOption = ref('');
+
+const filteredGoals = computed(() => {
+  
+  var filteredGoal = goals_.value.filter(item => item.plan == selectedOption.value);
+  return filteredGoal
+});
+
 </script>
 <template>
   <div class="title">
     <div class="modal" id="myModal1">
       <div class="modal-dialog">
         <div class="modal-content">
-
+          <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+          <v-btn @click="downloadPDF">Download as PDF</v-btn>
           <!-- Modal Header -->
           <div class="modal-header">
-            <h4 class="modal-title">Deployment Plan Table</h4>
+            <h4 class="modal-title">Development Plans</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
 
@@ -245,8 +250,6 @@ const downloadPDF = () => {
                   </tr>
                 </tbody>
               </table>
-              <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
-              <v-btn @click="downloadPDF">Download as PDF</v-btn>
 
             </div>
           </div>
@@ -257,7 +260,14 @@ const downloadPDF = () => {
 
     <button class="view" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
   </div>
+  <select class="form-select" v-model="selectedOption">
+    <option value="">All Plans</option>
+    <option v-for="option in options" :key="option.value" :value="option.value">
+      {{ option.text }}
+    </option>
+  </select>
   <div class="table-responsive d-flex flex-row">
+
     <table class="table">
       <thead>
         <tr>
@@ -343,7 +353,7 @@ const downloadPDF = () => {
       </thead>
       <tbody>
 
-        <tr v-for="item in goals" :key="item.id" @click="selectItem(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})">
+        <tr v-for="item in filteredGoals" :key="item.id" @click="selectItem(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})">
           <td>{{item.id}}</td>
           <td>{{item.plan}}</td>
           <td>{{item.term}}</td>
@@ -532,5 +542,8 @@ tr {
   gap: 10px;
   border-radius: 10px;
   background: #fff;
+}
+.modal-backdrop {
+  --bs-backdrop-zindex: -1;
 }
 </style>

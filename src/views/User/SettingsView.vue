@@ -105,7 +105,7 @@ const tab = ref(1);
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">User Role Form</h5>
+              <h5 class="modal-title">Add Role Form</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -114,15 +114,12 @@ const tab = ref(1);
               <div class="goal">
                 <div class="left">
                   <h4>Name</h4>
-                  <textarea name="Name" placeholder="Name" id="" cols="30" rows="10" v-model="name"></textarea>
+                  <textarea name="Name" placeholder="Name" id="" cols="30" rows="10" v-model="user"></textarea>
                 </div>
                 <div class="right">
-                  <h4 class="">Department</h4>
-                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="department">
+                  <h4 class="">Email</h4>
+                  <textarea name="Email" placeholder="Email" id="" cols="30" rows="10" v-model="email"></textarea>
 
-                    <option class="opt" value="Knowledge Management">Knowledge Management</option>
-                    <option class="opt" value="Credit Risk Management">Credit Risk Management</option>
-                  </select>
                 </div>
               </div>
               <div class="goal">
@@ -136,8 +133,12 @@ const tab = ref(1);
                   </select>
                 </div>
                 <div class="right">
-                  <h4 class="">Email</h4>
-                  <textarea name="Email" placeholder="Email" id="" cols="30" rows="10" v-model="email"></textarea>
+                  <h4 class="">Department</h4>
+                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="department">
+
+                    <option class="opt" value="Knowledge Management">Knowledge Management</option>
+                    <option class="opt" value="Credit Risk Management">Credit Risk Management</option>
+                  </select>
                 </div>
               </div>
               <div class="goal">
@@ -159,7 +160,21 @@ const tab = ref(1);
                   </select>
                 </div>
               </div>
+              <div class="goal">
+                <div class="left">
+                  <h4>Role</h4>
+                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="role">
 
+                    <option class="opt" value="User">User</option>
+                    <option class="opt" value="Supervisor">Supervisor</option>
+                    <option class="opt" value="Auditor">Auditor</option>
+                    <option class="opt" value="IT Admin">IT Admin</option>
+                    <option class="opt" value="Knowledge Manager">Knowledge Manager</option>
+                    <option class="opt" value="Management">Management</option>
+                  </select>
+                </div>
+
+              </div>
             </div>
             <div class="modal-footer">
 
@@ -317,7 +332,7 @@ const tab = ref(1);
                     <tbody>
                       <tr v-for="item in users" :key="item.id">
                         <td>{{ item.id }}</td>
-                        <td>{{ item.name }}</td>
+                        <td>{{ item.user }}</td>
                         <td>{{ item.department }}</td>
                         <td>{{ item.manager }}</td>
                         <td>{{ item.email }}</td>
@@ -433,7 +448,7 @@ main {
 }
 .modal-dialog {
   width: 900px;
-  height: 630px;
+  height: auto;
   margin-left: 20%;
   display: inline-flex;
   padding: 30px;
@@ -587,5 +602,21 @@ main {
 }
 #myModal1 .modal-dialog {
   height: 370px;
+}
+tr th {
+  color: var(--Black, #000);
+  font-family: Roboto;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 14.4px;
+}
+tr td {
+  color: var(--Grey-Dark, #808080);
+  font-family: Roboto;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 14.4px;
 }
 </style>

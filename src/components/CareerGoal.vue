@@ -1,54 +1,38 @@
 <script setup>
   import TableOne from '../components/Tables/TableOne.vue'
+  import { selectedOption, filterOptions, filteredOptions } from '@/store/filter';
+
   // import KMTableOne from '../components/Tables/KMTableOne.vue'
   // import { useRoute } from 'vue-router'
-  import { ref,computed } from 'vue'
+  // import { ref,computed } from 'vue'
 
 //    const isUserRoute = computed(() => {
 //   const route = useRoute();
 //   return route.path !== '/';
 // });
  
- const options = ref([
-  { value: '1', text: 'Career Goals and Aspirations' },
-  { value: '2', text: 'Areas of Interest' },
-  { value: '3', text: 'Mentorship and Skills Building' },
-]);
+//  const options = ref([
+//   { value: '1', text: 'Career Goals and Aspirations' },
+//   { value: '2', text: 'Areas of Interest' },
+//   { value: '3', text: 'Mentorship and Skills Building' },
+// ]);
 
-const selectedOption = ref('1');
-
-// const filteredOptions = computed(() => {
-//   return options.value; 
-// });
+// const selectedOption = ref('1');
 
 // const filterOptions = () => {
-  
 //   if (selectedOption.value === '1') {
 //     console.log('option 1');
-//     filteredOptions.value = options.value.filter((option) => option.value === '1');
+//     return options.value.filter((option) => option.value === '1');
 //   } else if (selectedOption.value === '2') {
 //     console.log('option 2');
-//     filteredOptions.value = options.value.filter((option) => option.value === '2');
+//     return options.value.filter((option) => option.value === '2');
 //   } else {
-//     filteredOptions.value = options.value.filter((option) => option.value === '3');
 //     console.log('option 3');
+//     return options.value.filter((option) => option.value === '3');
 //   }
 // };
 
-const filterOptions = () => {
-  if (selectedOption.value === '1') {
-    console.log('option 1');
-    return options.value.filter((option) => option.value === '1');
-  } else if (selectedOption.value === '2') {
-    console.log('option 2');
-    return options.value.filter((option) => option.value === '2');
-  } else {
-    console.log('option 3');
-    return options.value.filter((option) => option.value === '3');
-  }
-};
-
-const filteredOptions = ref(options.value);
+// const filteredOptions = ref(options.value);
 
 
 </script>
@@ -58,11 +42,17 @@ const filteredOptions = ref(options.value);
     <form action="">
       <div class="d-goal">
         Development Plan:
+        <!-- <select class="form-select" aria-label="Default select example" v-model="selectedOption" @change="filterOptions">
+          <option class="opt" v-for="option in filteredOptions" :key="option.value" :value="option.value">
+            {{ option.text }}
+          </option>
+        </select> -->
         <select class="form-select" aria-label="Default select example" v-model="selectedOption" @change="filterOptions">
           <option class="opt" v-for="option in filteredOptions" :key="option.value" :value="option.value">
             {{ option.text }}
           </option>
         </select>
+
       </div>
       <div class="d-flex justify-content-between mt-4">
         <div class="custom-table table-responsive-sm">

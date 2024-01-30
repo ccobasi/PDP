@@ -20,8 +20,9 @@ export const useDepartmentsStore = defineStore('departments', {
   actions: {
     addDepartment(dept) {
       try {
+        const nextId = this.departments.length + 1;
         this.departments.push({
-          id: Date.now(),
+          id: nextId,
           dept: dept,
         });
 

@@ -103,7 +103,7 @@ onMounted(() => {
                   <option class="opt" selected>Career Goals and Aspirations</option>
                   <option class="opt" value="Area of Interest">Area of Interest</option>
                   <option class="opt" value="Care Goals and Aspirations">Care Goals and Aspirations</option>
-                  <option class="opt" value="Mentorship and Skill Building<">Mentorship and Skill Building</option>
+                  <option class="opt" value="Mentorship and Skill Building">Mentorship and Skill Building</option>
                 </select>
               </div>
               <div class="goal">

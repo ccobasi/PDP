@@ -87,7 +87,7 @@ const handleFileChange = (goal) => {
   selectedFile.value = file;
 };
 
-
+const tab = ref(1);
 </script>
 
 
@@ -99,7 +99,7 @@ const handleFileChange = (goal) => {
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Development Plan Request Form</h5>
+              <h5 class="modal-title">Add Plan Form</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -113,7 +113,7 @@ const handleFileChange = (goal) => {
                       <option class="opt" selected>Career Goals and Aspirations</option>
                       <option class="opt" value="Area of Interest">Area of Interest</option>
                       <option class="opt" value="Care Goals and Aspirations">Care Goals and Aspirations</option>
-                      <option class="opt" value="Mentorship and Skill Building<">Mentorship and Skill Building</option>
+                      <option class="opt" value="Mentorship and Skill Building">Mentorship and Skill Building</option>
                     </select>
                   </div>
                   <div class="term">
@@ -207,7 +207,7 @@ const handleFileChange = (goal) => {
       </div>
       <hr>
       <div class="goals">
-        <div class="short">
+        <!-- <div class="short">
           <h5>Short term goals (3 - 6 Months)</h5>
         </div>
         <div class="mid">
@@ -215,15 +215,63 @@ const handleFileChange = (goal) => {
         </div>
         <div class="long">
           <h5>Long term goals (13 - 24 Months)</h5>
-        </div>
+        </div> -->
+        <v-card>
+          <v-tabs class="custom-tab" v-model="tab" color="deep-purple-accent-4" align-tabs="center">
+            <v-tab :value="1">Short term goals (3 - 6 Months)</v-tab>
+            <v-tab :value="2">Mid term goals (7 - 12 Months)</v-tab>
+            <v-tab :value="3">Long term goals (13 - 24 Months)</v-tab>
+          </v-tabs>
+
+          <v-tabs-items v-model="tab">
+            <!-- Users Tab -->
+            <v-tab-item :value="1">
+              <v-container fluid v-if="tab === 1">
+                <div class="chart">
+                  <DoughNut />
+
+                </div>
+                <div class="table">
+                  <CareerGoal />
+                </div>
+              </v-container>
+            </v-tab-item>
+
+            <!-- Department and Levels Tab -->
+            <v-tab-item :value="2">
+              <v-container fluid v-if="tab === 2">
+                <div class="chart">
+                  <DoughNut />
+
+                </div>
+                <div class="table">
+                  <CareerGoal />
+                </div>
+              </v-container>
+            </v-tab-item>
+
+            <!-- Log Tab -->
+            <v-tab-item :value="3">
+              <v-container fluid v-if="tab === 3">
+                <div class="chart">
+                  <DoughNut />
+
+                </div>
+                <div class="table">
+                  <CareerGoal />
+                </div>
+              </v-container>
+            </v-tab-item>
+          </v-tabs-items>
+        </v-card>
       </div>
-      <div class="chart">
+      <!-- <div class="chart">
         <DoughNut />
 
       </div>
       <div class="table">
         <CareerGoal />
-      </div>
+      </div> -->
 
     </div>
   </main>
@@ -335,6 +383,9 @@ hr {
   gap: 20px;
   border-radius: 10px;
   background: #fff;
+}
+.modal-backdrop {
+  --bs-backdrop-zindex: 1 !important;
 }
 .type {
   display: flex;
