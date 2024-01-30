@@ -56,10 +56,10 @@ const options = ref([
   { value: 'Mentorship and Skill Building<', text: 'Mentorship and Skills Building' },
 ]);
 
-const selectedOption = ref('');
+const selectedOption = ref('Career Goals and Aspirations');
 
 const filteredGoals = computed(() => {
-  
+
   var filteredGoal = goals_.value.filter(item => item.plan == selectedOption.value);
   return filteredGoal
 });
@@ -261,7 +261,7 @@ const filteredGoals = computed(() => {
     <button class="view" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
   </div>
   <select class="form-select" v-model="selectedOption">
-    <option value="">All Plans</option>
+
     <option v-for="option in options" :key="option.value" :value="option.value">
       {{ option.text }}
     </option>
@@ -545,5 +545,8 @@ tr {
 }
 .modal-backdrop {
   --bs-backdrop-zindex: -1;
+}
+.form-select {
+  width: 30%;
 }
 </style>
