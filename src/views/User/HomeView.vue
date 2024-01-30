@@ -5,6 +5,7 @@ import DoughNut from '../../components/DoughNut.vue'
 import CareerGoal from '../../components/CareerGoal.vue'
 import { ref, onMounted} from 'vue'
 import {useGoalsStore} from "@/store/goals"
+import MidTerm from "../../components/Tables/MidTerm.vue"
 
 
 const store = useGoalsStore();
@@ -245,7 +246,7 @@ const tab = ref(1);
 
                 </div>
                 <div class="table">
-                  <CareerGoal />
+                  <MidTerm />
                 </div>
               </v-container>
             </v-tab-item>

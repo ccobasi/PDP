@@ -57,7 +57,7 @@ const options = ref([
 ]);
 
 const selectedOption = ref('Career Goals and Aspirations');
-const selectedTerm = ref('Short Term Goal');
+const selectedTerm = ref('Long Term Goal');
 
 const filteredGoals = computed(() => {
 
