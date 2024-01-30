@@ -99,4 +99,27 @@ label select {
   background: #227cbf;
   color: #227cbf;
 }
+@media screen and (max-width: 768px) {
+  .menu {
+    flex-direction: column;
+  }
+
+  .navbar {
+    flex-wrap: wrap;
+  }
+
+  .nav-item {
+    margin-top: 10px;
+    margin-right: 0;
+  }
+
+  .navbar-nav {
+    width: 100%;
+    text-align: center;
+  }
+
+  .active::after {
+    bottom: -8px;
+  }
+}
 </style>

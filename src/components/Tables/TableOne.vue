@@ -61,212 +61,212 @@ const selectedTerm = ref('Short Term Goal');
 
 const filteredGoals = computed(() => {
 
-  // var filteredGoal = goals_.value.filter(item => item.plan == selectedOption.value);
-  // return filteredGoal
+  var filteredGoal = goals_.value.filter(item => item.plan == selectedOption.value);
+  return filteredGoal
 
-  return goals_.value.filter(item => {
+  // return goals_.value.filter(item => {
     
-    const planFilter = item.plan == selectedOption.value;
+  //   const planFilter = item.plan == selectedOption.value;
 
-    const termFilter = item.term == selectedTerm.value;
+  //   const termFilter = item.term == selectedTerm.value;
 
-    return planFilter && termFilter;
-  });
+  //   return planFilter && termFilter;
+  // });
 });
-
+console.log(store.goals);
 </script>
 <template>
-  <div class="title">
-    <div class="modal" id="myModal1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
-          <v-btn @click="downloadPDF">Download as PDF</v-btn>
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title">Development Plans</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-
-          <!-- Modal body -->
-          <div class="modal-body">
-            <div class="table-responsive d-flex flex-column">
-
-              <table class="full">
-                <thead>
-                  <tr>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink">S/N</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Plan</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Term</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Achieve</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Resources</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Success</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Potential</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Solution </span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Date </span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Progress</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Status</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Feedback</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Evidence</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, index) in paginatedGoals" :key="index" @click="selectItem(item)" @dblclick="$router.push({ name: 'Skill Assessment Details', params: { id: item.id } })">
-
-                    <!-- <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
-                    <td>{{item.id}}</td>
-                    <td>{{item.plan}}</td>
-                    <td>{{item.term}}</td>
-                    <td>{{item.goal}}</td>
-                    <td>{{item.achieve}}</td>
-                    <td>{{item.resource}}</td>
-                    <td>{{item.potential}}</td>
-                    <td>{{item.solution}}</td>
-                    <td>{{item.date}}</td>
-                    <td>{{item.progress}}</td>
-                    <td>{{item.status}}</td>
-                    <td>{{item.feedback}}</td>
-                    <td>{{item.evidence}}</td>
-                  </tr>
-                </tbody>
-              </table>
-
-            </div>
-          </div>
-
+  <div class="modal" id="myModal1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+        <v-btn @click="downloadPDF">Download as PDF</v-btn>
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h4 class="modal-title">Development Plans</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class="table-responsive d-flex flex-column">
+
+            <table class="full">
+              <thead>
+                <tr>
+                  <th scope="col">
+                    <div class="d-flex align-center gap-1">
+                      <span class="noshrink">S/N</span>
+
+                      <span class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                        <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                      </span>
+
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex align-center gap-1">
+                      <span class="noshrink"> Plan</span>
+
+                      <span class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                        <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                      </span>
+
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex align-center gap-1">
+                      <span class="noshrink"> Term</span>
+
+                      <span class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                        <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                      </span>
+
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex align-center gap-1">
+                      <span class="noshrink"> Achieve</span>
+
+                      <span class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                        <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                      </span>
+
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex align-center gap-1">
+                      <span class="noshrink"> Resources</span>
+
+                      <span class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                        <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                      </span>
+
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex align-center gap-1">
+                      <span class="noshrink"> Success</span>
+
+                      <span class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                        <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                      </span>
+
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex align-center gap-1">
+                      <span class="noshrink"> Potential</span>
+
+                      <span class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                        <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                      </span>
+
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex align-center gap-1">
+                      <span class="noshrink"> Solution </span>
+
+                      <span class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                        <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                      </span>
+
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex align-center gap-1">
+                      <span class="noshrink"> Date </span>
+
+                      <span class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                        <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                      </span>
+
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex align-center gap-1">
+                      <span class="noshrink"> Progress</span>
+
+                      <span class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                        <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                      </span>
+
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex align-center gap-1">
+                      <span class="noshrink"> Status</span>
+
+                      <span class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                        <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                      </span>
+
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex align-center gap-1">
+                      <span class="noshrink"> Feedback</span>
+
+                      <span class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                        <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                      </span>
+
+                    </div>
+                  </th>
+                  <th scope="col">
+                    <div class="d-flex align-center gap-1">
+                      <span class="noshrink"> Evidence</span>
+
+                      <span class="d-flex flex-column align-center">
+                        <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                        <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                      </span>
+
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, index) in paginatedGoals" :key="index" @click="selectItem(item)" @dblclick="$router.push({ name: 'Skill Assessment Details', params: { id: item.id } })">
+
+                  <!-- <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
+                  <td>{{item.id}}</td>
+                  <td>{{item.plan}}</td>
+                  <td>{{item.term}}</td>
+                  <td>{{item.goal}}</td>
+                  <td>{{item.achieve}}</td>
+                  <td>{{item.resource}}</td>
+                  <td>{{item.potential}}</td>
+                  <td>{{item.solution}}</td>
+                  <td>{{item.date}}</td>
+                  <td>{{item.progress}}</td>
+                  <td>{{item.status}}</td>
+                  <td>{{item.feedback}}</td>
+                  <td>{{item.evidence}}</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+        </div>
+
       </div>
     </div>
+  </div>
+  <div class="title">
 
     <button class="view" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
   </div>
@@ -553,9 +553,7 @@ tr {
   border-radius: 10px;
   background: #fff;
 }
-.modal-backdrop {
-  --bs-backdrop-zindex: -1;
-}
+
 .form-select {
   width: 30%;
 }

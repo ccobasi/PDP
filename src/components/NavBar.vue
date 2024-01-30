@@ -91,5 +91,53 @@
   font-weight: 700;
   line-height: 24px;
 }
+@media screen and (max-width: 768px) {
+  .navbar-nav {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .navbar-nav .nav-item {
+    margin-top: 10px;
+    margin-right: 0;
+  }
+
+  .logo img {
+    width: 50%;
+    height: 20%;
+  }
+  .brand {
+    font-size: 18px;
+  }
+}
+
+/*label {
+  
+}
+
+.navbar {
+  
+}
+
+.navbar-nav .nav-item:first-child .nav-link {
+  
+}
+
+.nav-item {
+  
+}
+
+.nav-link {
+  
+}
+
+.link {
+  
+}
+
+.active::after {
+  
+}*/
 </style>
 

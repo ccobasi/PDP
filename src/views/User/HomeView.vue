@@ -6,7 +6,7 @@ import CareerGoal from '../../components/CareerGoal.vue'
 import { ref, onMounted} from 'vue'
 import {useGoalsStore} from "@/store/goals"
 import MidTerm from "../../components/Tables/MidTerm.vue"
-
+import LongTerm from "../../components/Tables/LongTerm.vue"
 
 const store = useGoalsStore();
 console.log(store.goals);
@@ -123,7 +123,7 @@ const tab = ref(1);
                       <option class="opt" selected>Short Term Goal</option>
                       <option class="opt" value="Short Term Goal">Short Term Goal</option>
                       <option class="opt" value="Mid Term Goal">Mid Term Goal</option>
-                      <option class="opt" value="Long Term Goal<">Long Term Goal</option>
+                      <option class="opt" value="Long Term Goal">Long Term Goal</option>
                     </select>
                   </div>
                 </div>
@@ -259,7 +259,7 @@ const tab = ref(1);
 
                 </div>
                 <div class="table">
-                  <CareerGoal />
+                  <LongTerm />
                 </div>
               </v-container>
             </v-tab-item>
@@ -386,7 +386,7 @@ hr {
   background: #fff;
 }
 .modal-backdrop {
-  --bs-backdrop-zindex: 1 !important;
+  --bs-backdrop-zindex: -1;
 }
 .type {
   display: flex;
