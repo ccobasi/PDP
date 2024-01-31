@@ -18,7 +18,6 @@ const departments = stores.departments;
   const user = ref('')
   const department = ref('')
   const manager = ref('')
-  const resource = ref('')
   const email  = ref('')
   const level = ref('')
   const status = ref('')
@@ -30,12 +29,12 @@ const departments = stores.departments;
 const addUser = async () => {
   if (
     user.value.trim() !== '' || department.value.trim() !== '' || manager.value.trim() !== '' ||
-    resource.value.trim() !== '' || email.value.trim() !== '' || level.value.trim() !== '' ||
+    email.value.trim() !== '' || level.value.trim() !== '' ||
     status.value.trim() !== '' || role.value.trim() !== '' 
   ) {
     await store.addUser(
       user.value.trim(), department.value.trim(), manager.value.trim(),
-      resource.value.trim(), email.value.trim(), level.value.trim(), status.value.trim(), role.value.trim()
+      email.value.trim(), level.value.trim(), status.value.trim(), role.value.trim()
     );
 
     // Clear form inputs after submission
@@ -105,7 +104,7 @@ const tab = ref(1);
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Add Role Form</h5>
+              <h5 class="modal-title">Add User Form</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -233,8 +232,8 @@ const tab = ref(1);
               <v-tab-item :value="1">
                 <v-container fluid v-if="tab === 1">
                   <div class="dev">
-                    <h3>Roles</h3>
-                    <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Add Role</button>
+                    <h3>Users</h3>
+                    <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Add User</button>
                   </div>
                   <v-table>
                     <thead>

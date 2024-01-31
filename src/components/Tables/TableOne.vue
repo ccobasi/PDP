@@ -266,7 +266,7 @@ console.log(store.goals);
       </div>
     </div>
   </div>
-  <div class="title">
+  <div class="title mb-3">
 
     <button class="view" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
   </div>
