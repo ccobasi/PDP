@@ -46,14 +46,15 @@ const downloadPDF = () => {
 
           <!-- Modal Header -->
           <div class="modal-header">
-            <h4 class="modal-title">Training Schedule Table</h4>
+            <h4 class="modal-title">Training Schedule</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
 
           <!-- Modal body -->
           <div class="modal-body">
             <div class="table-responsive d-flex flex-column">
-
+              <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+              <v-btn @click="downloadPDF">Download as PDF</v-btn>
               <table class="full">
                 <thead>
                   <tr>
@@ -198,8 +199,6 @@ const downloadPDF = () => {
                   </tr>
                 </tbody>
               </table>
-              <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
-              <v-btn @click="downloadPDF">Download as PDF</v-btn>
 
             </div>
           </div>
@@ -210,7 +209,7 @@ const downloadPDF = () => {
 
     <button class="view" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
   </div>
-  <div class="table-responsive d-flex">
+  <div class="table-responsive d-flex mt-3">
     <table class="table">
       <thead>
         <tr>
@@ -375,11 +374,11 @@ tr {
   line-height: 28.8px;
 }
 .modal {
-  margin-left: 5%;
+  margin-left: 1%;
 }
 .modal-dialog {
   --bs-modal-width: 1280px;
-  width: 1200px;
+  width: 100%;
   height: 550px;
   display: inline-flex;
   padding: 20px;
@@ -387,7 +386,5 @@ tr {
   align-items: flex-start;
   gap: 10px;
   border-radius: 10px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--Grey-Light, #eee);
 }
 </style>
