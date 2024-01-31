@@ -1,4 +1,3 @@
-<!-- eslint-disable vue/valid-v-model -->
 <script setup>
 import TabMenu from '../../components/Tabs/TabMenu.vue';
 import DoughNut from '../../components/DoughNut.vue'
@@ -208,15 +207,7 @@ const tab = ref(1);
       </div>
       <hr>
       <div class="goals">
-        <!-- <div class="short">
-          <h5>Short term goals (3 - 6 Months)</h5>
-        </div>
-        <div class="mid">
-          <h5>Mid term goals (7 - 12 Months)</h5>
-        </div>
-        <div class="long">
-          <h5>Long term goals (13 - 24 Months)</h5>
-        </div> -->
+
         <v-card>
           <v-tabs class="custom-tab" v-model="tab" color="deep-purple-accent-4" align-tabs="center">
             <v-tab :value="1">Short term goals (3 - 6 Months)</v-tab>
@@ -225,7 +216,7 @@ const tab = ref(1);
           </v-tabs>
 
           <v-tabs-items v-model="tab">
-            <!-- Users Tab -->
+
             <v-tab-item :value="1">
               <v-container fluid v-if="tab === 1">
                 <div class="chart">
@@ -238,7 +229,6 @@ const tab = ref(1);
               </v-container>
             </v-tab-item>
 
-            <!-- Department and Levels Tab -->
             <v-tab-item :value="2">
               <v-container fluid v-if="tab === 2">
                 <div class="chart">
@@ -251,7 +241,6 @@ const tab = ref(1);
               </v-container>
             </v-tab-item>
 
-            <!-- Log Tab -->
             <v-tab-item :value="3">
               <v-container fluid v-if="tab === 3">
                 <div class="chart">
@@ -265,14 +254,8 @@ const tab = ref(1);
             </v-tab-item>
           </v-tabs-items>
         </v-card>
-      </div>
-      <!-- <div class="chart">
-        <DoughNut />
 
       </div>
-      <div class="table">
-        <CareerGoal />
-      </div> -->
 
     </div>
   </main>
@@ -324,12 +307,12 @@ hr {
   justify-content: flex-start !important;
   align-items: flex-start;
   gap: 30px;
-  margin-left: 10px;
+  margin-left: 1px;
   margin-top: 20px;
   padding-top: 5px;
   padding-bottom: 5px;
-  padding-left: 15px;
-  border-radius: 50px;
+  padding-left: 0px;
+  border-radius: 10px;
   background: var(--Grey-Light, #eee);
   align-self: stretch;
 }

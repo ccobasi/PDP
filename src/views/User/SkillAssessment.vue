@@ -150,7 +150,7 @@ const onSelectChange = () => {
 
 <style scoped>
 main {
-  height: 1450px;
+  height: 1600px;
 }
 .skill {
   display: flex;
@@ -162,7 +162,7 @@ main {
 
   border-radius: 10px;
   background: #fff;
-  height: 1276px;
+  height: 1470px;
 }
 .skill h3 {
   color: var(--Black, #000);
