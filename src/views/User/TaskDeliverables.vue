@@ -117,7 +117,7 @@ const downloadPDF = () => {
             <!-- Modal Header -->
             <div class="modal-header">
               <h4 class="modal-title">Tasks/Deliverables</h4>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
             </div>
 
             <!-- Modal body -->
@@ -478,5 +478,14 @@ main {
   font-style: normal;
   font-weight: 400;
   line-height: 19.2px;
+}
+.modal-header .btn-close {
+  background: transparent;
+  color: #808080;
+}
+button:not(:disabled) {
+  cursor: pointer;
+  background: #47b65c;
+  color: #fff;
 }
 </style>

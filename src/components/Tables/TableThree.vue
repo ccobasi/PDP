@@ -47,7 +47,7 @@ const downloadPDF = () => {
           <!-- Modal Header -->
           <div class="modal-header">
             <h4 class="modal-title">Training Schedule</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
           </div>
 
           <!-- Modal body -->
@@ -330,10 +330,10 @@ const downloadPDF = () => {
   line-height: 19.2px;
 }
 .full {
-  width: 1120px;
+  width: 1200px;
 }
 table {
-  width: 900px;
+  width: 1200px;
 }
 thead tr th {
   font-size: 12px;
@@ -386,5 +386,17 @@ tr {
   align-items: flex-start;
   gap: 10px;
   border-radius: 10px;
+}
+.modal-header .btn-close {
+  background: transparent;
+  color: #808080;
+}
+button:not(:disabled) {
+  cursor: pointer;
+  background: #47b65c;
+  color: #fff;
+}
+.noshrink {
+  width: 60px;
 }
 </style>

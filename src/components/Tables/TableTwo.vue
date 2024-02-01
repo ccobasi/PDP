@@ -49,7 +49,7 @@ const downloadPDF = () => {
           <!-- Modal Header -->
           <div class="modal-header">
             <h4 class="modal-title">Skill Assessment</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
           </div>
 
           <!-- Modal body -->
@@ -400,7 +400,16 @@ tr {
   border-radius: 10px;
   background: #fff;
 }
-.v-btn__content {
+.v-btn button {
   background: #47b65c;
+}
+.modal-header .btn-close {
+  background: transparent;
+  color: #808080;
+}
+button:not(:disabled) {
+  cursor: pointer;
+  background: #47b65c;
+  color: #fff;
 }
 </style>

@@ -190,4 +190,9 @@ tr {
   display: flex;
   flex-shrink: 0;
 }
+button:not(:disabled) {
+  cursor: pointer;
+  background: #47b65c;
+  color: #fff;
+}
 </style>
