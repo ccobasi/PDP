@@ -60,18 +60,8 @@ const selectedOption = ref('Career Goals and Aspirations');
 const selectedTerm = ref('Long Term Goal');
 
 // const filteredGoals = computed(() => {
-
   // var filteredGoal = goals_.value.filter(item => item.plan == selectedOption.value);
   // return filteredGoal
-
-//   return goals_.value.filter(item => {
-    
-//     const planFilter = item.plan == selectedOption.value;
-
-//     const termFilter = item.term == selectedTerm.value;
-
-//     return planFilter && termFilter;
-//   });
 // });
 const filteredGoals = computed(() => {
   return goals_.value.filter(item => {
