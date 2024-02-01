@@ -53,16 +53,17 @@ const downloadPDF = () => {
 const options = ref([
   { value: 'Career Goals and Aspirations', text: 'Career Goals and Aspirations' },
   { value: 'Area of Interest', text: 'Areas of Interest' },
-  { value: 'Mentorship and Skill Building<', text: 'Mentorship and Skills Building' },
+  { value: 'Mentorship and Skill Building', text: 'Mentorship and Skills Building' },
 ]);
 
 const selectedOption = ref('Career Goals and Aspirations');
 const selectedTerm = ref('Short Term Goal');
 
-const filteredGoals = computed(() => {
+// const filteredGoals = computed(() => {
 
-  var filteredGoal = goals_.value.filter(item => item.plan == selectedOption.value);
-  return filteredGoal
+//   var filteredGoal = goals_.value.filter(item => item.plan == selectedOption.value);
+  
+//   return filteredGoal 
 
   // return goals_.value.filter(item => {
     
@@ -72,8 +73,14 @@ const filteredGoals = computed(() => {
 
   //   return planFilter && termFilter;
   // });
+// });
+
+const filteredGoals = computed(() => {
+  return goals_.value.filter(item => {
+    return item.plan === selectedOption.value && item.term === selectedTerm.value;
+  });
 });
-console.log(store.goals);
+
 </script>
 <template>
   <div class="modal" id="myModal1">
