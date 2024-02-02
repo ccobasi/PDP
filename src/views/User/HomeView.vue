@@ -2,16 +2,18 @@
 import TabMenu from '../../components/Tabs/TabMenu.vue';
 import DoughNut from '../../components/DoughNut.vue'
 import CareerGoal from '../../components/CareerGoal.vue'
-import { ref, onMounted} from 'vue'
+import { ref, onMounted, computed} from 'vue'
 import {useGoalsStore} from "@/store/goals"
 import MidTerm from "../../components/Tables/MidTerm.vue"
 import LongTerm from "../../components/Tables/LongTerm.vue"
+import html2pdf from 'html2pdf.js';
 
 const store = useGoalsStore();
+var goals = store.goals;
 console.log(store.goals);
 
 // eslint-disable-next-line no-unused-vars
-const goals = ref([])
+// const goals = ref([])
   const plan = ref('')
   const term = ref('')
   const goal = ref('')
@@ -88,6 +90,29 @@ const handleFileChange = (goal) => {
 };
 
 const tab = ref(1);
+
+const itemsPerPage = 10; 
+const currentPage = ref(1);
+
+const totalPages = computed(() => Math.ceil(goals.length / itemsPerPage));
+
+const paginatedGoals = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return goals.slice(startIndex, endIndex);
+});
+
+const downloadPDF = () => {
+  const table = document.querySelector('.table-responsive');
+
+  html2pdf(table, {
+    margin: 10,
+    filename: 'table-data.pdf',
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+  });
+};
 </script>
 
 
@@ -200,7 +225,199 @@ const tab = ref(1);
         </div>
       </div>
     </form>
+    <div class="modal" id="myModal1">
+      <div class="modal-dialog" id="two">
+        <div class="modal-content">
+          <v-pagination class="page" v-model="currentPage" :length="totalPages"></v-pagination>
+          <v-btn class="download" @click="downloadPDF">Download as PDF</v-btn>
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Development Plans</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <div class="table-responsive d-flex flex-column">
+
+              <table class="full">
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink">S/N</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Plan</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Term</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Achieve</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Resources</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Success</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Potential</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Solution </span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Date </span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Progress</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Status</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Feedback</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                    <th scope="col">
+                      <div class="d-flex align-center gap-1">
+                        <span class="noshrink"> Evidence</span>
+
+                        <span class="d-flex flex-column align-center">
+                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                        </span>
+
+                      </div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(item, index) in paginatedGoals" :key="index" @click="selectItem(item)" @dblclick="$router.push({ name: 'Skill Assessment Details', params: { id: item.id } })">
+
+                    <!-- <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
+                    <td>{{item.id}}</td>
+                    <td>{{item.plan}}</td>
+                    <td>{{item.term}}</td>
+                    <td>{{item.goal}}</td>
+                    <td>{{item.achieve}}</td>
+                    <td>{{item.resource}}</td>
+                    <td>{{item.potential}}</td>
+                    <td>{{item.solution}}</td>
+                    <td>{{item.date}}</td>
+                    <td>{{item.progress}}</td>
+                    <td>{{item.status}}</td>
+                    <td>{{item.feedback}}</td>
+                    <td>{{item.evidence}}</td>
+                  </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
     <div class="development mt-5">
+
       <div class="dev">
         <h3>Development Plans</h3>
         <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Development Plan Request</button>
@@ -256,12 +473,26 @@ const tab = ref(1);
         </v-card>
 
       </div>
-
+      <button style="visibility: hidden;" class="view" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
     </div>
   </main>
 </template>
 
 <style scoped>
+.view {
+  display: flex;
+  padding: 10px 30px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+  color: var(--White, #fff);
+  font-family: Roboto;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
 .development {
   display: flex;
   padding: 30px;
@@ -360,16 +591,18 @@ hr {
   background: var(--Grey-Light, #eee);
 }
 .modal-content {
+  z-index: 1;
+  --bs-backdrop-zindex: 1;
   display: flex;
   padding: 30px;
   flex-direction: column;
   align-items: flex-start;
   gap: 20px;
   border-radius: 10px;
-  background: #fff;
 }
 .modal-backdrop {
   --bs-backdrop-zindex: -1;
+  display: none;
 }
 .type {
   display: flex;
@@ -496,5 +729,35 @@ hr {
   background: var(--Secondary, #47b65c);
   color: #fff;
   margin-top: 10px;
+}
+#myModal1 {
+  margin-left: 1%;
+}
+#two {
+  --bs-modal-width: 1280px;
+  width: 1280px;
+  height: 550px;
+  display: inline-flex;
+  padding: 20px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 10px;
+  margin-left: 2%;
+  border: none;
+  background: none;
+}
+.modal-header .btn-close {
+  background: transparent;
+  color: #808080;
+}
+.download {
+  cursor: pointer;
+  margin: auto;
+  background: #47b65c;
+  color: #fff;
+}
+.page {
+  margin: auto;
 }
 </style>

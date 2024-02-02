@@ -44,7 +44,6 @@ import ITProfile from '../views/IT/MyProfile.vue'
 import ITProfileSkillAssessment from '../views/IT/ProfileSkillAssessment.vue'
 import ITProfileTrainingSchedule from '../views/IT/ProfileTrainingSchedule.vue'
 
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -54,7 +53,7 @@ const router = createRouter({
       component: HomeView,
       
     },
-     {
+    {
       path: '/skillassessment',
       name: 'Skill Assessment',
       component: SkillAssessment,

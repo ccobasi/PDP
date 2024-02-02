@@ -1,6 +1,6 @@
 <script setup>
     import { useGoalsStore } from "@/store/goals";
-    import { ref, computed, /*onMounted, watchEffect*/ } from 'vue';
+    import { ref, computed } from 'vue';
     import AccordionCard from "../Cards/AccordionCard.vue"
     import { useRoute } from 'vue-router';
     import html2pdf from 'html2pdf.js';
@@ -79,7 +79,7 @@ const filteredGoals = computed(() => {
         <!-- Modal Header -->
         <div class="modal-header">
           <h4 class="modal-title">Development Plans</h4>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
         </div>
 
         <!-- Modal body -->
@@ -524,8 +524,6 @@ tr {
   align-items: flex-start;
   gap: 10px;
   border-radius: 10px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--Grey-Light, #eee);
 }
 .modal-title {
   display: flex;
@@ -551,5 +549,14 @@ tr {
 
 .form-select {
   width: 30%;
+}
+.modal-header .btn-close {
+  background: transparent;
+  color: #808080;
+}
+button:not(:disabled) {
+  cursor: pointer;
+  background: #47b65c;
+  color: #fff;
 }
 </style>
