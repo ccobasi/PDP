@@ -13,9 +13,9 @@ const addSkill = () => {
   if (skill.value.trim() !== '' || currentState.value.trim() !== '' || gap.value.trim() !== ''
       || desiredState.value.trim() !== ''
       || initiative.value.trim() !== '' || status.value.trim() !== '' 
-      || evidence.value.trim() !== '') {
+      || evidence.value) {
     store.addSkill(skill.value.trim(), currentState.value.trim(), gap.value.trim(), desiredState.value.trim(), initiative.value.trim(), status.value.trim(), 
-    feedback.value.trim(), evidence.value.trim(),);
+    feedback.value.trim(), evidence.value,);
   
   }
 }
@@ -29,8 +29,9 @@ const skills = ref([])
   const initiative  = ref('')
   const status = ref('')
   const feedback = ref('')
-  const evidence = ref('')
+  const evidence = ref(null)
   const selectedValue = ref('')
+  const loadingUpload = ref(false);
 
 const handleSubmit = () => {
   addSkill();
@@ -47,7 +48,24 @@ const onSelectChange = () => {
   // eslint-disable-next-line no-self-assign
   selectedValue.value = selectedValue.value
 }
- 
+
+const openFileInput = () => {
+  evidence.value.click();
+};
+
+const submitFile = () => {
+  const file = evidence.value.files[0];
+
+  if (file) {
+    store.setEvidence(file);
+
+    loadingUpload.value = true;
+    setTimeout(() => {
+      loadingUpload.value = false;
+      console.log('File uploaded successfully:', file.name);
+    }, 2000);
+  }
+};
 </script>
 
 
@@ -117,8 +135,10 @@ const onSelectChange = () => {
               </div>
               <div class="frame">
                 <h6>Evidence</h6>
-                <input type="file" @change="handleFileChange">
-                <button>Save Changes</button>
+                <div class="upload">
+                  <v-btn :loading="loadingUpload" height="48" rounded="xl" size="small" onclick="document.getElementById('getFile').click()" @click="openFileInput" variant="flat">Upload Evidence</v-btn>
+                  <input type='file' id="getFile" style="display:none" @change="submitFile()" accept="application/pdf" ref="evidence">
+                </div>
               </div>
             </div>
 
@@ -150,7 +170,7 @@ const onSelectChange = () => {
 
 <style scoped>
 main {
-  height: 1600px;
+  height: auto;
 }
 .skill {
   display: flex;
@@ -162,7 +182,7 @@ main {
 
   border-radius: 10px;
   background: #fff;
-  height: 1470px;
+  height: auto;
 }
 .skill h3 {
   color: var(--Black, #000);

@@ -3,18 +3,22 @@ import {defineStore} from 'pinia';
 export const useSkillsStore = defineStore('skills', {
   state: () => ({
     skills: JSON.parse(localStorage.getItem('skills')) || [],
+    evidence: null,
   }),
 
   getters: {
     getSkills() {
       return this.skills;
     },
+    getEvidence() {
+      return this.evidence;
+    },
   },
  
   actions: {
     addSkill(skill, currentState, gap, desiredState, initiative, status, feedback, evidence) {
       try {
-        const nextId = this.events.length + 1;
+        const nextId = this.skills.length + 1;
 
         this.skills.push({
           id: nextId,
@@ -44,6 +48,9 @@ export const useSkillsStore = defineStore('skills', {
       } catch (error) {
         console.error('Error saving skills to localStorage:', error);
       }
+    },
+    setEvidence(file) {
+      this.evidence = file;
     },
   },
 });

@@ -226,9 +226,7 @@ const submitFile = () => {
                   <v-btn :loading="loadingUpload" height="48" rounded="xl" size="small" onclick="document.getElementById('getFile').click()" @click="openFileInput" variant="flat">Upload Evidence</v-btn>
                   <input type='file' id="getFile" style="display:none" @change="submitFile()" accept="application/pdf" ref="evidence">
                 </div>
-                <div class="upload">
 
-                </div>
               </div>
             </div>
             <div class="modal-footer">
