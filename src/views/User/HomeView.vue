@@ -11,7 +11,6 @@ import html2pdf from 'html2pdf.js';
 const store = useGoalsStore();
 var goals = store.goals;
 console.log(store.goals);
-
 // eslint-disable-next-line no-unused-vars
 // const goals = ref([])
   const plan = ref('')
@@ -26,20 +25,21 @@ console.log(store.goals);
   const progress = ref('')
   const status = ref('')
   const feedback = ref('')
-  const evidence = ref('')
+  const evidence = ref(null)
   const selectedValue = ref('')
+  const loadingUpload = ref(false);
 
 const addGoal = async () => {
   if (
     plan.value.trim() !== '' || term.value.trim() !== '' || goal.value.trim() !== '' || achieve.value.trim() !== '' ||
     resource.value.trim() !== '' || success.value.trim() !== '' || potential.value.trim() !== '' ||
     solution.value.trim() !== '' || date.value.trim() !== '' || progress.value.trim() !== '' ||
-    status.value.trim() !== '' || feedback.value.trim() !== '' || evidence.value.trim() !== ''
+    status.value.trim() !== '' || feedback.value.trim() !== '' || evidence.value
   ) {
     await store.addGoal(
       plan.value.trim(), term.value.trim(), goal.value.trim(), achieve.value.trim(),
       resource.value.trim(), success.value.trim(), potential.value.trim(), solution.value.trim(),
-      date.value.trim(), progress.value.trim(), status.value.trim(), feedback.value.trim(), evidence.value.trim()
+      date.value.trim(), progress.value.trim(), status.value.trim(), feedback.value.trim(), evidence.value
     );
 
     // Clear form inputs after submission
@@ -55,7 +55,7 @@ const addGoal = async () => {
     progress.value = '';
     status.value = '';
     feedback.value = '';
-    evidence.value = '';
+    evidence.value = null;
 
     console.log("Goal added");
   }
@@ -81,13 +81,6 @@ onMounted(() => {
   selectedValue.value = selectedValue.value
 }
 
-const selectedFile = ref(null);
-
-const handleFileChange = (goal) => {
-  const file = goal.target.files[0];
-  
-  selectedFile.value = file;
-};
 
 const tab = ref(1);
 
@@ -112,6 +105,24 @@ const downloadPDF = () => {
     html2canvas: { scale: 2 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
   });
+};
+
+const openFileInput = () => {
+  evidence.value.click();
+};
+
+const submitFile = () => {
+  const file = evidence.value.files[0];
+
+  if (file) {
+    store.setEvidence(file);
+
+    loadingUpload.value = true;
+    setTimeout(() => {
+      loadingUpload.value = false;
+      console.log('File uploaded successfully:', file.name);
+    }, 2000);
+  }
 };
 </script>
 
@@ -211,9 +222,13 @@ const downloadPDF = () => {
 
               </div>
               <div class="types">
+                <div class="upload">
+                  <v-btn :loading="loadingUpload" height="48" rounded="xl" size="small" onclick="document.getElementById('getFile').click()" @click="openFileInput" variant="flat">Upload Evidence</v-btn>
+                  <input type='file' id="getFile" style="display:none" @change="submitFile()" accept="application/pdf" ref="evidence">
+                </div>
+                <div class="upload">
 
-                <input type="file" @change="handleFileChange">
-                <!-- <button>Save Changes</button> -->
+                </div>
               </div>
             </div>
             <div class="modal-footer">

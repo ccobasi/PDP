@@ -3,11 +3,15 @@ import {defineStore} from 'pinia';
 export const useGoalsStore = defineStore('goals', {
   state: () => ({
     goals: JSON.parse(localStorage.getItem('goals')) || [],
+    evidence: null,
   }),
 
   getters: {
     getGoals() {
       return this.goals;
+    },
+    getEvidence() {
+      return this.evidence;
     },
   },
  
@@ -49,6 +53,9 @@ export const useGoalsStore = defineStore('goals', {
       } catch (error) {
         console.error('Error saving goals to localStorage:', error);
       }
+    },
+    setEvidence(file) {
+      this.evidence = file;
     },
   },
 });
