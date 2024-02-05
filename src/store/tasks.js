@@ -3,7 +3,7 @@ import {defineStore} from 'pinia';
 export const useTasksStore = defineStore('tasks', {
   state: () => ({
     tasks: JSON.parse(localStorage.getItem('tasks')) || [],
-    selectedFile: null,
+    evidence: null,
   }),
 
   mutations: {
@@ -15,18 +15,22 @@ export const useTasksStore = defineStore('tasks', {
     getTasks() {
       return this.tasks;
     },
+    getEvidence() {
+      return this.evidence;
+    },
   },
  
   actions: {
     addTask(task, status, startDate, endDate, comment, evidence) {
       try {
-        // Ensure this.getTasks is an array
+        const nextId = this.tasks.length + 1;
+
         if (!Array.isArray(this.getTasks)) {
           this.setTasks([]);
         }
 
         this.tasks.push({
-          id: Date.now(),
+          id: nextId,
           task: task,
           status: status,
           startDate: startDate,
@@ -52,10 +56,6 @@ export const useTasksStore = defineStore('tasks', {
       }
     },
 
-    setSelectedFile(file) {
-      this.selectedFile = file;
-    },
-
     fetchTasks() {
       return this.tasks;
     },
@@ -66,6 +66,9 @@ export const useTasksStore = defineStore('tasks', {
       } catch (error) {
         console.error('Error saving tasks to localStorage:', error);
       }
+    },
+     setEvidence(file) {
+      this.evidence = file;
     },
   },
 });

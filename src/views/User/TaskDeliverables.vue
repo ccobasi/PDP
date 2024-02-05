@@ -18,17 +18,18 @@ console.log(store.tasks);
   const startDate = ref('')
   const endDate = ref('')
   const comment  = ref('')
-  const evidence = ref('')
+  const evidence = ref(null)
   const selectedValue = ref('')
+  const loadingUpload = ref(false);
 
 const addTask = async () => {
   if (
     task.value.trim() !== '' || status.value.trim() !== '' || startDate.value.trim() !== '' ||
-    endDate.value.trim() !== '' || comment.value.trim() !== '' || evidence.value.trim() !== ''
+    endDate.value.trim() !== '' || comment.value.trim() !== '' || evidence.value
   ) {
     await store.addTask(
       task.value.trim(), status.value.trim(), startDate.value.trim(),
-      endDate.value.trim(), comment.value.trim(), evidence.value.trim()
+      endDate.value.trim(), comment.value.trim(), evidence.value
     );
 
     // Clear form inputs after submission
@@ -37,7 +38,7 @@ const addTask = async () => {
     startDate.value = '';
     endDate.value = '';
     comment.value = '';
-    evidence.value = '';
+    evidence.value = null;
 
     console.log("Task added");
   }
@@ -62,17 +63,6 @@ onMounted(() => {
   // eslint-disable-next-line no-self-assign
   selectedValue.value = selectedValue.value
 }
-
-const selectedFile = ref(null);
-
-const handleFileChange = (task) => {
-  const file = task.target.files[0];
-  
-  selectedFile.value = file;
-};
-
-
-
 // const tab = null;
  const isUserRoute = computed(() => {
   const route = useRoute();
@@ -102,6 +92,23 @@ const downloadPDF = () => {
   });
 };
 
+const openFileInput = () => {
+  evidence.value.click();
+};
+
+const submitFile = () => {
+  const file = evidence.value.files[0];
+
+  if (file) {
+    store.setEvidence(file);
+
+    loadingUpload.value = true;
+    setTimeout(() => {
+      loadingUpload.value = false;
+      console.log('File uploaded successfully:', file.name);
+    }, 2000);
+  }
+};
 </script>
 
 
@@ -277,7 +284,10 @@ const downloadPDF = () => {
                 </div>
                 <div class="frame">
                   <h6>Evidence of Completion</h6>
-                  <input type="file" @change="handleFileChange">
+                  <div class="upload">
+                    <v-btn :loading="loadingUpload" height="48" rounded="xl" size="small" onclick="document.getElementById('getFile').click()" @click="openFileInput" variant="flat">Upload Evidence</v-btn>
+                    <input type='file' id="getFile" style="display:none" @change="submitFile()" accept="application/pdf" ref="evidence">
+                  </div>
 
                 </div>
               </div>

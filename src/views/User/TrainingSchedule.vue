@@ -11,10 +11,10 @@ console.log(store.trainings);
 const addTraining = () => {
   if (month.value.trim() !== '' || trainingTopic.value.trim() !== '' || learningOutcome.value.trim() !== ''
     || trainingMethod.value.trim() !== ''
-    || trainingInitiator.value.trim() !== '' || skillMatrixMapping.value.trim() !== '' || dueDate.value.trim() !== '' || status.value.trim() !== '' || selectedRating.value.trim() !== '' || evidence.value.trim() !== '') {
+    || trainingInitiator.value.trim() !== '' || skillMatrixMapping.value.trim() !== '' || dueDate.value.trim() !== '' || status.value.trim() !== '' || selectedRating.value || evidence.value) {
     store.addTraining(month.value.trim(), trainingTopic.value.trim(), learningOutcome.value.trim(),
        trainingMethod.value.trim(), trainingInitiator.value.trim(), skillMatrixMapping.value.trim(), dueDate.value.trim(), status.value.trim(),
-       selectedRating.value.trim(), evidence.value.trim());
+       selectedRating.value, evidence.value);
   
   }
 };
@@ -30,12 +30,11 @@ const trainings = ref([])
   const skillMatrixMapping = ref('')
   const dueDate = ref('')
   const status = ref('')
-  const selectedRating = ref('')
-  const evidence = ref('')
+  const selectedRating = ref(null)
+  const evidence = ref(null)
   const selectedValue = ref('')
-  const selectedFile = ref(null)
- 
-
+  const loadingUpload = ref(false);
+  
 const handleSubmit = () => {
   addTraining();
   console.log("Training added")
@@ -45,22 +44,30 @@ const handleSubmit = () => {
 onMounted(() => {
   
   store.fetchTrainings();
-});
-
-
-const handleFileChange = (training) => {
-  const file = training.target.files[0];
-  selectedFile.value = file;
-  store.setSelectedFile(file);
-};
-
- 
+}); 
 
  const onSelectChange = () => {
   // eslint-disable-next-line no-self-assign
   selectedValue.value = selectedValue.value
 }
 
+const openFileInput = () => {
+  evidence.value.click();
+};
+
+const submitFile = () => {
+  const file = evidence.value.files[0];
+
+  if (file) {
+    store.setEvidence(file);
+
+    loadingUpload.value = true;
+    setTimeout(() => {
+      loadingUpload.value = false;
+      console.log('File uploaded successfully:', file.name);
+    }, 2000);
+  }
+};
 </script>
 
 
@@ -163,8 +170,10 @@ const handleFileChange = (training) => {
                 </div>
                 <div class="frame">
                   <h6>Evidence</h6>
-                  <input type="file" @change="handleFileChange">
-                  <button>Save Changes</button>
+                  <div class="upload">
+                    <v-btn :loading="loadingUpload" height="48" rounded="xl" size="small" onclick="document.getElementById('getFile').click()" @click="openFileInput" variant="flat">Upload Evidence</v-btn>
+                    <input type='file' id="getFile" style="display:none" @change="submitFile()" accept="application/pdf" ref="evidence">
+                  </div>
                 </div>
               </div>
             </div>

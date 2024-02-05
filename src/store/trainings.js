@@ -3,25 +3,32 @@ import {defineStore} from 'pinia';
 export const useTrainingsStore = defineStore('trainings', {
   state: () => ({
     trainings: JSON.parse(localStorage.getItem('trainings')) || [],
-    selectedFile: null,
+    evidence: null,
   }),
 
   mutations: {
     setTrainings(trainings) {
       this.trainings = trainings;
     },
+    setEvidence(file) {
+      this.evidence = file;
+    },
   },
   getters: {
     getTrainings() {
       return this.trainings;
+    },
+    getEvidence() {
+      return this.evidence;
     },
   },
  
   actions: {
     addTraining(month, trainingTopic, learningOutcome, trainingMethod, trainingInitiator,skillMatrixMapping, dueDate, status, selectedRating, evidence) {
       try {
+        const nextId = this.trainings.length + 1;
         this.trainings.push({
-          id: Date.now(),
+          id: nextId,
           month: month,
           trainingTopic: trainingTopic,
           learningOutcome: learningOutcome,
@@ -54,6 +61,9 @@ export const useTrainingsStore = defineStore('trainings', {
       } catch (error) {
         console.error('Error saving trainings to localStorage:', error);
       }
+    },
+    setEvidence(file) {
+      this.evidence = file;
     },
   },
 });
