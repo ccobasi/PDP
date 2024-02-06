@@ -92,6 +92,9 @@
   line-height: 24px;
 }
 @media screen and (max-width: 768px) {
+  .pageheader {
+    overflow-x: hidden;
+  }
   .navbar-nav {
     flex-direction: column;
     align-items: center;
@@ -111,33 +114,5 @@
     font-size: 18px;
   }
 }
-
-/*label {
-  
-}
-
-.navbar {
-  
-}
-
-.navbar-nav .nav-item:first-child .nav-link {
-  
-}
-
-.nav-item {
-  
-}
-
-.nav-link {
-  
-}
-
-.link {
-  
-}
-
-.active::after {
-  
-}*/
 </style>
 

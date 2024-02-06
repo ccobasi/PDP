@@ -60,4 +60,28 @@ import PieChart from '../components/Charts/PieChart.vue';
   width: 373px;
   height: 358px;
 }
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    padding: 20px;
+    align-items: center;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .box-padded {
+    margin-top: 10px;
+  }
+
+  .chart-box-3 {
+    width: 100%;
+    height: auto;
+  }
+  .d-flex {
+    flex-direction: column;
+  }
+}
 </style>

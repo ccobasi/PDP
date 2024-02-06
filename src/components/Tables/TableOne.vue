@@ -559,4 +559,72 @@ button:not(:disabled) {
   background: #47b65c;
   color: #fff;
 }
+
+@media (max-width: 768px) {
+  .modal-dialog {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+  }
+
+  .modal-body {
+    padding: 10px;
+  }
+
+  .form-select {
+    width: 100%;
+  }
+
+  .table {
+    width: 100%;
+  }
+
+  thead tr th {
+    font-size: 10px;
+    padding: 10px;
+  }
+
+  tbody tr td {
+    font-size: 10px;
+    padding: 8px;
+  }
+
+  .side-panel {
+    width: 100%;
+  }
+
+  .side-panel h3 {
+    font-size: 18px;
+  }
+
+  .accordion-item {
+    width: 100%;
+    height: auto;
+    padding: 10px;
+  }
+
+  .accordion-button {
+    width: 100%;
+  }
+
+  .accordion-body textarea {
+    width: 100%;
+  }
+
+  .accordion-body input {
+    width: 100%;
+  }
+
+  .accordion-body button {
+    width: 100%;
+  }
+
+  .delete {
+    justify-content: center;
+  }
+
+  .delete button {
+    width: 100%;
+  }
+}
 </style>

@@ -439,10 +439,10 @@ const submitFile = () => {
       <div class="goals">
 
         <v-card>
-          <v-tabs class="custom-tab" v-model="tab" color="deep-purple-accent-4" align-tabs="center">
-            <v-tab :value="1">Short term goals (3 - 6 Months)</v-tab>
-            <v-tab :value="2">Mid term goals (7 - 12 Months)</v-tab>
-            <v-tab :value="3">Long term goals (13 - 24 Months)</v-tab>
+          <v-tabs class="custom-tab" v-model="tab" color="deep-purple-accent-4" align-tabs="left">
+            <v-tab class="link-tab" :value="1">Short term goals (3 - 6 Months)</v-tab>
+            <v-tab class="link-tab" :value="2">Mid term goals (7 - 12 Months)</v-tab>
+            <v-tab class="link-tab" :value="3">Long term goals (13 - 24 Months)</v-tab>
           </v-tabs>
 
           <v-tabs-items v-model="tab">
@@ -613,10 +613,7 @@ hr {
   gap: 20px;
   border-radius: 10px;
 }
-.modal-backdrop {
-  --bs-backdrop-zindex: -1;
-  display: none;
-}
+
 .type {
   display: flex;
   flex-direction: column;
@@ -772,5 +769,65 @@ hr {
 }
 .page {
   margin: auto;
+}
+
+@media (max-width: 768px) {
+  .dev {
+    width: 600px;
+    padding: 10px;
+  }
+
+  .dev h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  .dev button {
+    font-size: 14px;
+  }
+  .modal-body {
+    gap: 10px;
+    overflow-y: auto;
+  }
+  .modal-dialog {
+    --bs-modal-width: 700px;
+    margin-left: 5%;
+    padding: 10px;
+    gap: 10px;
+  }
+  .modal-body {
+    width: 100%;
+    height: 1100px;
+  }
+  .goal {
+    justify-content: flex-start;
+    gap: 7px;
+  }
+  .goal textarea {
+    width: 300px;
+  }
+  .type .form-select {
+    display: flex;
+    width: 300px;
+  }
+  .modal-footer {
+    background: #000;
+    height: 100px;
+  }
+  .custom-tab {
+    align-items: flex-start;
+    width: 600px;
+    margin-left: 40px;
+  }
+  .v-slide-group__container {
+    width: 600px;
+  }
+  .link-tab {
+    width: 180px;
+    font-size: 10px;
+    letter-spacing: 0.01px;
+  }
+  .v-slide-group__content {
+    width: 600px;
+  }
 }
 </style>
