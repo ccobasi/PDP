@@ -458,4 +458,18 @@ label[for]:hover {
 .rating [type='radio']:nth-of-type(5):focus ~ .stars label:nth-of-type(5) {
   color: darkorange;
 }
+@media screen and (max-width: 768px) {
+  .modal {
+    margin-left: 5%;
+  }
+  .modal-dialog {
+    --bs-modal-width: 700px;
+  }
+
+  .frame input,
+  .frame textarea,
+  .form-select {
+    width: 290px;
+  }
+}
 </style>

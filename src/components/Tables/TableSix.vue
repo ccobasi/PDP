@@ -12,7 +12,7 @@
 
     console.log(mentorship);
 
-    const itemsPerPage = 15; 
+    const itemsPerPage = 10; 
 const currentPage = ref(1);
 
 const totalPages = computed(() => Math.ceil(mentorship.length / itemsPerPage));
@@ -38,6 +38,8 @@ const downloadPDF = () => {
 </script>
 <template>
   <div class="table-responsive d-flex flex-column">
+    <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+    <v-btn @click="downloadPDF">Download as PDF</v-btn>
     <table class="table">
       <thead>
         <tr>
@@ -147,8 +149,7 @@ const downloadPDF = () => {
 
       </tbody>
     </table>
-    <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
-    <v-btn @click="downloadPDF">Download as PDF</v-btn>
+
   </div>
 </template>
 
@@ -261,5 +262,24 @@ tr {
   font-style: normal;
   font-weight: 400;
   line-height: 19.2px;
+}
+button:not(:disabled) {
+  cursor: pointer;
+  background: #47b65c;
+  color: #fff;
+}
+.v-btn button {
+  background: #47b65c;
+}
+@media screen and (max-width: 768px) {
+  table {
+    width: 100%;
+  }
+
+  thead tr th,
+  tbody tr td {
+    font-size: 8px;
+    padding: 10px;
+  }
 }
 </style>

@@ -319,7 +319,7 @@ const submitFile = () => {
 
 <style scoped>
 main {
-  height: 800px;
+  height: 950px;
 }
 .titles {
   display: flex;

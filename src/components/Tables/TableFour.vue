@@ -195,4 +195,10 @@ button:not(:disabled) {
   background: #47b65c;
   color: #fff;
 }
+@media screen and (max-width: 768px) {
+  thead tr th,
+  tbody tr td {
+    font-size: 7px;
+  }
+}
 </style>

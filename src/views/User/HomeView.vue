@@ -796,21 +796,30 @@ hr {
   }
   .modal-body {
     width: 100%;
-    height: 1100px;
+    height: 770px;
   }
   .goal {
     justify-content: flex-start;
     gap: 7px;
   }
   .goal textarea {
-    width: 300px;
+    width: 290px;
   }
   .type .form-select {
     display: flex;
-    width: 300px;
+    width: 290px;
+  }
+  .wright textarea {
+    width: 290px;
+    height: 70px;
+  }
+  .lefts input {
+    width: 290px;
+  }
+  .form-selects {
+    width: 290px;
   }
   .modal-footer {
-    background: #000;
     height: 100px;
   }
   .custom-tab {
