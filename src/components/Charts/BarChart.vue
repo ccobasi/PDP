@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Create a canvas element for the chart -->
-    <canvas ref="barChart" width="1000" height="300"></canvas>
+    <canvas class="bar" ref="barChart" width="1000" height="300"></canvas>
   </div>
 </template>
 
@@ -72,5 +72,10 @@ export default {
 </script>
 
 <style>
-/* Add any custom styles for your component here */
+@media (max-width: 768px) {
+  .bar {
+    width: 600px;
+    height: 300px;
+  }
+}
 </style>

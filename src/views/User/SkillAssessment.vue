@@ -342,4 +342,9 @@ main {
   color: #fff;
   margin-top: 10px;
 }
+@media only screen and (max-width: 768px) {
+  .modal {
+    margin-left: 18%;
+  }
+}
 </style>

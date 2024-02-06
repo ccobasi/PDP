@@ -412,4 +412,27 @@ button:not(:disabled) {
   background: #47b65c;
   color: #fff;
 }
+
+@media only screen and (max-width: 768px) {
+  .table-responsive {
+    width: 100%;
+    overflow-y: auto;
+  }
+  table,
+  .full {
+    width: 580px;
+  }
+  thead tr th {
+    font-size: 10px;
+    padding: 6px;
+  }
+
+  tbody tr td {
+    font-size: 10px;
+    padding: 10px;
+  }
+  .side-panel {
+    max-width: 100%;
+  }
+}
 </style>

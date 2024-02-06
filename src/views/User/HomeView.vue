@@ -829,5 +829,41 @@ hr {
   .v-slide-group__content {
     width: 600px;
   }
+  .table-responsive {
+    width: 100%;
+    overflow-y: auto;
+  }
+  table,
+  .full {
+    width: 580px;
+  }
+  thead tr th {
+    font-size: 8px;
+    padding: 6px;
+  }
+
+  tbody tr td {
+    font-size: 5px;
+    padding: 10px;
+  }
+  #myModal1 {
+    margin-left: 2px;
+  }
+  #two {
+    --bs-modal-width: 760px;
+  }
+  .modal-header .btn-close {
+    background: transparent;
+    color: #808080;
+  }
+  .download {
+    cursor: pointer;
+    margin: auto;
+    background: #47b65c;
+    color: #fff;
+  }
+  .page {
+    margin: auto;
+  }
 }
 </style>
