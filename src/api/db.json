@@ -1,0 +1,20 @@
+[
+  {
+    "planTypeId": 1,
+    "planTermId": 2,
+    "goalSummary": "Improve website conversion rate",
+    "achievementApproach": "A/B testing different landing pages",
+    "requiredResources": "Design team, development team",
+    "successCriteria": "Increase conversion rate by 10%",
+    "potentialChallenges": "Limited resources, user resistance to change",
+    "solutionToChallenges": "Prioritize testing, gather user feedback",
+    "targetCompletionDate": "2024-06-30",
+    "progressMetrics": "Conversion rate analytics",
+    "status": "In Progress",
+    "feedback": "",
+    "evidenceURL": ""
+  },
+  {
+    
+  }
+]

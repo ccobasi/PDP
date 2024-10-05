@@ -1,0 +1,56 @@
+{
+  "plans": [
+    {
+      "id": 1,
+      "planTypeId": 1,
+      "planTermId": 1,
+      "goalSummary": "Improve project management",
+      "achievementApproach": "Use Agile methodologies",
+      "requiredResources": "Project management software",
+      "successCriteria": "On-time project delivery",
+      "potentialChallenges": "Resistance to change",
+      "solutionToChallenges": "Training sessions",
+      "targetCompletionDate": "2024-12-31",
+      "progressMetrics": "Weekly sprints",
+      "status": "In Progress",
+      "feedback": "Positive",
+      "evidenceURL": "http://example.com/evidence"
+    },
+    {
+      "id": "04f0",
+      "planTypeId": "Career Goals and Aspirations",
+      "planTermId": "Short Term Goal",
+      "goalSummary": "Json server test",
+      "achievementApproach": "test",
+      "requiredResources": "test",
+      "successCriteria": "test",
+      "potentialChallenges": "test",
+      "solutionToChallenges": "test",
+      "targetCompletionDate": "2024-05-31",
+      "progressMetrics": "test",
+      "status": "Not started",
+      "feedback": "test",
+      "evidenceURL": {
+        "_vei": {}
+      }
+    },
+    {
+      "id": "5442",
+      "planTypeId": "Career Goals and Aspirations",
+      "planTermId": "Short Term Goal",
+      "goalSummary": "Json server test",
+      "achievementApproach": "test",
+      "requiredResources": "test",
+      "successCriteria": "test",
+      "potentialChallenges": "test",
+      "solutionToChallenges": "test",
+      "targetCompletionDate": "2024-05-31",
+      "progressMetrics": "test",
+      "status": "Not started",
+      "feedback": "test",
+      "evidenceURL": {
+        "_vei": {}
+      }
+    }
+  ]
+}
