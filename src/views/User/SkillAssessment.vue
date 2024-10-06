@@ -298,8 +298,19 @@ main {
   margin-top: 0px !important;
 }
 
+.modal-dialog {
+  --bs-modal-width: 900px;
+  width: 900px;
+  height: 740px;
+  margin-left: 13%;
+  display: inline-flex;
+  padding: 30px;
+  border-radius: 10px;
+  background: #eeeeee;
+}
+
 .modal-content {
-  width: 860px;
+  width: 840px;
   height: 680px;
   z-index: 1;
   --bs-backdrop-zindex: 1;
@@ -309,21 +320,6 @@ main {
   align-items: flex-start;
   gap: 20px;
   border-radius: 10px;
-}
-
-.type {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
-}
-.type h3 {
-  color: var(--Black, #000);
-  font-family: "Roboto", sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 19.2px;
 }
 
 .form-select {
@@ -336,59 +332,7 @@ main {
   font-weight: 400;
   line-height: 14.4px;
 }
-.goal {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  gap: 20px;
-  margin-top: 20px;
-}
-.left {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
-}
-.right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
-}
-.left h4,
-.right h4,
-.wright h4,
-.lefts h4 {
-  color: var(--Black, #000);
-  font-family: "Roboto", sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 19.2px;
-}
-.goal textarea {
-  display: flex;
-  width: 320px;
-  height: 70px;
-  padding: 10px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  border: 1px solid #808080;
-  border-radius: 5px;
-}
-.type input {
-  display: flex;
-  width: 320px;
-  height: 40px;
-  padding: 10px;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 5px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--White, #fff);
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
-}
+
 .modal-footer {
   display: flex;
   height: 40px;
@@ -402,51 +346,17 @@ main {
   background: var(--Secondary, #47b65c);
   color: #fff;
 }
-.wright textarea {
-  width: 320px;
-  height: 70px;
-}
-.lefts input {
-  width: 320px;
-  height: 40px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--White, #fff);
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
-}
-.form-selects {
-  display: flex;
-  width: 320px;
-  height: 40px;
-  padding: 10px;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 5px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--White, #fff);
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
-}
-.types button {
-  display: flex;
-  padding: 10px 50px;
-  align-items: center;
-  gap: 10px;
-  align-self: stretch;
-  border-radius: 5px;
-  background: var(--Secondary, #47b65c);
-  color: #fff;
-  margin-top: 10px;
-}
 
 .one {
   display: flex;
-  gap: 30px;
+  justify-content: space-between;
+  gap: 1rem;
 }
+
 .frame {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
+  flex: 1;
 }
+
 .frame input {
   width: 370px;
 }
@@ -481,7 +391,7 @@ main {
 }
 .form-select {
   width: 370px;
-  height: 50px;
+  height: 40px;
   color: var(--Grey-Dark, #808080);
   font-family: "Roboto", sans-serif;
   font-size: 12px;
@@ -525,12 +435,72 @@ main {
   color: #fff;
   margin-top: 30px;
 }
-@media only screen and (max-width: 768px) {
+
+@media screen and (max-width: 992px) {
+  .modal-dialog {
+    width: 800px;
+    margin-top: 10%;
+    margin-left: 60px;
+  }
+
+  .modal-content {
+    width: 100%;
+  }
+
+  .form-select,
+  .frame textarea {
+    width: 320px;
+  }
+}
+
+@media screen and (max-width: 768px) {
   .skill {
     height: 2400px;
   }
   .modal {
-    margin-left: 18%;
+    margin: auto;
+  }
+  .one {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-dialog {
+    max-width: 90%;
+    height: 1040px;
+  }
+
+  .modal-content {
+    height: 980px;
+  }
+
+  .frame textarea,
+  .form-select {
+    width: 480px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .one {
+    flex-direction: column;
+  }
+
+  .modal-dialog {
+    max-width: 100%;
+    margin: 0 1rem;
+  }
+
+  .modal-header,
+  .modal-footer {
+    text-align: center;
+  }
+
+  h5.modal-title {
+    font-size: 1.2rem;
+  }
+
+  button {
+    width: 100%;
   }
 }
 </style>

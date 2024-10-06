@@ -1,6 +1,6 @@
 <template>
   <div>
-    <canvas class="bar" ref="barChart" width="1000" height="300"></canvas>
+    <canvas class="bar" ref="barChart"></canvas>
   </div>
 </template>
 
@@ -103,10 +103,36 @@ export default {
 </script>
 
 <style>
-@media (max-width: 768px) {
+.bar {
+  width: 1000px;
+  height: 300px;
+}
+
+@media screen and (max-width: 1200px) {
   .bar {
-    width: 550px;
-    height: 300px;
+    width: 800px;
+    height: 250px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .bar {
+    width: 600px;
+    height: 200px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .bar {
+    width: 100%;
+    height: 150px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .bar {
+    width: 100%;
+    height: 100px;
   }
 }
 </style>
