@@ -3,7 +3,6 @@ import TabMenu from '../../components/Tabs/TabMenuFive.vue';
 import DoughnutChart from '../../components/Charts/DoughnutChart.vue'
 import AllTrainingTable from '../../components/Tables/AllTrainingTable.vue'
 
-
 </script>
 
 
@@ -28,7 +27,6 @@ import AllTrainingTable from '../../components/Tables/AllTrainingTable.vue'
       </div>
 
       <div class="table">
-
         <AllTrainingTable />
       </div>
 

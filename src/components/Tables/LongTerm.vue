@@ -588,7 +588,7 @@ input {
 .space {
   width: 220px;
   color: var(--Grey-Dark, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 12px;
 }
 

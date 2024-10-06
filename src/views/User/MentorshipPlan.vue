@@ -395,7 +395,6 @@ const downloadPDF = () => {
           </div>
         </div>
       </div>
-
     </form>
     <div class="skill mt-4">
       <div class="header">
@@ -429,7 +428,7 @@ main {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -448,7 +447,7 @@ main {
 }
 .skill h3 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -474,7 +473,7 @@ main {
   background: var(--Secondary, #47b65c);
 
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -546,7 +545,7 @@ main {
 }
 .type h3 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -556,7 +555,7 @@ main {
   width: 370px;
   height: 50px;
   color: var(--Grey-Dark, #808080);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -578,7 +577,7 @@ main {
 }
 .frame h6 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -603,7 +602,7 @@ main {
 }
 .frame textarea::placeholder {
   color: var(--Grey-Dark, #808080);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -612,7 +611,7 @@ main {
 .form-select {
   width: 320px;
   color: var(--Grey-Dark, #808080);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;

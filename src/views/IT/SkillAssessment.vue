@@ -4,11 +4,11 @@ import BarChart from '../../components/Charts/BarChart.vue'
 import SkillMetrics from '../../components/SkillMetrics.vue'
 import Table from '../../components/Tables/TableFive.vue'
 import { ref } from 'vue'
-import {useITSkillsStore} from "@/store/skills"
+import {useSkillsStore} from "@/store/skills"
 
 
-const store = useITSkillsStore();
-console.log(store.itSkills);
+const store = useSkillsStore();
+console.log(store.skills);
 
 const addSkill = () => {
   if (skill.value.trim() !== '' || currentState.value.trim() !== '' || gap.value.trim() !== ''
@@ -213,7 +213,7 @@ main {
 }
 .skill h3 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: Roboto;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -249,7 +249,7 @@ main {
   background: var(--Secondary, #47b65c);
 
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: Roboto;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -264,7 +264,7 @@ main {
   border-radius: 20px;
   background: var(--Primary, #227cbf);
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: Roboto;
   font-size: 13px;
   font-style: normal;
   font-weight: 400;
@@ -273,7 +273,7 @@ main {
 .team,
 .approval {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: Roboto;
   font-size: 13px;
   font-style: normal;
   font-weight: 400;
@@ -298,7 +298,7 @@ main {
   align-items: center;
   align-self: stretch;
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: Roboto;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -326,7 +326,7 @@ main {
 }
 .frame h6 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: Roboto;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -347,7 +347,7 @@ main {
 }
 .frame textarea::placeholder {
   color: var(--Grey-Dark, #808080);
-  font-family: 'Inter', sans-serif;
+  font-family: Roboto;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -356,7 +356,7 @@ main {
 .form-select {
   width: 350px;
   color: var(--Grey-Dark, #808080);
-  font-family: 'Inter', sans-serif;
+  font-family: Roboto;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -378,7 +378,7 @@ main {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: Roboto;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;

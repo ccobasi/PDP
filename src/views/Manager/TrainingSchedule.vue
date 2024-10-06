@@ -226,7 +226,11 @@ main {
 }
 .skill h3 {
   color: var(--Black, #000);
+<<<<<<< HEAD
   font-family: 'Inter', sans-serif;
+=======
+  font-family: Roboto;
+>>>>>>> 778fe7e07245997f2ed89303404e2c094e2a65a3
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -253,7 +257,11 @@ main {
 }
 .member h3 {
   color: var(--Black, #000);
+<<<<<<< HEAD
   font-family: 'Inter', sans-serif;
+=======
+  font-family: Roboto;
+>>>>>>> 778fe7e07245997f2ed89303404e2c094e2a65a3
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -274,7 +282,11 @@ main {
   background: var(--Secondary, #47b65c);
 
   color: var(--White, #fff);
+<<<<<<< HEAD
   font-family: 'Inter', sans-serif;
+=======
+  font-family: Roboto;
+>>>>>>> 778fe7e07245997f2ed89303404e2c094e2a65a3
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -323,7 +335,11 @@ main {
   align-items: center;
   align-self: stretch;
   color: var(--Black, #000);
+<<<<<<< HEAD
   font-family: 'Inter', sans-serif;
+=======
+  font-family: Roboto;
+>>>>>>> 778fe7e07245997f2ed89303404e2c094e2a65a3
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -337,7 +353,11 @@ main {
 .team,
 .approval {
   color: var(--Black, #000);
+<<<<<<< HEAD
   font-family: 'Inter', sans-serif;
+=======
+  font-family: Roboto;
+>>>>>>> 778fe7e07245997f2ed89303404e2c094e2a65a3
   font-size: 13px;
   font-style: normal;
   font-weight: 400;
@@ -360,7 +380,11 @@ main {
 }
 .frame h6 {
   color: var(--Black, #000);
+<<<<<<< HEAD
   font-family: 'Inter', sans-serif;
+=======
+  font-family: Roboto;
+>>>>>>> 778fe7e07245997f2ed89303404e2c094e2a65a3
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -385,7 +409,11 @@ main {
 }
 .frame textarea::placeholder {
   color: var(--Grey-Dark, #808080);
+<<<<<<< HEAD
   font-family: 'Inter', sans-serif;
+=======
+  font-family: Roboto;
+>>>>>>> 778fe7e07245997f2ed89303404e2c094e2a65a3
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -394,7 +422,11 @@ main {
 .form-select {
   width: 400px;
   color: var(--Grey-Dark, #808080);
+<<<<<<< HEAD
   font-family: 'Inter', sans-serif;
+=======
+  font-family: Roboto;
+>>>>>>> 778fe7e07245997f2ed89303404e2c094e2a65a3
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -416,7 +448,11 @@ main {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
+<<<<<<< HEAD
   font-family: 'Inter', sans-serif;
+=======
+  font-family: Roboto;
+>>>>>>> 778fe7e07245997f2ed89303404e2c094e2a65a3
   font-size: 16px;
   font-style: normal;
   font-weight: 400;

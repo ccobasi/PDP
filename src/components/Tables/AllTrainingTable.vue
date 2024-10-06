@@ -177,7 +177,6 @@ const filteredItems = computed(() => {
 
             </div>
           </th>
-
           <th scope="col">
             <div class="d-flex align-center gap-1">
               <span class="noshrink"> Status </span>

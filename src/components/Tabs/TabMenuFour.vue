@@ -255,7 +255,7 @@ const closeModal = () => {
   border-radius: 6px;
   background: var(--Gradient, linear-gradient(90deg, #227cbf 0%, #47b65c 100%));
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -268,7 +268,7 @@ const closeModal = () => {
   width: 80px;
   height: 40px;
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -312,7 +312,7 @@ label select {
 .nav-link {
   color: var(--Grey-Dark, #808080);
 
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 14px;
   font-style: normal;
   font-weight: 400;
@@ -324,7 +324,7 @@ label select {
 }
 
 .active::after {
-  content: '';
+  content: "";
   position: absolute;
   display: block;
   width: 100%;
@@ -336,7 +336,7 @@ label select {
   color: #227cbf;
 }
 .active-indicator::after {
-  content: '';
+  content: "";
   position: absolute;
   display: block;
   width: 100%;
@@ -347,7 +347,6 @@ label select {
   background: #227cbf;
   color: #227cbf;
 }
-
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -374,7 +373,7 @@ label select {
   border-radius: 20px;
   background: var(--Primary, #227cbf);
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -383,7 +382,7 @@ label select {
 .team,
 .approval {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -424,7 +423,7 @@ table {
 }
 thead tr th {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;

@@ -191,7 +191,7 @@ main {
 }
 .skill h3 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -226,7 +226,7 @@ main {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -253,7 +253,7 @@ main {
   align-items: center;
   align-self: stretch;
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -276,7 +276,7 @@ main {
 }
 .frame h6 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -297,7 +297,7 @@ main {
 }
 .frame textarea::placeholder {
   color: var(--Grey-Dark, #808080);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -306,7 +306,7 @@ main {
 .form-select {
   width: 400px;
   color: var(--Grey-Dark, #808080);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -328,7 +328,7 @@ main {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;

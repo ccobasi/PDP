@@ -513,7 +513,6 @@ hr {
   font-weight: 400;
   line-height: 19.2px;
 }
-
 .chart {
   width: 100%;
 }
@@ -597,7 +596,6 @@ hr {
   width: 390px;
   height: 40px;
   color: var(--Grey-Dark, #000);
-  font-family: "Roboto", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -606,10 +604,9 @@ hr {
   border-radius: 5px;
   border: 1px 0px 0px 0px;
   justify-content: space-between;
-}
-.goal {
   display: flex;
-  justify-content: flex-end;
+  width: 320px;
+  height: 40px;
   align-items: flex-start;
   gap: 20px;
   margin-top: 20px;

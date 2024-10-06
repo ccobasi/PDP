@@ -128,7 +128,6 @@ const formatDate = (dateString) => {
 
             </div>
           </th>
-
           <th scope="col">
 
             <div class="d-flex align-center gap-1">

@@ -787,7 +787,7 @@ tr {
 }
 .type h3 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -829,7 +829,7 @@ tr {
 .wright h4,
 .lefts h4 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;

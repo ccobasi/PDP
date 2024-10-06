@@ -153,7 +153,7 @@ main {
   align-self: stretch;
 }
 .title h3 {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 .title button {
   display: flex;
@@ -164,7 +164,7 @@ main {
   background: var(--Secondary, #47b65c);
 
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -255,7 +255,7 @@ form .modal-dialog {
 .wright h4,
 .lefts h4 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;

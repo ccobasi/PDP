@@ -503,7 +503,7 @@ const tab = ref(1);
 }
 .dev h3 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -530,7 +530,7 @@ const tab = ref(1);
   width: 252px;
   height: 40px;
   color: #fff;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 .wrap {
   gap: 40px;
@@ -558,7 +558,7 @@ const tab = ref(1);
   border-radius: 20px;
   background: var(--Primary, #227cbf);
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -572,7 +572,6 @@ hr {
 .chart {
   width: 100%;
 }
-
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -645,7 +644,7 @@ hr {
 }
 .type h3 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -687,7 +686,7 @@ hr {
 .wright h4,
 .lefts h4 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;

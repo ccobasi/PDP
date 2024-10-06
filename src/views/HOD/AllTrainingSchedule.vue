@@ -3,7 +3,6 @@ import TabMenu from '../../components/Tabs/TabMenuFour.vue';
 import DoughnutChart from '../../components/Charts/DoughnutChart.vue'
 import AllTrainingTable from '../../components/Tables/AllTrainingTable.vue'
 
-
 </script>
 
 
@@ -55,7 +54,7 @@ main {
 }
 .skill h3 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -81,7 +80,7 @@ main {
   background: var(--Secondary, #47b65c);
 
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -109,7 +108,7 @@ main {
 .form-select {
   width: 100px;
   color: var(--Grey-Dark, #808080);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;

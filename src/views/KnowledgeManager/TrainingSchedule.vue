@@ -269,7 +269,7 @@ main {
 }
 .skill h3 {
   color: var(--Black, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -295,7 +295,7 @@ main {
   background: var(--Secondary, #47b65c);
 
   color: var(--White, #fff);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -344,7 +344,7 @@ main {
   align-items: center;
   align-self: stretch;
   color: var(--Black, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -375,7 +375,7 @@ v-window-item {
 .team,
 .approval {
   color: var(--Black, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 13px;
   font-style: normal;
   font-weight: 400;
@@ -398,7 +398,7 @@ v-window-item {
 }
 .frame h6 {
   color: var(--Black, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -423,7 +423,7 @@ v-window-item {
 }
 .frame textarea::placeholder {
   color: var(--Grey-Dark, #808080);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -433,7 +433,7 @@ v-window-item {
   width: 320px;
   height: 40px;
   color: var(--Grey-Dark, #808080);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -455,13 +455,13 @@ v-window-item {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 19.2px;
 }
-.rating input[type='radio']:not(:nth-of-type(0)) {
+.rating input[type="radio"]:not(:nth-of-type(0)) {
   /* hide visually */
   border: 0;
   clip: rect(0 0 0 0);
@@ -472,7 +472,7 @@ v-window-item {
   position: absolute;
   width: 1px;
 }
-.rating [type='radio']:not(:nth-of-type(0)) + label {
+.rating [type="radio"]:not(:nth-of-type(0)) + label {
   display: none;
 }
 
@@ -481,7 +481,7 @@ label[for]:hover {
 }
 
 .rating .stars label:before {
-  content: '★';
+  content: "★";
   font-size: 24px;
 }
 
@@ -493,19 +493,34 @@ label[for]:hover {
   text-shadow: 0 0 1px #000;
 }
 
-.rating [type='radio']:nth-of-type(1):checked ~ .stars label:nth-of-type(-n + 1),
-.rating [type='radio']:nth-of-type(2):checked ~ .stars label:nth-of-type(-n + 2),
-.rating [type='radio']:nth-of-type(3):checked ~ .stars label:nth-of-type(-n + 3),
-.rating [type='radio']:nth-of-type(4):checked ~ .stars label:nth-of-type(-n + 4),
-.rating [type='radio']:nth-of-type(5):checked ~ .stars label:nth-of-type(-n + 5) {
+.rating
+  [type="radio"]:nth-of-type(1):checked
+  ~ .stars
+  label:nth-of-type(-n + 1),
+.rating
+  [type="radio"]:nth-of-type(2):checked
+  ~ .stars
+  label:nth-of-type(-n + 2),
+.rating
+  [type="radio"]:nth-of-type(3):checked
+  ~ .stars
+  label:nth-of-type(-n + 3),
+.rating
+  [type="radio"]:nth-of-type(4):checked
+  ~ .stars
+  label:nth-of-type(-n + 4),
+.rating
+  [type="radio"]:nth-of-type(5):checked
+  ~ .stars
+  label:nth-of-type(-n + 5) {
   color: orange;
 }
 
-.rating [type='radio']:nth-of-type(1):focus ~ .stars label:nth-of-type(1),
-.rating [type='radio']:nth-of-type(2):focus ~ .stars label:nth-of-type(2),
-.rating [type='radio']:nth-of-type(3):focus ~ .stars label:nth-of-type(3),
-.rating [type='radio']:nth-of-type(4):focus ~ .stars label:nth-of-type(4),
-.rating [type='radio']:nth-of-type(5):focus ~ .stars label:nth-of-type(5) {
+.rating [type="radio"]:nth-of-type(1):focus ~ .stars label:nth-of-type(1),
+.rating [type="radio"]:nth-of-type(2):focus ~ .stars label:nth-of-type(2),
+.rating [type="radio"]:nth-of-type(3):focus ~ .stars label:nth-of-type(3),
+.rating [type="radio"]:nth-of-type(4):focus ~ .stars label:nth-of-type(4),
+.rating [type="radio"]:nth-of-type(5):focus ~ .stars label:nth-of-type(5) {
   color: darkorange;
 }
 @media screen and (max-width: 768px) {

@@ -34,7 +34,7 @@ const isITRoute = route.path === '/it/skillassessment';
 
 <style scoped>
 body {
-  font-family: 'lato', sans-serif;
+  font-family: "lato", sans-serif;
 }
 h2 {
   font-size: 26px;

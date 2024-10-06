@@ -7,7 +7,7 @@
 
         <li :class="{ 'nav-item': true, 'active': $route.path === '/' }">
           <router-link to="/" class="nav-link">
-            Personal Development Plans
+            Development Plans
           </router-link>
         </li>
 
@@ -29,6 +29,7 @@
         <li :class="{ 'nav-item': true, 'active': $route.path === '/engagement' }">
           <router-link to="/engagement" class="nav-link">Speaking Engagement</router-link>
         </li>
+
         <li :class="{ 'nav-item': true, 'active': $route.path === '/settings' }">
           <router-link to="/settings" class="nav-link">Settings</router-link>
         </li>

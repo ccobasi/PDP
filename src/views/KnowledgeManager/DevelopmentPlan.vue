@@ -732,7 +732,7 @@ const downloadPDF = () => {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -750,7 +750,7 @@ const downloadPDF = () => {
 }
 .dev h3 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -769,7 +769,7 @@ const downloadPDF = () => {
   width: 252px;
   height: 40px;
   color: #fff;
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 hr {
   width: 100%;
@@ -802,7 +802,7 @@ hr {
   border-radius: 20px;
   background: var(--Primary, #227cbf);
   color: var(--White, #fff);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -867,7 +867,7 @@ hr {
 }
 .type h3 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -877,7 +877,7 @@ hr {
   width: 390px;
   height: 50px;
   color: var(--Grey-Dark, #808080);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -907,7 +907,7 @@ hr {
 .wright h4,
 .lefts h4 {
   color: var(--Black, #000);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -967,7 +967,7 @@ hr {
   width: 390px;
   height: 50px;
   color: var(--Grey-Dark, #808080);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;

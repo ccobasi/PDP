@@ -721,7 +721,7 @@ tr {
   width: 390px;
   height: 40px;
   color: var(--Grey-Dark, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -731,7 +731,7 @@ tr {
 .space {
   width: 220px;
   color: var(--Grey-Dark, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .icon-warning {

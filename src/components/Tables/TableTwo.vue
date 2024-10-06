@@ -591,7 +591,7 @@ button:not(:disabled) {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -631,7 +631,7 @@ button:not(:disabled) {
 }
 .type h3 {
   color: var(--Black, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -642,7 +642,7 @@ button:not(:disabled) {
   width: 320px;
   height: 40px;
   color: var(--Grey-Dark, #808080);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -672,7 +672,7 @@ button:not(:disabled) {
 .wright h4,
 .lefts h4 {
   color: var(--Black, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -764,7 +764,7 @@ button:not(:disabled) {
 }
 .frame h6 {
   color: var(--Black, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -785,7 +785,7 @@ button:not(:disabled) {
 }
 .frame textarea::placeholder {
   color: var(--Grey-Dark, #808080);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -795,7 +795,7 @@ button:not(:disabled) {
   width: 370px;
   height: 50px;
   color: var(--Grey-Dark, #808080);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -818,7 +818,7 @@ button:not(:disabled) {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
