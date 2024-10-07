@@ -18,7 +18,6 @@ const props = defineProps({
         required: false
     }
 });
-// const { chartId, chartData,  } = defineProps(["chartId", "chartData"])
 
 const chartRef = ref()
 const pieChartId = `pie-${props.chartId}`
@@ -53,22 +52,36 @@ onMounted(async () => {
   };
 
   const options = {
-    responsive: true,
-    maintainAspectRatio: true,
-    plugins: {
-      legend: {
-        position: 'bottom',
+  responsive: true,
+  maintainAspectRatio: true,
+  plugins: {
+    legend: {
+      display: true,
+    },
+    title: {
+      display: false,
+      text: 'Chart.js Pie Chart',
+    },
+    datalabels: {
+      color: 'white', // Text color
+      display: 'auto',
+      formatter: (value, context) => {
+        // Combine the label and percentage
+        const label = context.chart.data.labels[context.dataIndex];
+        return `${label}\n${Math.round(value)}%`; // Show label and percentage
       },
-      title: {
-        display: false,
-        text: 'Training Status'
+      anchor: 'center', // Position label in the center of each segment
+      align: 'center',  // Align text to the center
+    },
+    tooltip: {
+      callbacks: {
+        label: (tooltipItem) => {
+          return `${tooltipItem.label}: ${Math.round(tooltipItem.raw)}%`;
+        },
       },
-      datalabels: {
-        color: 'white',
-        display: 'auto',
-      }
-    }
-  };
+    },
+  },
+};
 
   const config = {
     type: props.doughnut ? 'doughnut' : 'pie',
@@ -81,15 +94,6 @@ onMounted(async () => {
   const createdChart = new Chart(ctx, config);
   chartRef.value = markRaw(createdChart);
 })
-
-const updateChart = () => {
-    return new Promise((resolve, reject) => {
-        const chart = chartRef.value;
-        chart.data.datasets[0].data = [newGurantees.value, newMandates.value, followMandates.value]
-        chart.update('none');
-        resolve()
-    });
-};
 
 </script>
 

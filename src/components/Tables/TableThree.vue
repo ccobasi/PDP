@@ -135,226 +135,230 @@ const downloadPDF = () => {
   });
 };
 
-
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toISOString().split('T')[0]; // Outputs YYYY-MM-DD format
+}
 </script>
 <template>
-  <div class="title">
-    <teleport to="body">
-      <form method="post" action="" @submit.prevent="editingTraining ? updateTraining() : handleSubmit">
-        <div class="modal" id="myModal2" tabindex="-1">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Training Request Form</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><b></b></button>
-              </div>
-
-              <div class="modal-body">
-
-                <div class="first">
-                  <div class="frame">
-                    <h6>Month</h6>
-                    <input type="date" v-model="trainingStartDate">
-                  </div>
-                  <div class="frame">
-                    <h6>Training Topic</h6>
-
-                    <input type="text" class="form-control inputField" id="trainingTopic" v-model="trainingTopic" placeholder="Digital marketing" />
-                  </div>
+  <main class="wrapper">
+    <div class="title">
+      <teleport to="body">
+        <form method="post" action="" @submit.prevent="editingTraining ? updateTraining() : handleSubmit">
+          <div class="modal" id="myModal2" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Training Request Form</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><b></b></button>
                 </div>
-                <div class="second mt-3">
-                  <div class="frame">
-                    <h6>Learning Outcome</h6>
 
-                    <input type="text" class="form-control inputField" id="learningOutcome" v-model="learningOutcome" placeholder="Learning Outcome" />
-                  </div>
-                  <div class="frame">
-                    <h6>Training Method</h6>
-                    <select v-model="trainingMethod" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
-                      <option selected>Online</option>
-                      <option value="Physical">Physical</option>
-                      <option value="Online">Online</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="third mt-3">
-                  <div class="frame">
-                    <h6>Training Initiator</h6>
-                    <select v-model="trainingInitiator" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
-                      <option selected>Self</option>
-                      <option value="Self">Self</option>
-                      <option value="Manager">Manager</option>
-                      <option value="Knowledge Mgt">Knowledge Mgt</option>
-                    </select>
-                  </div>
-                  <div class="frame">
-                    <h6>Skill Matrix Mapping</h6>
-                    <select v-model="skillMatrixMapping" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
-                      <option selected>Select</option>
-                      <option value="Matrix One">Matrix One</option>
-                      <option value="Matrix Two">Matrix Two</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="fourth mt-3">
-                  <div class="frame">
-                    <h6>Due Date</h6>
-                    <input type="date" v-model="dueDate">
-                  </div>
-                  <div class="frame">
-                    <h6>Status</h6>
-                    <select v-model="status" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
-                      <option class="opt" selected>Status</option>
-                      <option class="opt" value="Completed">Completed</option>
-                      <option class="opt" value="On-going">On-going</option>
-                      <option class="opt" value="Not started">Not started</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="fifth mt-3">
-                  <div class="frame">
-                    <h6>Rating</h6>
-                    <div class="rating">
-                      <input id="demo-1" type="radio" name="demo" value="1" v-model.number="selectedRating">
-                      <label for="demo-1">1 star</label>
-                      <input id="demo-2" type="radio" name="demo" value="2" v-model.number="selectedRating">
-                      <label for="demo-2">2 stars</label>
-                      <input id="demo-3" type="radio" name="demo" value="3" v-model.number="selectedRating">
-                      <label for="demo-3">3 stars</label>
-                      <input id="demo-4" type="radio" name="demo" value="4" v-model.number="selectedRating">
-                      <label for="demo-4">4 stars</label>
-                      <input id="demo-5" type="radio" name="demo" value="5" v-model.number="selectedRating">
-                      <label for="demo-5">5 stars</label>
+                <div class="modal-body">
 
-                      <div class="stars">
-                        <label for="demo-1" aria-label="1 star" title="1 star"></label>
-                        <label for="demo-2" aria-label="2 stars" title="2 stars"></label>
-                        <label for="demo-3" aria-label="3 stars" title="3 stars"></label>
-                        <label for="demo-4" aria-label="4 stars" title="4 stars"></label>
-                        <label for="demo-5" aria-label="5 stars" title="5 stars"></label>
-                      </div>
+                  <div class="first">
+                    <div class="frame">
+                      <h6>Month</h6>
+                      <input type="date" v-model="trainingStartDate">
+                    </div>
+                    <div class="frame">
+                      <h6>Training Topic</h6>
 
+                      <input type="text" class="form-control inputField" id="trainingTopic" v-model="trainingTopic" placeholder="Digital marketing" />
                     </div>
                   </div>
-                  <div class="frame">
-                    <h6>Evidence</h6>
-                    <input type="file" class="form-control" @change="handleFileChange">
+                  <div class="second mt-3">
+                    <div class="frame">
+                      <h6>Learning Outcome</h6>
+
+                      <input type="text" class="form-control inputField" id="learningOutcome" v-model="learningOutcome" placeholder="Learning Outcome" />
+                    </div>
+                    <div class="frame">
+                      <h6>Training Method</h6>
+                      <select v-model="trainingMethod" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                        <option selected>Online</option>
+                        <option value="Physical">Physical</option>
+                        <option value="Online">Online</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="third mt-3">
+                    <div class="frame">
+                      <h6>Training Initiator</h6>
+                      <select v-model="trainingInitiator" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                        <option selected>Self</option>
+                        <option value="Self">Self</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Knowledge Mgt">Knowledge Mgt</option>
+                      </select>
+                    </div>
+                    <div class="frame">
+                      <h6>Skill Matrix Mapping</h6>
+                      <select v-model="skillMatrixMapping" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                        <option selected>Select</option>
+                        <option value="Matrix One">Matrix One</option>
+                        <option value="Matrix Two">Matrix Two</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="fourth mt-3">
+                    <div class="frame">
+                      <h6>Due Date</h6>
+                      <input type="date" v-model="dueDate">
+                    </div>
+                    <div class="frame">
+                      <h6>Status</h6>
+                      <select v-model="status" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                        <option class="opt" selected>Status</option>
+                        <option class="opt" value="Completed">Completed</option>
+                        <option class="opt" value="On-going">On-going</option>
+                        <option class="opt" value="Not started">Not started</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="fifth mt-3">
+                    <div class="frame">
+                      <h6>Rating</h6>
+                      <div class="rating">
+                        <input id="demo-1" type="radio" name="demo" value="1" v-model.number="selectedRating">
+                        <label for="demo-1">1 star</label>
+                        <input id="demo-2" type="radio" name="demo" value="2" v-model.number="selectedRating">
+                        <label for="demo-2">2 stars</label>
+                        <input id="demo-3" type="radio" name="demo" value="3" v-model.number="selectedRating">
+                        <label for="demo-3">3 stars</label>
+                        <input id="demo-4" type="radio" name="demo" value="4" v-model.number="selectedRating">
+                        <label for="demo-4">4 stars</label>
+                        <input id="demo-5" type="radio" name="demo" value="5" v-model.number="selectedRating">
+                        <label for="demo-5">5 stars</label>
+
+                        <div class="stars">
+                          <label for="demo-1" aria-label="1 star" title="1 star"></label>
+                          <label for="demo-2" aria-label="2 stars" title="2 stars"></label>
+                          <label for="demo-3" aria-label="3 stars" title="3 stars"></label>
+                          <label for="demo-4" aria-label="4 stars" title="4 stars"></label>
+                          <label for="demo-5" aria-label="5 stars" title="5 stars"></label>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="frame">
+                      <h6>Evidence</h6>
+                      <input type="file" class="form-control" @change="handleFileChange">
+                    </div>
+                  </div>
+                  <div class="sixth mt-3">
+                    <div class="frame">
+                      <h6 class="department">Department</h6>
+                      <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="department">
+
+                        <option class="opt" value="Administration">Administration</option>
+                        <option class="opt" value="Procurement">Procurement</option>
+                        <option class="opt" value="Knowledge Management">Knowledge Management</option>
+                        <option class="opt" value="Credit Risk Management">Credit Risk Management</option>
+                        <option class="opt" value="Information Technology">Information Technology</option>
+                      </select>
+                    </div>
+                    <div class="frame">
+                      <h6>Feedback</h6>
+
+                      <textarea v-model="feedback" name="feedback" id="" cols="30" rows="50" placeholder="Feedback"></textarea>
+                    </div>
                   </div>
                 </div>
-                <div class="sixth mt-3">
-                  <div class="frame">
-                    <h6 class="department">Department</h6>
-                    <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="department">
 
-                      <option class="opt" value="Administration">Administration</option>
-                      <option class="opt" value="Procurement">Procurement</option>
-                      <option class="opt" value="Knowledge Management">Knowledge Management</option>
-                      <option class="opt" value="Credit Risk Management">Credit Risk Management</option>
-                      <option class="opt" value="Information Technology">Information Technology</option>
-                    </select>
-                  </div>
-                  <div class="frame">
-                    <h6>Feedback</h6>
-
-                    <textarea v-model="feedback" name="feedback" id="" cols="30" rows="50" placeholder="Feedback"></textarea>
-                  </div>
+                <div class="modal-footer">
+                  <button type="submit" data-bs-dismiss="modal">{{ editingTraining ? 'Update' : 'Submit' }}</button>
                 </div>
-              </div>
-
-              <div class="modal-footer">
-                <button type="submit" data-bs-dismiss="modal">{{ editingTraining ? 'Update' : 'Submit' }}</button>
               </div>
             </div>
           </div>
-        </div>
 
-      </form>
-    </teleport>
-    <div class="modal" id="myModal1">
-      <div class="modal-dialog">
-        <div class="modal-content">
+        </form>
+      </teleport>
+      <div class="modal" id="myModal1">
+        <div class="modal-dialog">
+          <div class="modal-content">
 
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title">Training Schedule</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
-          </div>
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Training Schedule</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
+            </div>
 
-          <!-- Modal body -->
-          <div class="modal-body">
-            <div class="table-responsive d-flex flex-column">
-              <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
-              <v-btn @click="downloadPDF">Download as PDF</v-btn>
-              <table class="full">
-                <thead>
-                  <tr>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink">S/N</span>
+            <!-- Modal body -->
+            <div class="modal-body">
+              <div class="table-responsive d-flex flex-column">
+                <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+                <v-btn @click="downloadPDF">Download as PDF</v-btn>
+                <table class="full">
+                  <thead>
+                    <tr>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink">S/N</span>
 
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
 
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Month</span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Month</span>
 
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
 
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Training Topic</span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Training Topic</span>
 
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
 
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Learning Outcome</span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Learning Outcome</span>
 
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
 
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Training Method</span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Training Method</span>
 
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
 
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Training Initiator</span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Training Initiator</span>
 
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
 
-                      </div>
-                    </th>
-                    <!-- <th scope="col">
+                        </div>
+                      </th>
+                      <!-- <th scope="col">
                       <div class="d-flex align-center gap-1">
                         <span class="noshrink"> Skill Matrix Mapping </span>
 
@@ -365,137 +369,144 @@ const downloadPDF = () => {
 
                       </div>
                     </th> -->
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Due Date </span>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Due Date </span>
 
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
 
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Status</span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Status</span>
 
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
 
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Rating</span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Rating</span>
 
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
 
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Evidence</span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink"> Evidence</span>
 
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
 
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, index) in paginatedTrainings" :key="index">
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, index) in paginatedTrainings" :key="index">
 
-                    <!-- <tr v-for="item in trainings" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
-                    <td>{{item.id}}</td>
-                    <td>{{item.trainingStartDate}}</td>
-                    <td>{{item.trainingTopic}}</td>
-                    <td>{{item.learningOutcome}}</td>
-                    <td>{{item.trainingMethod}}</td>
-                    <td>{{item.trainingInitiator}}</td>
-                    <!-- <td>{{item.skillMatrixMapping}}</td> -->
-                    <td>{{item.dueDate}}</td>
-                    <td>{{item.status}}</td>
-                    <td>{{item.selectedRating}}</td>
-                    <td>{{item.evidenceURL}}</td>
-                  </tr>
-                </tbody>
-              </table>
+                      <!-- <tr v-for="item in trainings" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
+                      <td>{{item.id}}</td>
+                      <td>{{item.trainingStartDate}}</td>
+                      <td>{{item.trainingTopic}}</td>
+                      <td>{{item.learningOutcome}}</td>
+                      <td>{{item.trainingMethod}}</td>
+                      <td>{{item.trainingInitiator}}</td>
+                      <!-- <td>{{item.skillMatrixMapping}}</td> -->
+                      <td>{{item.dueDate}}</td>
+                      <td>{{item.status}}</td>
+                      <td>{{item.selectedRating}}</td>
+                      <td>{{item.evidenceURL}}</td>
+                    </tr>
+                  </tbody>
+                </table>
 
+              </div>
             </div>
-          </div>
 
+          </div>
         </div>
       </div>
+
+      <button class="view mb-2" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
     </div>
+    <div class="table-responsive mt-3">
 
-    <button class="view mb-2" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
-  </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">
+              <div class="adjustable-column d-flex align-center gap-1">
+                <span class="noshrink" style="width:30px">S/N</span>
 
-  <div class="d-flex">
-    <table class="table">
-      <thead>
-        <tr>
-          <th scope="col">
-            <div class="adjustable-column d-flex align-center gap-1">
-              <span class="noshrink">S/N</span>
+              </div>
+            </th>
+            <th scope="col">
+              <div class="adjustable-column d-flex align-center gap-1">
+                <span class="noshrink"> Months</span>
 
-            </div>
-          </th>
-          <th scope="col">
-            <div class="adjustable-column d-flex align-center gap-1">
-              <span class="noshrink"> Months</span>
+              </div>
+            </th>
+            <th scope="col">
+              <div class="adjustable-column d-flex align-center gap-1">
+                <span class="noshrink"> Training Topics</span>
 
-            </div>
-          </th>
-          <th scope="col">
-            <div class="adjustable-column d-flex align-center gap-1">
-              <span class="noshrink"> Training Topics</span>
+              </div>
+            </th>
+            <th scope="col">
+              <div class="adjustable-column d-flex align-center gap-1">
+                <span class="noshrink"> Training Methods</span>
 
-            </div>
-          </th>
-          <th scope="col">
-            <div class="adjustable-column d-flex align-center gap-1">
-              <span class="noshrink"> Training Methods</span>
+              </div>
+            </th>
+            <th scope="col">
+              <div class="adjustable-column d-flex align-center gap-1">
+                <span class="noshrink"> Status </span>
 
-            </div>
-          </th>
-          <th scope="col">
-            <div class="adjustable-column d-flex align-center gap-1">
-              <span class="noshrink"> Status </span>
+              </div>
+            </th>
 
-            </div>
-          </th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- <tr v-for="item in skills" @click="selectItem(item)"> -->
+          <tr v-for="item in trainings" @dblclick="editTraining(item)" :class="{'expanded-row': selectedItem && selectedItem.id === item.id}">
+            <td scope="row" style="width:30px">{{item.id}}</td>
+            <td>{{formatDate(item.trainingStartDate)}}</td>
+            <td>{{item.trainingTopic}}</td>
+            <td>{{item.trainingMethod}}</td>
+            <td>{{item.status}}</td>
+            <td>
 
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in trainings" @dblclick="editTraining(item)" :class="{'expanded-row': selectedItem && selectedItem.id === item.id}">
-          <td scope="row">{{item.id}}</td>
-          <td>{{item.trainingStartDate}}</td>
-          <td>{{item.trainingTopic}}</td>
-          <td>{{item.trainingMethod}}</td>
-          <td>{{item.status}}</td>
-          <td>
+              <!-- <v-icon icon="mdi-delete" class="icon-danger" @click="deleteTraining(item.id)"></v-icon> -->
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-            <!-- <v-icon icon="mdi-delete" class="icon-danger" @click="deleteTraining(item.id)"></v-icon> -->
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-  </div>
+    </div>
+    <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
+  </main>
 </template>
 
 <style scoped>
+.wrapper {
+  margin: 0;
+  padding: 0;
+}
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -512,17 +523,6 @@ const downloadPDF = () => {
 .modal {
   background-color: rgba(0, 0, 0, 0.5);
   overflow-y: auto;
-}
-
-.modal-dialog {
-  --bs-modal-width: 900px;
-  width: 900px;
-  height: 1150px;
-  margin-left: 13%;
-  display: inline-flex;
-  padding: 30px;
-  border-radius: 10px;
-  background: #fff;
 }
 
 .title {
@@ -547,7 +547,7 @@ const downloadPDF = () => {
   line-height: 19.2px;
 }
 .table-responsive {
-  width: 70%;
+  width: 100%;
   display: flex;
   flex-direction: row;
 }
@@ -556,40 +556,41 @@ const downloadPDF = () => {
 }
 table {
   width: 100%;
-}
-thead tr th {
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 14.4px;
-  padding: 15px;
-}
-tbody tr {
-  height: 50px;
-  overflow: hidden;
-  white-space: nowrap;
+  table-layout: auto; /* Adjust column width based on content */
+  border-collapse: collapse;
 }
 
-tbody tr td {
-  color: var(--grey-dark, #000);
-  /* Caption */
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 14.4px;
+thead th,
+tbody td {
+  text-align: left; /* Align text to the left */
+  white-space: nowrap;
   padding: 15px;
-  height: auto;
+  vertical-align: middle;
+}
+
+thead th {
+  font-size: 12px;
+  font-weight: 600;
+  background-color: #fff;
+}
+
+tbody td {
+  font-size: 12px;
+  color: #000;
 }
 
 thead,
-tr {
-  box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.05);
+tbody tr {
+  border-bottom: 1px solid #ddd; /* Add bottom border */
 }
 
 .adjustable-column {
   min-width: 150px;
   max-width: 300px;
-  width: auto;
   white-space: normal;
+  gap: 0;
 }
+
 .expanded-row {
   height: 70px;
 }
@@ -606,7 +607,7 @@ tr {
   height: 30px !important;
 }
 
-.modal-dialog {
+#myModal2 .modal-dialog {
   --bs-modal-width: 960px;
   width: 960px;
   height: 900px;
@@ -614,7 +615,18 @@ tr {
   display: inline-flex;
   padding: 30px;
   border-radius: 10px;
-  background: #fff;
+  background: #eee;
+}
+
+.modal-dialog {
+  --bs-modal-width: 900px;
+  width: 900px;
+  height: 1150px;
+  margin-left: 13%;
+  display: inline-flex;
+  padding: 30px;
+  border-radius: 10px;
+  background: #eee;
 }
 
 .modal-body {
@@ -634,6 +646,7 @@ tr {
   align-items: flex-start;
   gap: 20px;
   border-radius: 10px;
+  background: beige;
 }
 
 .first,
@@ -857,30 +870,132 @@ label[for]:hover {
   border: 1px solid #ccc;
 }
 
-@media only screen and (max-width: 768px) {
-  .d-flex {
+@media (max-width: 576px) {
+  .table thead {
+    display: none;
+  }
+
+  .table tbody tr {
+    display: block;
+    margin-bottom: 15px;
+  }
+
+  .table tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    font-size: 12px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .table tbody td::before {
+    content: attr(data-label);
+    flex: 1;
+    font-weight: bold;
+  }
+
+  .noshrink {
+    white-space: nowrap;
+    font-size: 12px;
+  }
+
+  .adjustable-column {
     flex-direction: column;
+    text-align: right;
   }
-  .table-responsive {
-    width: 88%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    flex-direction: column;
+
+  .pagination-controls {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
   }
-  table {
-    width: 50%;
+
+  .pagination-btn {
+    padding: 8px 12px;
+    font-size: 12px;
   }
-  .full {
-    width: 580px;
-  }
-  thead tr th {
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .table thead th {
     font-size: 10px;
-    padding: 6px;
+    padding: 15px 5px;
+    width: 120px;
+  }
+
+  .table tbody td {
+    font-size: 10px;
+    padding: 15px 5px;
+    width: auto;
+  }
+
+  .adjustable-column[data-v-5ac5b9c5] {
+    min-width: 30px;
+    max-width: 150px;
+    white-space: nowrap;
+  }
+
+  .noshrink {
+    font-size: 13px;
+  }
+
+  .table-responsive {
+    width: 850px;
+    overflow-x: auto;
+    margin: 0;
+  }
+
+  .pagination-btn {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .modal-dialog {
+    width: 800px;
+    margin-top: 10%;
+    margin-left: 60px;
+  }
+
+  .modal-content {
+    width: 100%;
+  }
+
+  .form-select,
+  .frame textarea {
+    width: 320px;
+  }
+
+  .table-responsive {
+    width: 100%;
+  }
+
+  table {
+    width: 800px;
+    overflow-x: hidden;
+  }
+
+  thead tr th {
+    min-width: 100px;
+    padding: 10px 5px;
+    gap: 0;
   }
 
   tbody tr td {
-    font-size: 10px;
-    padding: 10px;
+    min-width: 100px;
+    padding: 10px 5px;
+    gap: 0;
+  }
+
+  thead,
+  tr {
+    box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.05);
+  }
+
+  tbody tr {
+    height: 50px;
+    overflow: hidden;
   }
 }
 </style>

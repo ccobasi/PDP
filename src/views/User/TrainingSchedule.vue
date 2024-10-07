@@ -134,7 +134,7 @@ const handleFileChange = (event) => {
               <div class="first">
                 <div class="frame">
                   <h6>Month</h6>
-                  <input type="date" v-model="trainingStartDate">
+                  <input class="month" type="date" v-model="trainingStartDate">
                 </div>
                 <div class="frame">
                   <h6>Training Topic</h6>
@@ -179,7 +179,7 @@ const handleFileChange = (event) => {
               <div class="fourth mt-2">
                 <div class="frame">
                   <h6>Due Date</h6>
-                  <input type="date" v-model="dueDate">
+                  <input class="month" type="date" v-model="dueDate">
                 </div>
                 <div class="frame">
                   <h6>Status</h6>
@@ -349,6 +349,18 @@ main {
   align-self: stretch;
   height: 30px !important;
 }
+
+.modal-dialog {
+  --bs-modal-width: 960px;
+  width: 960px;
+  height: 900px;
+  margin-left: 8%;
+  display: inline-flex;
+  padding: 30px;
+  border-radius: 10px;
+  background: #eee;
+}
+
 .modal-body {
   gap: 20px;
   background: #fff;
@@ -408,7 +420,8 @@ main {
   background: var(--White, #fff);
   box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
 }
-.frame textarea::placeholder {
+.frame textarea::placeholder,
+.frame input::placeholder {
   color: var(--Grey-Dark, #808080);
   font-family: "Roboto", sans-serif;
   font-size: 12px;
@@ -472,6 +485,12 @@ main {
   background: var(--Secondary, #47b65c);
   color: #fff;
   margin-top: 10px;
+}
+
+.month {
+  border: 1px solid var(--Grey-Light, #eee);
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .rating {
@@ -567,9 +586,39 @@ label[for]:hover {
 .rating [type="radio"]:nth-of-type(5):focus ~ .stars label:nth-of-type(5) {
   color: darkorange;
 }
+
+@media (max-width: 1200px) {
+  .modal {
+    margin-left: 3%;
+  }
+  .modal-dialog {
+    --bs-modal-width: 700px;
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-content {
+    width: 100%;
+  }
+
+  .modal-body {
+    width: 100%;
+  }
+  .form-select,
+  .frame textarea,
+  .frame input,
+  .rating {
+    width: 280px;
+  }
+}
+
 @media screen and (max-width: 768px) {
+  main {
+    overflow-y: hidden;
+  }
   .skill {
-    height: 1600px;
+    height: 1300px;
   }
   .modal {
     margin-left: 5%;
@@ -578,10 +627,32 @@ label[for]:hover {
     --bs-modal-width: 700px;
   }
 
-  .frame input,
+  .form-select,
   .frame textarea,
-  .form-select {
-    width: 290px;
+  .frame input,
+  .rating {
+    width: 200px;
+  }
+
+  @media (max-width: 576px) {
+    .modal-dialog {
+      max-width: 80%;
+      margin: 5px;
+    }
+
+    .modal-body {
+      padding: 10px;
+    }
+
+    .form-control,
+    .form-select,
+    .btn {
+      font-size: 14px;
+    }
+
+    .modal-header h4 {
+      font-size: 18px;
+    }
   }
 }
 </style>
