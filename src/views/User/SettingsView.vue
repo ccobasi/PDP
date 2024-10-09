@@ -801,7 +801,7 @@ const tab = ref(1);
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="user in userData" :key="user.id">
+                      <tr v-for="user in userData" :key="user.id" @dblclick="editUser(user)">
                         <td>{{ user.id }}</td>
                         <td>{{ user.fullName }}</td>
                         <td>{{ user.roleId }}</td>
@@ -812,7 +812,6 @@ const tab = ref(1);
                         <td>{{ user.businessUnitId }}</td>
                         <td>{{ user.createdBy }}</td>
                         <td>
-                          <v-icon icon="mdi-pencil" class="icon-warning" @click="editUser(user)"></v-icon>
                           <v-icon icon="mdi-delete" class="icon-danger" @click="deleteUser(user.id)"></v-icon>
                         </td>
                       </tr>
@@ -868,12 +867,11 @@ const tab = ref(1);
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="department in departs" :key="department.id">
+                      <tr v-for="department in departs" :key="department.id" @dblclick="editDepartment(department)">
                         <td>{{ department.id }}</td>
                         <td>{{ department.shortCode }}</td>
                         <td>{{ department.departmentDescription }}</td>
                         <td>
-                          <v-icon icon="mdi-pencil" class="icon-warning" @click="editDepartment(department)"></v-icon>
                           <v-icon icon="mdi-delete" class="icon-danger" @click="deleteDepartment(department.id)"></v-icon>
                         </td>
                       </tr>
@@ -947,13 +945,13 @@ const tab = ref(1);
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="role in storeRole" :key="role.id" @dblclick="$router.push({name: 'Role Detail', params: {id: role.id}})">
+                      <tr v-for="role in storeRole" :key="role.id" @dblclick="editRole(role)">
                         <td>{{ role.id }}</td>
                         <td>{{ role.name }}</td>
                         <td>{{ role.description }}</td>
                         <td>{{ role.userType }}</td>
                         <td>
-                          <v-icon icon="mdi-pencil" class="icon-warning" @click="editRole(role)"></v-icon>
+
                           <v-icon icon="mdi-delete" class="icon-danger" @click="deleteRole(role.id)"></v-icon>
                         </td>
                       </tr>
@@ -997,11 +995,10 @@ const tab = ref(1);
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="biz in businessUnits" :key="biz.id">
+                      <tr v-for="biz in businessUnits" :key="biz.id" @dblclick="editBusinessUnit(biz)">
                         <td>{{ biz.id }}</td>
                         <td>{{ biz.businessUnitDescription }}</td>
                         <td>
-                          <v-icon icon="mdi-pencil" class="icon-warning" @click="editBusinessUnit(biz)"></v-icon>
                           <v-icon icon="mdi-delete" class="icon-danger" @click="deleteBusinessUnit(biz.id)"></v-icon>
                         </td>
                       </tr>
@@ -1021,6 +1018,24 @@ const tab = ref(1);
   </main>
 </template>
 <style scoped>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1040;
+}
+
+.modal {
+  background-color: rgba(0, 0, 0, 0.5);
+  overflow-y: auto;
+}
+
 main {
   height: 1450px;
 }
