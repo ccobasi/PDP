@@ -1026,7 +1026,7 @@ main {
 }
 .dev h3 {
   color: var(--Black, #000);
-  font-family: "Inter", sans-serif;
+  font-family: Roboto, sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -1042,7 +1042,7 @@ main {
 .dev button {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
-  width: 180px;
+  width: 190px;
   height: 40px;
   color: #fff;
   font-size: 18px;
@@ -1059,10 +1059,11 @@ main {
   background: #fff;
   margin-top: 0px !important;
 }
+
 .modal-dialog {
   width: 900px;
   height: auto;
-  margin-left: 20%;
+  margin-left: 15%;
   display: inline-flex;
   padding: 30px;
   flex-direction: column;
@@ -1089,7 +1090,7 @@ main {
 }
 .type h3 {
   color: var(--Black, #000);
-  font-family: "Inter", sans-serif;
+  font-family: Roboto, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -1104,7 +1105,6 @@ main {
   align-items: center;
   border-radius: 5px;
   border: 1px solid var(--Grey-Light, #eee);
-  background: var(--White, #fff);
   box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
 }
 .goal {
@@ -1126,10 +1126,19 @@ main {
   align-items: flex-start;
   gap: 5px;
 }
+
+.right input,
+.left input {
+  width: 320px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+}
+
 .left h4,
 .right h4 {
   color: var(--Black, #000);
-  font-family: "Inter", sans-serif;
+  font-family: Roboto, sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -1143,9 +1152,15 @@ main {
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
-  border: 1px solid #808080;
+  border: 1px solid #ddd;
   border-radius: 5px;
 }
+
+.goal textarea::placeholder,
+.right input::placeholder {
+  font-size: 12px;
+}
+
 .type input {
   display: flex;
   width: 320px;
@@ -1218,7 +1233,7 @@ main {
 }
 tr th {
   color: var(--Black, #000);
-  font-family: "Inter", sans-serif;
+  font-family: Roboto, sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 600;
@@ -1226,7 +1241,7 @@ tr th {
 }
 tr td {
   color: var(--Grey-Dark, #808080);
-  font-family: "Inter", sans-serif;
+  font-family: Roboto, sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -1249,5 +1264,158 @@ tr td {
 
 .icon-danger {
   color: red;
+}
+
+@media (max-width: 1024px) {
+  .modal-dialog {
+    width: 800px;
+    --bs-modal-width: 800px;
+    margin-left: 6.5%;
+  }
+}
+
+@media (max-width: 768px) {
+  #myModal1 .modal-dialog,
+  #myModal2 .modal-dialog,
+  #myModal3 .modal-dialog {
+    width: 600px;
+    height: 600px;
+    margin-left: 9%;
+  }
+
+  .modal-dialog {
+    margin-left: 18%;
+  }
+  .modal-body {
+    flex-direction: column;
+  }
+
+  .right input,
+  .right textarea,
+  .left textarea,
+  .left input {
+    width: 450px;
+  }
+
+  .goal {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .goal .left,
+  .goal .right {
+    width: 100%;
+  }
+
+  textarea,
+  input,
+  select {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .modal-footer button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  #myModal1 .modal-dialog,
+  #myModal2 .modal-dialog,
+  #myModal3 .modal-dialog {
+    width: 400px;
+    height: 600px;
+    margin-left: 2%;
+  }
+
+  #myModal2 .modal-dialog {
+    margin-left: 12.5%;
+  }
+
+  #myModal2 .modal-body {
+    width: 100%;
+  }
+
+  .right input,
+  .right textarea,
+  .left textarea,
+  .left input,
+  .goal textarea,
+  .goal .form-select {
+    width: 250px;
+  }
+
+  .modal-dialog {
+    width: 500px;
+    margin-left: 4%;
+  }
+
+  .modal-body {
+    padding: 15px;
+  }
+
+  .goal {
+    margin-bottom: 15px;
+  }
+
+  h4 {
+    font-size: 16px;
+  }
+
+  textarea,
+  input,
+  select {
+    font-size: 12px;
+    padding: 6px;
+  }
+
+  .modal-footer button {
+    width: 100%;
+    padding: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  #myModal1 .modal-dialog,
+  #myModal2 .modal-dialog,
+  #myModal3 .modal-dialog {
+    margin-top: 20%;
+    margin-left: 6%;
+    height: 600px;
+    width: 320px;
+  }
+  .modal-dialog {
+    width: 320px;
+    margin-left: 4%;
+  }
+
+  .modal-body {
+    padding: 10px;
+  }
+
+  .goal textarea,
+  .form-select,
+  .right input,
+  .right textarea,
+  .left input,
+  .goal .form-select {
+    width: 200px;
+  }
+
+  h4 {
+    font-size: 14px;
+  }
+
+  textarea,
+  input,
+  select {
+    font-size: 10px;
+    padding: 5px;
+  }
+
+  .modal-footer button {
+    font-size: 14px;
+    padding: 8px;
+  }
 }
 </style>
