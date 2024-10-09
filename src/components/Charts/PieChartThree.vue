@@ -169,9 +169,9 @@ watch(selectedStatus, () => {
 div {
   position: relative;
   height: 100%;
-  width: 80%;
+  width: 90%;
   max-height: 400px;
-  margin-right: 80px;
+  margin: auto;
 }
 
 @media (max-width: 768px) {

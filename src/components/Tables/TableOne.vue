@@ -255,6 +255,18 @@ const saveExpandedText = () => {
   // Close the expand modal
   showExpandModal.value = false;
 };
+
+const planTypeMap = {
+      1: 'Area of Interest',
+      2: 'Career Goals and Aspirations',
+      3: 'Mentorship and Skill Building',
+    };
+
+    const planTermMap = {
+      1: 'Short Term Goal',
+      2: 'Mid Term Goal',
+      3: 'Long Term Goal',
+    };
 </script>
 <template>
   <div class="scrollable-container">
@@ -277,7 +289,7 @@ const saveExpandedText = () => {
                       <label for="planTypeId" class="form-label">Development Plan Type</label>
                       <select class="form-select" v-model="planTypeId">
                         <option value="Select Type">Select Type</option>
-                        <option value="1">Area of Robotoest</option>
+                        <option value="1">Area of Interest</option>
                         <option value="2">Career Goals and Aspirations</option>
                         <option value="3">Mentorship and Skill Building</option>
                       </select>
@@ -445,9 +457,14 @@ const saveExpandedText = () => {
             <tbody>
               <tr v-for="(item, index) in paginatedGoals" :key="index" @dblclick="editGoal(item)">
                 <td>{{item.id}}</td>
-                <td>{{item.planTypeId}}</td>
-                <td>{{item.planTermId}}</td>
-                <td>{{item.goalSummary}}</td>
+                <td>{{ planTypeMap[item.planTypeId] }}</td>
+                <td>{{ planTermMap[item.planTermId] }}</td>
+                <!-- <td>{{item.goalSummary}}</td> -->
+                <td>
+                  <div class="goal-summary" :title="item.goalSummary">
+                    {{ item.goalSummary.length > 50 ? item.goalSummary.substring(0, 50) + '...' : item.goalSummary }}
+                  </div>
+                </td>
                 <td>{{item.status}}</td>
                 <td>
 
@@ -597,7 +614,19 @@ input {
 }
 
 .table-container {
-  flex-grow: 1;
+  width: 100%;
+}
+
+.goal-summary {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+}
+
+.goal-summary-wrap {
+  word-wrap: break-word;
+  max-width: 250px;
 }
 
 .table-responsive {

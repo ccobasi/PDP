@@ -41,22 +41,20 @@ import PieChartThree from '../components/Charts/PieChartThree.vue';
   flex-wrap: wrap;
 }
 
-.box-title {
+.tab {
+  width: 100%;
+  gap: 20px;
+}
+
+.box-title,
+.first,
+.box-titles {
   font-family: Roboto;
-  font-size: 20px;
+  font-size: 17px;
   font-style: normal;
   font-weight: 600;
   line-height: 24px;
   margin: auto;
-}
-
-.box-titles {
-  font-family: Roboto;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 600;
-  line-height: 24px;
-  margin-left: 2px;
 }
 
 .box-padded {
@@ -71,14 +69,6 @@ import PieChartThree from '../components/Charts/PieChartThree.vue';
   width: 380px;
   height: 358px;
   margin: 10px;
-}
-
-.first {
-  margin-left: 73px;
-}
-
-.box-titles {
-  margin-left: 30px;
 }
 
 @media (max-width: 1024px) {

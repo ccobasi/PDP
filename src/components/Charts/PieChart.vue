@@ -170,8 +170,8 @@ div {
   position: relative;
   height: 100%;
   max-height: 400px;
-  margin-left: 63px;
-  width: 80%;
+  margin: auto;
+  width: 90%;
 }
 
 @media (max-width: 1024px) {

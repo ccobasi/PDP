@@ -171,7 +171,7 @@ div {
   height: 100%;
   width: 90%;
   max-height: 400px;
-  margin-left: 20px;
+  margin: auto;
 }
 
 @media (max-width: 768px) {

@@ -89,19 +89,46 @@ export const useGoalsStore = defineStore('goals', {
     }
   }
 },
-    async updateGoal(goal) {
-      try {
-        const goalIndex = this.goals.findIndex(d => d.id === goal.id);
-        if (goalIndex !== -1) {
-          const response = await axios.put(`${this.baseUrl}/${goal.id}`, goal);
-          this.goals.splice(goalIndex, 1, response.data);
-        } else {
-          console.error('Goal to update not found:', goal.id);
-        }
-      } catch (error) {
-        console.error('Error updating goal:', error);
-      }
-    },
+    // async modifyGoal(goal) {
+    //   try {
+    //     const goalIndex = this.goals.findIndex(d => d.id === goal.id);
+    //     if (goalIndex !== -1) {
+    //       const response = await axios.put(`${this.baseUrl}/${goal.id}`, goal);
+    //       this.goals.splice(goalIndex, 1, response.data);
+    //     } else {
+    //       console.error('Goal to update not found:', goal.id);
+    //     }
+    //   } catch (error) {
+    //     console.error('Error updating goal:', error);
+    //   }
+    // },
+    async modifyGoal(goal) {
+   try {
+     const goalIndex = this.goals.findIndex(d => d.id === goal.id);
+     if (goalIndex !== -1) {
+       
+       const formData = new FormData();
+       for (const key in goal) {
+         if (goal[key] !== undefined && goal[key] !== null) {
+           formData.append(key, goal[key]);
+         }
+       }
+
+       const response = await axios.put(`${this.baseUrl}/${goal.id}`, formData, {
+         headers: {
+           'Content-Type': 'multipart/form-data',
+         },
+       });
+       this.goals.splice(goalIndex, 1, response.data);
+     } else {
+       console.error('Goal to update not found:', goal.id);
+     }
+   } catch (error) {
+     console.error('Error updating goal:', error.response ? error.response.data : error);
+   }
+ },
+
+    
     async deleteGoal(goalId) {
       try {
         await axios.delete(`${this.baseUrl}/${goalId}`);

@@ -106,28 +106,35 @@ export default {
 .pageheader {
   background: #fff;
   padding: 20px 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .pageheader::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: 0;
   left: 0;
-  top: 82px;
+  top: 95px;
   width: 100%;
-  height: 5px; /* Adjust height to control the thickness of the gradient border */
-  background: linear-gradient(to right, #237dbd, #46b55e); /* Adjust colors as needed */
+  height: 5px;
+  background: linear-gradient(to right, #237dbd, #46b55e);
 }
 
-.pageheader .brand {
-  height: 45.62px;
-  width: 500px;
+.brand {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--Primary, #227cbf);
 }
 
 .subheader {
   font-weight: 400;
   font-size: 16px;
   line-height: 19px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
 }
 
 .avatar,
@@ -138,6 +145,11 @@ export default {
   cursor: pointer;
 }
 
+.logo img {
+  width: auto;
+  height: 60px;
+}
+
 .avatar .profile-image {
   width: 32px;
   height: 32px;
@@ -145,7 +157,7 @@ export default {
 }
 
 .logo {
-  font-family: 'Inter', sans-serif;
+  font-family: Roboto, sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 30px;
@@ -158,33 +170,110 @@ export default {
 }
 .brand {
   color: var(--Primary, #227cbf);
-  font-family: Inter;
+  font-family: Roboto;
   font-size: 28px;
   font-style: normal;
   font-weight: 700;
   line-height: 24px;
 }
+
+@media screen and (max-width: 1024px) {
+  .logo img {
+    width: 80%;
+    height: auto;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .pageheader {
     overflow-x: hidden;
   }
-  .navbar-nav {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
 
-  .navbar-nav .nav-item {
-    margin-top: 10px;
-    margin-right: 0;
+  .pageheader::after {
+    top: 105px;
   }
 
   .logo img {
-    width: 50%;
-    height: 20%;
+    width: 40%;
+    height: auto;
   }
+
+  .brand {
+    font-size: 22px;
+    margin: 10px 0;
+  }
+
+  .subheader {
+    font-size: 14px;
+    gap: 10px;
+  }
+
+  .avatar .profile-image,
+  .logout img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .pageheader {
+    padding: 15px;
+    flex-direction: column;
+  }
+
+  .logo img {
+    width: 35%;
+  }
+
   .brand {
     font-size: 18px;
+  }
+
+  .subheader {
+    font-size: 12px;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .avatar .profile-image,
+  .logout img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .logout span,
+  .avatar span {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .pageheader {
+    padding: 10px;
+  }
+
+  .logo img {
+    width: 30%;
+  }
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .subheader {
+    font-size: 10px;
+    gap: 5px;
+  }
+
+  .avatar .profile-image,
+  .logout img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .logout span,
+  .avatar span {
+    font-size: 10px;
   }
 }
 </style>
