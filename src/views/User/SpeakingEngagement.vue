@@ -436,7 +436,7 @@ main {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -456,7 +456,7 @@ main {
 }
 .skill h3 {
   color: var(--Black, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -482,7 +482,7 @@ main {
   background: var(--Secondary, #47b65c);
 
   color: var(--White, #fff);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -523,7 +523,7 @@ th span {
   align-items: center;
   align-self: stretch;
   color: var(--Black, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -538,8 +538,8 @@ th span {
 .modal-dialog {
   --bs-modal-width: 950px;
   width: 950px;
-  height: 900px;
-  margin-left: 15%;
+  height: 1060px;
+  margin-left: 8%;
   display: inline-flex;
   padding: 30px;
   flex-direction: column;
@@ -547,8 +547,9 @@ th span {
   gap: 20px;
   border-radius: 10px;
   border: 1px solid var(--Grey-Light, #eee);
-  background: var(--Grey-Light, #fff);
+  background: var(--Grey-Light, #eee);
 }
+
 #myModal2 {
   margin-left: 4%;
 }
@@ -579,6 +580,7 @@ th span {
 .fifth {
   display: flex;
   gap: 30px;
+  margin-bottom: 10px;
 }
 .frame {
   display: flex;
@@ -588,20 +590,23 @@ th span {
 }
 .frame h6 {
   color: var(--Black, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 19.2px;
 }
 .frame input {
-  width: 400px;
+  width: 410px;
   height: 40px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
 }
 .frame textarea {
   display: flex;
-  width: 400px;
-  height: 80px;
+  width: 410px;
+  height: 100px;
   padding: 10px;
   flex-direction: column;
   align-items: flex-start;
@@ -613,7 +618,7 @@ th span {
 }
 .frame textarea::placeholder {
   color: var(--Grey-Dark, #808080);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -623,7 +628,7 @@ th span {
   width: 400px;
   height: 40px;
   color: var(--Grey-Dark, #808080);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -645,15 +650,13 @@ th span {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: 19.2px;
 }
-.rating {
-  width: 320px;
-}
+
 .frame button {
   width: 145px;
   display: flex;
@@ -666,51 +669,123 @@ th span {
   color: #fff;
   margin-top: 10px;
 }
-.rating input[type='radio']:not(:nth-of-type(0)) {
-  /* hide visually */
-  border: 0;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-}
-.rating [type='radio']:not(:nth-of-type(0)) + label {
-  display: none;
+
+@media (max-width: 1024px) {
+  .modal-dialog {
+    width: 90%;
+    margin-left: 6%;
+  }
+
+  .frame {
+    width: 100%;
+  }
+
+  .frame textarea,
+  .form-select,
+  .frame input {
+    width: 340px;
+  }
+
+  textarea,
+  input,
+  select {
+    font-size: 12px;
+  }
+
+  .modal-lg {
+    max-width: 100%;
+  }
 }
 
-label[for]:hover {
-  cursor: pointer;
+@media (max-width: 768px) {
+  .modal-body {
+    flex-direction: column;
+  }
+
+  .frame {
+    width: 100%;
+  }
+
+  .frame textarea,
+  .form-select,
+  .frame input {
+    width: 260px;
+  }
+
+  textarea,
+  input,
+  select {
+    font-size: 12px;
+  }
+
+  .modal-lg {
+    max-width: 100%;
+  }
 }
 
-.rating .stars label:before {
-  content: '★';
-  font-size: 24px;
+@media (max-width: 576px) {
+  .modal-dialog {
+    height: 1990px;
+  }
+  .modal-body {
+    flex-direction: column;
+  }
+
+  .first,
+  .second,
+  .third,
+  .fourth,
+  .fifth {
+    flex-direction: column;
+  }
+
+  .frame {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  textarea,
+  input,
+  select {
+    font-size: 12px;
+  }
+
+  .modal-lg {
+    max-width: 100%;
+  }
+
+  .modal-title {
+    font-size: 18px;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+  }
 }
 
-.stars label {
-  color: lightgray;
-}
+@media (max-width: 400px) {
+  .modal-title {
+    font-size: 14px;
+  }
 
-.stars label:hover {
-  text-shadow: 0 0 1px #000;
-}
+  .modal-body {
+    padding: 10px;
+  }
 
-.rating [type='radio']:nth-of-type(1):checked ~ .stars label:nth-of-type(-n + 1),
-.rating [type='radio']:nth-of-type(2):checked ~ .stars label:nth-of-type(-n + 2),
-.rating [type='radio']:nth-of-type(3):checked ~ .stars label:nth-of-type(-n + 3),
-.rating [type='radio']:nth-of-type(4):checked ~ .stars label:nth-of-type(-n + 4),
-.rating [type='radio']:nth-of-type(5):checked ~ .stars label:nth-of-type(-n + 5) {
-  color: orange;
-}
+  .frame textarea,
+  .form-select,
+  .frame input {
+    width: 230px;
+  }
 
-.rating [type='radio']:nth-of-type(1):focus ~ .stars label:nth-of-type(1),
-.rating [type='radio']:nth-of-type(2):focus ~ .stars label:nth-of-type(2),
-.rating [type='radio']:nth-of-type(3):focus ~ .stars label:nth-of-type(3),
-.rating [type='radio']:nth-of-type(4):focus ~ .stars label:nth-of-type(4),
-.rating [type='radio']:nth-of-type(5):focus ~ .stars label:nth-of-type(5) {
-  color: darkorange;
+  textarea,
+  input,
+  select {
+    font-size: 10px;
+  }
+
+  button[type="submit"] {
+    font-size: 12px;
+  }
 }
 </style>

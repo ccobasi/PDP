@@ -429,7 +429,7 @@ tbody tr {
   align-items: center;
   align-self: stretch;
   color: var(--Black, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 20px;
   font-style: normal;
   font-weight: 600;
@@ -444,8 +444,8 @@ tbody tr {
 .modal-dialog {
   --bs-modal-width: 950px;
   width: 950px;
-  height: 900px;
-  margin-left: 15%;
+  height: 940px;
+  margin-left: 8%;
   display: inline-flex;
   padding: 30px;
   flex-direction: column;
@@ -453,11 +453,9 @@ tbody tr {
   gap: 20px;
   border-radius: 10px;
   border: 1px solid var(--Grey-Light, #eee);
-  background: var(--Grey-Light, #fff);
+  background: var(--Grey-Light, #eee);
 }
-#myModal2 {
-  margin-left: 4%;
-}
+
 #myModal2 tr td {
   font-size: 13px;
 }
@@ -467,17 +465,7 @@ tbody tr {
 .modal-body[data-v-bf8ca16e] {
   width: 100%;
 }
-#myModal2 .modal-dialog {
-  width: 930px;
-  --bs-modal-width: 930px;
-  margin-left: 12%;
-  display: inline-flex;
-  padding: 30px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-  border-radius: 10px;
-}
+
 .first,
 .second,
 .third,
@@ -494,7 +482,7 @@ tbody tr {
 }
 .frame h6 {
   color: var(--Black, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -503,7 +491,11 @@ tbody tr {
 .frame input {
   width: 400px;
   height: 40px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
 }
+
 .frame textarea {
   display: flex;
   width: 400px;
@@ -519,7 +511,7 @@ tbody tr {
 }
 .frame textarea::placeholder {
   color: var(--Grey-Dark, #808080);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -529,7 +521,7 @@ tbody tr {
   width: 400px;
   height: 40px;
   color: var(--Grey-Dark, #808080);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -551,7 +543,7 @@ tbody tr {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -572,7 +564,63 @@ tbody tr {
   color: #fff;
   margin-top: 10px;
 }
-@media only screen and (max-width: 768px) {
+
+@media (max-width: 1024px) {
+  .modal-dialog {
+    width: 90%;
+    margin-left: 6%;
+  }
+
+  .frame {
+    width: 100%;
+  }
+
+  .frame textarea,
+  .form-select,
+  .frame input {
+    width: 340px;
+  }
+
+  textarea,
+  input,
+  select {
+    font-size: 12px;
+  }
+
+  .modal-lg {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-dialog {
+    margin-left: 5%;
+  }
+
+  .modal-body {
+    flex-direction: column;
+  }
+
+  .frame {
+    width: 100%;
+  }
+
+  .frame textarea,
+  .form-select,
+  .frame input {
+    width: 260px;
+  }
+
+  textarea,
+  input,
+  select {
+    font-size: 12px;
+  }
+
+  .modal-lg {
+    max-width: 100%;
+  }
+
   .d-flex {
     flex-direction: column;
   }
@@ -596,6 +644,72 @@ tbody tr {
   }
   .side-panel {
     max-width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .modal-dialog {
+    height: 1990px;
+  }
+  .modal-body {
+    flex-direction: column;
+  }
+
+  .first,
+  .second,
+  .third,
+  .fourth,
+  .fifth {
+    flex-direction: column;
+  }
+
+  .frame {
+    width: 100%;
+    margin-bottom: 15px;
+  }
+
+  textarea,
+  input,
+  select {
+    font-size: 12px;
+  }
+
+  .modal-lg {
+    max-width: 100%;
+  }
+
+  .modal-title {
+    font-size: 18px;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  .modal-title {
+    font-size: 14px;
+  }
+
+  .modal-body {
+    padding: 10px;
+  }
+
+  .frame textarea,
+  .form-select,
+  .frame input {
+    width: 230px;
+  }
+
+  textarea,
+  input,
+  select {
+    font-size: 10px;
+  }
+
+  button[type="submit"] {
+    font-size: 12px;
   }
 }
 </style>
