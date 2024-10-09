@@ -1,13 +1,13 @@
 <script setup>
 import { useMentorshipStore } from "@/store/mentorship";
-import html2pdf from 'html2pdf.js';
+// import html2pdf from 'html2pdf.js';
 import { ref, computed, onMounted } from 'vue';
-import AccordionCardSix from '../../components/Cards/AccordionCardSix.vue'
+
 
 const store = useMentorshipStore();
 const mentorships = ref([]);
 const editingMentorship = ref(null);
-const selectedItem = ref(null);
+// const selectedItem = ref(null);
   const month = ref('')
   const financialYearId = ref('')
   const mentor = ref('')
@@ -68,8 +68,11 @@ const editMentorship = (mentorship) => {
   createdBy.value = mentorship.createdBy;
   lastModifiedBy.value = mentorship.lastModifiedBy;
   status.value = mentorship.status;
-
+  
+  console.log('Opening modal for editing:', mentorship);
   document.getElementById('myModal3').style.display = 'block';
+  console.log('Modal opened');
+
 };
 
 const updateMentorship = async () => {
@@ -104,11 +107,11 @@ const updateMentorship = async () => {
 };
 
 
-const deleteMentorship = async (mentorshipId) => {
-  if (confirm('Are you sure you want to delete this mentorship plan?')) {
-    await store.deleteMentorship(mentorshipId);
-  }
-};
+// const deleteMentorship = async (mentorshipId) => {
+//   if (confirm('Are you sure you want to delete this mentorship plan?')) {
+//     await store.deleteMentorship(mentorshipId);
+//   }
+// };
 
 const loading = ref(false);
 const handleFileChange = async (event) => {
@@ -119,25 +122,25 @@ const handleFileChange = async (event) => {
   loading.value = false;
 };
 
-const itemsPerPage = 10; 
+const itemsPerPage = 20; 
 const currentPage = ref(1);
-const totalPages = computed(() => Math.ceil(mentorships.value.length / itemsPerPage));
-const paginatedMentorship = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return mentorships.value.slice(startIndex, endIndex);
-});
+// const totalPages = computed(() => Math.ceil(mentorships.value.length / itemsPerPage));
+// const paginatedMentorship = computed(() => {
+//   const startIndex = (currentPage.value - 1) * itemsPerPage;
+//   const endIndex = startIndex + itemsPerPage;
+//   return mentorships.value.slice(startIndex, endIndex);
+// });
 
-const downloadPDF = () => {
-  const table = document.querySelector('.table-responsive');
-  html2pdf(table, {
-    margin: 10,
-    filename: 'table-data.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-  });
-};
+// const downloadPDF = () => {
+//   const table = document.querySelector('.table-responsive');
+//   html2pdf(table, {
+//     margin: 10,
+//     filename: 'table-data.pdf',
+//     image: { type: 'jpeg', quality: 0.98 },
+//     html2canvas: { scale: 2 },
+//     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+//   });
+// };
 
 
 
@@ -161,41 +164,65 @@ const paginatedFilteredMentorship = computed(() => {
   const endIndex = startIndex + itemsPerPage;
   return filteredMentorship.value.slice(startIndex, endIndex);
 });
+
+const totalPages = computed(() => Math.ceil(filteredMentorship.value.length / itemsPerPage));
+
+const goToPage = (page) => {
+  if (page > 0 && page <= totalPages.value) {
+    currentPage.value = page;
+  }
+};
 </script>
 
 <template>
   <teleport to="body">
-    <form method="post" action="" @submit.prevent="editingMentorship ? updateMentorship() : handleSubmit">
-      <div class="modal" id="myModal3">
+    <form method="post" @submit.prevent="editMentorship ? updateMentorship() : handleSubmit">
+      <div class="modal" id="myModal3" tabindex="-1">
         <div class="modal-dialog">
           <div class="modal-content">
-
-            <!-- Modal Header -->
             <div class="modal-header">
-              <h4 class="modal-title">Mentorship request form</h4>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              <h4 class="modal-title">Mentorship Request Form</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><b></b></button>
             </div>
 
-            <!-- Modal body -->
             <div class="modal-body">
 
               <div class="first">
                 <div class="frame">
                   <h6>Financial Year</h6>
-                  <select v-model="financialYear" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                  <select v-model="financialYearId" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
                     <option selected>Select Financial Year</option>
-                    <option value="FY23">FY23</option>
-                    <option value="FY24">FY24</option>
-                    <option value="FY25">FY25</option>
-                    <option value="FY26">FY26</option>
+                    <option value="2023">FY23</option>
+                    <option value="2024">FY24</option>
+                    <option value="2025">FY25</option>
+                    <option value="2026">FY26</option>
                   </select>
                 </div>
                 <div class="frame">
                   <h6>Month</h6>
-
-                  <input v-model="month" id="bday-month" type="month" name="bday-month" min="2023-01" max="2026-12" />
+                  <div class="fallbackDatePicker">
+                    <div>
+                      <span>
+                        <select class="form-select" v-model="month" id="month" name="month">
+                          <option selected>January</option>
+                          <option>February</option>
+                          <option>March</option>
+                          <option>April</option>
+                          <option>May</option>
+                          <option>June</option>
+                          <option>July</option>
+                          <option>August</option>
+                          <option>September</option>
+                          <option>October</option>
+                          <option>November</option>
+                          <option>December</option>
+                        </select>
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
+
               <div class="second">
                 <div class="frame">
                   <h6>Mentors</h6>
@@ -215,37 +242,68 @@ const paginatedFilteredMentorship = computed(() => {
               <div class="third">
                 <div class="frame">
                   <h6>Action Plan</h6>
-                  <textarea v-model="actionPlan" name="Action Plan" id="" cols="30" rows="10" placeholder="Action Plan"></textarea>
+                  <textarea v-model="actionPlans" name="Action Plan" id="" cols="30" rows="10" placeholder="Action Plan"></textarea>
 
                 </div>
                 <div class="frame">
                   <h6>Timeline</h6>
-                  <input v-model="timeLine" type="date">
+                  <input v-model="targetCompletionDate" type="date">
                 </div>
               </div>
+
               <div class="fourth">
                 <div class="frame">
                   <h6>Status</h6>
                   <select v-model="status" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
                     <option selected>Select Status</option>
                     <option value="Not started">Not started</option>
-                    <option value="Ongoing">Ongoing</option>
+                    <option value="On-going">On-going</option>
                     <option value="Completed">Completed</option>
                   </select>
+                </div>
+                <div class="frame">
+                  <h6>Evidence</h6>
+                  <input type="file" class="form-control" @change="handleFileChange">
                 </div>
 
               </div>
 
+              <div class="fifth">
+                <div class="frame">
+                  <h6>Progress Metrics</h6>
+                  <textarea v-model="progressMetrics" name="Progress Metrics" id="" cols="30" rows="10" placeholder="Progress Metrics"></textarea>
+                </div>
+                <div class="frame">
+                  <h6>Feedback</h6>
+                  <textarea v-model="feedback" name="Feedback" id="" cols="30" rows="10" placeholder="Feedback"></textarea>
+                </div>
+              </div>
+              <div class="fifth">
+                <div class="frame">
+                  <h6>CreatedBy</h6>
+                  <input type="text" v-model="createdBy" placeholder="Created By" disabled>
+                </div>
+                <div class="frame">
+                  <h6>Modified By</h6>
+                  <input type="text" v-model="lastModifiedBy" placeholder="Last Modified By" disabled>
+                </div>
+              </div>
             </div>
-
-            <!-- Modal footer -->
             <div class="modal-footer">
-              <button type="submit" data-bs-dismiss="modal">{{ editingMentorship ? 'Update' : 'Submit' }}</button>
+              <button type="submit" class="btn btn-success">{{ editingMentorship ? 'Update' : 'Submit' }}</button>
             </div>
+          </div>
+        </div>
 
+        <div v-if="showExpandModal" class="modal-overlay">
+          <div class="expanded-modal-content">
+            <h5>{{ expandTitle }}</h5>
+            <textarea v-model="expandValue" class="form-control" rows="10"></textarea>
+            <button @click="saveExpandedText" class="btn btn-success mt-2">Save</button>
           </div>
         </div>
       </div>
+
     </form>
   </teleport>
   <div class="table-responsive">
@@ -290,6 +348,22 @@ const paginatedFilteredMentorship = computed(() => {
       </table>
 
     </div>
+
+    <div class="pagination-controls">
+      <button @click="prevPage" :disabled="currentPage === 1" class="pagination-btn">
+        Prev
+      </button>
+
+      <span v-for="page in totalPages" :key="page">
+        <button @click="goToPage(page)" :class="{'active': currentPage === page}" class="pagination-btn">
+          {{ page }}
+        </button>
+      </span>
+
+      <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-btn">
+        Next
+      </button>
+    </div>
   </div>
 </template>
 
@@ -322,7 +396,7 @@ const paginatedFilteredMentorship = computed(() => {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: var(--White, #fff);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -362,16 +436,6 @@ tbody tr {
 .v-btn button {
   background: #47b65c;
 }
-.modal-dialog {
-  --bs-modal-width: 900px;
-  width: 900px;
-  height: 600px;
-  margin-left: 13%;
-  display: inline-flex;
-  padding: 30px;
-  border-radius: 10px;
-  background: #fff;
-}
 
 .modal-footer {
   display: flex;
@@ -393,12 +457,12 @@ tbody tr {
 .modal-dialog {
   --bs-modal-width: 900px;
   width: 900px;
-  height: 600px;
-  margin-left: 13%;
+  height: 930px;
+  margin-left: 11%;
   display: inline-flex;
   padding: 30px;
   border-radius: 10px;
-  background: #fff;
+  background: #eee;
 }
 
 .modal-footer {
@@ -423,7 +487,7 @@ tbody tr {
   width: 120px;
   height: 30px;
   color: var(--Grey-Dark, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -435,7 +499,8 @@ tbody tr {
 .fourth,
 .fifth {
   display: flex;
-  gap: 30px;
+  gap: 20px;
+  margin-bottom: 10px;
 }
 .frame {
   display: flex;
@@ -445,7 +510,7 @@ tbody tr {
 }
 .frame h6 {
   color: var(--Black, #000);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -454,6 +519,9 @@ tbody tr {
 .frame input {
   width: 390px;
   height: 40px;
+  border: 1px solid var(--Grey-Dark, #ddd);
+  padding: 10px;
+  border-radius: 5px;
 }
 .frame textarea {
   display: flex;
@@ -470,7 +538,7 @@ tbody tr {
 }
 .frame textarea::placeholder {
   color: var(--Grey-Dark, #808080);
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
@@ -478,7 +546,7 @@ tbody tr {
 }
 .modal-footer {
   display: flex;
-  height: 40px;
+  height: 60px;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-end;
@@ -504,8 +572,6 @@ tbody tr {
   justify-content: space-between;
   align-items: center;
   border-radius: 5px;
-
-  background: var(--White, #fff);
 }
 
 .types button {
@@ -535,7 +601,87 @@ tbody tr {
   border: 1px solid #ccc;
 }
 
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.pagination-btn {
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-btn:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.pagination-btn.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+@media (max-width: 1200px) {
+  .modal {
+    margin: auto;
+  }
+  .modal-dialog {
+    --bs-modal-width: 700px;
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    height: 870px;
+  }
+  .modal-body {
+    width: 100%;
+  }
+  .form-select,
+  .frame textarea,
+  .frame input {
+    width: 280px;
+  }
+}
+
 @media only screen and (max-width: 768px) {
+  .modal .modal-dialog {
+    margin-left: 10%;
+    height: 1000px;
+  }
+
+  #myModal .modal-content {
+    width: 100%;
+  }
+  .first,
+  .second,
+  .third,
+  .fourth,
+  .fifth {
+    flex-direction: column;
+  }
+
+  .modal-body {
+    gap: 10px;
+    overflow-y: auto;
+    width: 100%;
+    height: 770px;
+  }
+
+  .modal-footer {
+    height: 100px;
+  }
+
+  .frame .form-select,
+  .frame textarea,
+  .frame input {
+    width: 480px;
+  }
+
   .table-responsive {
     width: 100%;
     overflow-y: auto;
@@ -556,6 +702,27 @@ tbody tr {
   }
   .side-panel {
     max-width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .modal-dialog {
+    max-width: 80%;
+    margin: 5px;
+  }
+
+  .modal-body {
+    padding: 10px;
+  }
+
+  .form-control,
+  .form-select,
+  .btn {
+    font-size: 14px;
+  }
+
+  .modal-header h4 {
+    font-size: 18px;
   }
 }
 </style>

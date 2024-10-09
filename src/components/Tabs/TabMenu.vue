@@ -119,6 +119,21 @@ label select {
   }
 }
 
+@media screen and (max-width: 820px) {
+  .menu {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .navbar {
+    flex-wrap: wrap;
+  }
+
+  .nav-item {
+    margin-right: 20px;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .menu {
     flex-direction: column;

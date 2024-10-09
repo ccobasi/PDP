@@ -132,17 +132,16 @@ const downloadPDF = () => {
 
 <template>
   <main class="wrapper">
-    <div class="modal" id="myModal2">
+    <!-- <div class="modal" id="myModal2">
       <div class="modal-dialog">
         <div class="modal-content">
 
-          <!-- Modal Header -->
           <div class="modal-header">
             <h4 class="modal-title">Mentorship Plan</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
 
-          <!-- Modal body -->
+       
           <div class="modal-body">
             <div class="table-responsive d-flex flex-column">
               <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
@@ -254,8 +253,6 @@ const downloadPDF = () => {
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in paginatedMentorship" :key="index" @click="selectItem(item)" style="font-size: 14px;">
-
-                    <!-- <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
                     <td>{{item.id}}</td>
                     <td>{{item.month}}</td>
                     <td>{{item.financialYearId}}</td>
@@ -275,14 +272,14 @@ const downloadPDF = () => {
 
         </div>
       </div>
-    </div>
+    </div> -->
     <TabMenu />
-    <form method="post" action="" @submit.prevent="handleSubmit()">
+    <form method="post" action="" @submit.prevent="handleSubmit">
       <div class="modal" id="myModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Mentorship Request Form</h5>
+              <h4 class="modal-title">Mentorship Request Form</h4>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><b></b></button>
             </div>
 
@@ -323,6 +320,7 @@ const downloadPDF = () => {
                   </div>
                 </div>
               </div>
+
               <div class="second">
                 <div class="frame">
                   <h6>Mentors</h6>
@@ -350,6 +348,7 @@ const downloadPDF = () => {
                   <input v-model="targetCompletionDate" type="date">
                 </div>
               </div>
+
               <div class="fourth">
                 <div class="frame">
                   <h6>Status</h6>
@@ -366,6 +365,7 @@ const downloadPDF = () => {
                 </div>
 
               </div>
+
               <div class="fifth">
                 <div class="frame">
                   <h6>Progress Metrics</h6>
@@ -387,15 +387,23 @@ const downloadPDF = () => {
                 </div>
               </div>
             </div>
-
             <div class="modal-footer">
-              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">Submit</button>
+              <button type="submit" class="btn btn-success">Submit Request</button>
             </div>
+          </div>
+        </div>
 
+        <div v-if="showExpandModal" class="modal-overlay">
+          <div class="expanded-modal-content">
+            <h5>{{ expandTitle }}</h5>
+            <textarea v-model="expandValue" class="form-control" rows="10"></textarea>
+            <button @click="saveExpandedText" class="btn btn-success mt-2">Save</button>
           </div>
         </div>
       </div>
+
     </form>
+
     <div class="skill mt-4">
       <div class="header">
         <div class="title mb-4">
@@ -514,9 +522,10 @@ main {
   margin-top: 0px !important;
 }
 .modal-dialog {
+  --bs-modal-width: 900px;
   width: 900px;
-  height: 850px;
-  margin-left: 20%;
+  height: 930px;
+  margin-left: 10%;
   display: inline-flex;
   padding: 30px;
   flex-direction: column;
@@ -524,7 +533,7 @@ main {
   gap: 20px;
   border-radius: 10px;
   border: 1px solid var(--Grey-Light, #eee);
-  background: var(--Grey-Light, #fff);
+  background: var(--Grey-Light, #eee);
 }
 .modal-content {
   z-index: 1;
@@ -553,7 +562,7 @@ main {
 }
 .form-select {
   width: 370px;
-  height: 50px;
+  height: 40px;
   color: var(--Grey-Dark, #808080);
   font-family: "Inter", sans-serif;
   font-size: 12px;
@@ -567,7 +576,8 @@ main {
 .fourth,
 .fifth {
   display: flex;
-  gap: 30px;
+  gap: 20px;
+  margin-bottom: 10px;
 }
 .frame {
   display: flex;
@@ -584,12 +594,15 @@ main {
   line-height: 19.2px;
 }
 .frame input {
-  width: 320px;
+  width: 370px;
   height: 40px;
+  border: 1px solid var(--Grey-Dark, #ddd);
+  padding: 10px;
+  border-radius: 5px;
 }
 .frame textarea {
   display: flex;
-  width: 320px;
+  width: 370px;
   height: 90px;
   padding: 10px;
   flex-direction: column;
@@ -609,7 +622,7 @@ main {
   line-height: 14.4px;
 }
 .form-select {
-  width: 320px;
+  width: 370px;
   color: var(--Grey-Dark, #808080);
   font-family: "Inter", sans-serif;
   font-size: 12px;
@@ -675,17 +688,80 @@ main {
 #myModal2 .table-header {
   font-style: 10px;
 }
-@media only screen and (max-width: 768px) {
+
+@media (max-width: 1200px) {
   .modal {
-    margin-left: 5%;
+    margin: auto;
   }
   .modal-dialog {
-    width: 700px;
+    --bs-modal-width: 700px;
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
   }
-  .frame input,
+  .modal-body {
+    width: 100%;
+  }
+  .form-select,
   .frame textarea,
-  .frame .form-select {
-    width: 290px;
+  .frame input {
+    width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal .modal-dialog {
+    margin-left: 11%;
+    height: 1070px;
+  }
+
+  #myModal .modal-content {
+    width: 100%;
+  }
+  .first,
+  .second,
+  .third,
+  .fourth,
+  .fifth {
+    flex-direction: column;
+  }
+
+  .modal-body {
+    gap: 10px;
+    overflow-y: auto;
+    width: 100%;
+    height: 770px;
+  }
+
+  .modal-footer {
+    height: 100px;
+  }
+
+  .frame .form-select,
+  .frame textarea,
+  .frame input {
+    width: 400px;
+  }
+}
+
+@media (max-width: 576px) {
+  .modal-dialog {
+    max-width: 80%;
+    margin: 5px;
+  }
+
+  .modal-body {
+    padding: 10px;
+  }
+
+  .form-control,
+  .form-select,
+  .btn {
+    font-size: 14px;
+  }
+
+  .modal-header h4 {
+    font-size: 18px;
   }
 }
 </style>
