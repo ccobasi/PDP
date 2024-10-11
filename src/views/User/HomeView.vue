@@ -537,7 +537,7 @@ hr {
   width: 100%;
 }
 .modal-title {
-  font-family: Roboto;
+  font-family: Roboto, sans-serif;
   font-size: 20px;
   font-weight: 600;
   line-height: 24px;
@@ -572,7 +572,7 @@ hr {
   border-radius: 10px;
 }
 .form-label {
-  font-family: Roboto;
+  font-family: Roboto, sans-serif;
   font-size: 16px;
   font-weight: 400;
   line-height: 19.2px;
@@ -646,7 +646,7 @@ hr {
   border-radius: 5px;
 }
 textarea::placeholder {
-  font-family: Roboto;
+  font-family: Roboto, sans-serif;
   font-size: 12px;
   font-weight: 400;
   line-height: 14.4px;

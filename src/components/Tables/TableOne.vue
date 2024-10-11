@@ -720,13 +720,6 @@ tbody tr {
 button:not(:disabled) {
   cursor: pointer;
 }
-.icon-warning {
-  color: orange;
-}
-
-.icon-danger {
-  color: red;
-}
 
 .form-select,
 .form-selects {

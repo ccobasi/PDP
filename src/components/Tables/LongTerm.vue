@@ -185,6 +185,18 @@ const saveExpandedText = () => {
   // Close the expand modal
   showExpandModal.value = false;
 };
+
+const planTypeMap = {
+      1: 'Area of Interest',
+      2: 'Career Goals and Aspirations',
+      3: 'Mentorship and Skill Building',
+    };
+
+    const planTermMap = {
+      1: 'Short Term Goal',
+      2: 'Mid Term Goal',
+      3: 'Long Term Goal',
+    };
 </script>
 <template>
   <teleport to="body">
@@ -194,7 +206,7 @@ const saveExpandedText = () => {
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Add Plan Form</h5>
+              <h5 class="modal-title">Development Plan Request Form</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><b></b></button>
             </div>
 
@@ -319,18 +331,15 @@ const saveExpandedText = () => {
 
   </teleport>
   <div class="title">
-    <div class="modal" id="myModal1">
+    <!-- <div class="modal" id="myModal1">
       <div class="modal-dialog">
         <div class="modal-content">
           <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
           <v-btn @click="downloadPDF">Download as PDF</v-btn>
-          <!-- Modal Header -->
           <div class="modal-header">
             <h4 class="modal-title">Development Plans</h4>
             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
-
-          <!-- Modal body -->
           <div class="modal-body">
             <div class="table-responsive d-flex flex-column">
 
@@ -419,8 +428,6 @@ const saveExpandedText = () => {
                 </thead>
                 <tbody>
                   <tr v-for="(item, index) in paginatedGoals" :key="index" @click="selectItem(item)" @dblclick="$router.push({ name: 'Skill Assessment Details', params: { id: item.id } })">
-
-                    <!-- <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
                     <td>{{item.id}}</td>
                     <td>{{item.plan}}</td>
                     <td>{{item.term}}</td>
@@ -443,7 +450,7 @@ const saveExpandedText = () => {
 
         </div>
       </div>
-    </div>
+    </div> -->
 
     <button class="view mt-2" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
   </div>
@@ -495,14 +502,33 @@ const saveExpandedText = () => {
           <tbody>
             <tr v-for="(item, index) in filteredGoals" :key="index" @dblclick="editGoal(item)">
               <td>{{item.id}}</td>
-              <td>{{item.planTypeId}}</td>
-              <td>{{item.planTermId}}</td>
-              <td>{{item.goalSummary}}</td>
+              <td>{{ planTypeMap[item.planTypeId] }}</td>
+              <td>{{ planTermMap[item.planTermId] }}</td>
+              <td>
+                <div class="goal-summary" :title="item.goalSummary">
+                  {{ item.goalSummary.length > 50 ? item.goalSummary.substring(0, 50) + '...' : item.goalSummary }}
+                </div>
+              </td>
               <td>{{item.status}}</td>
 
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="pagination-controls">
+        <button @click="prevPage" :disabled="currentPage === 1" class="pagination-btn">
+          Prev
+        </button>
+
+        <span v-for="page in totalPages" :key="page">
+          <button @click="goToPage(page)" :class="{'active': currentPage === page}" class="pagination-btn">
+            {{ page }}
+          </button>
+        </span>
+
+        <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-btn">
+          Next
+        </button>
       </div>
     </div>
 
@@ -548,6 +574,18 @@ const saveExpandedText = () => {
   padding-right: 15px;
 }
 
+.goal-summary {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+}
+
+.goal-summary-wrap {
+  word-wrap: break-word;
+  max-width: 250px;
+}
+
 .modal {
   background-color: rgba(0, 0, 0, 0.5);
   overflow-y: auto;
@@ -557,11 +595,11 @@ const saveExpandedText = () => {
   --bs-modal-width: 900px;
   width: 900px;
   height: 1150px;
-  margin-left: 13%;
+  margin-left: 7%;
   display: inline-flex;
   padding: 30px;
   border-radius: 10px;
-  background: #fff;
+  background: #eee;
 }
 
 .modal-footer {
@@ -615,16 +653,16 @@ input {
 }
 .d-flex {
   display: flex;
-  align-items: flex-start; /* Prevents vertical stretching of the table */
+  align-items: flex-start;
   align-items: flex-start;
 }
 
 .table-container {
-  flex-grow: 1; /* Allows the table to grow and take up available space */
+  flex-grow: 1;
 }
 
 .table-responsive {
-  flex-grow: 1; /* Let the table container take up available space */
+  flex-grow: 1;
 }
 
 table {
@@ -659,13 +697,47 @@ tr {
   margin-left: 5%;
 }
 
-.icon-warning {
-  color: orange;
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
-.icon-danger {
-  color: red;
+.pagination-btn {
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
+
+.pagination-btn:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.pagination-btn.active {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+@media (max-width: 1024px) {
+  #myModal3 .modal-dialog {
+    width: 90%;
+    margin: auto;
+  }
+
+  .form-select {
+    width: 100%;
+  }
+
+  input {
+    width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   .table-responsive {
     flex-direction: column;
