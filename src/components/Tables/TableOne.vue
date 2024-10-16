@@ -44,6 +44,8 @@ const fetchData = async () => {
 const selectedOwner = ref('');
 
 onMounted(async () => {
+  initializeModal();
+
   try {
     await store.fetchGoals();
 
@@ -81,40 +83,8 @@ onMounted(async () => {
   }
 });
 
-// const filteredUserGoals = computed(() => {
-//   const filteredGoals = goals.filter(goal => goal.recordOwner === selectedOwner.value);
-//   console.log('Filtered goals:', filteredGoals);
-//   return filteredGoals;
-// });
-
-const selectItem = (item) => {
-  selectedItem.value = item;
-  console.log(selectedItem)
-};
-
 const itemsPerPage = 20; 
 const currentPage = ref(1);
-
-// const totalPages = computed(() => Math.ceil(goals.value.length / itemsPerPage));
-
-// const paginatedGoals = computed(() => {
-//   const startIndex = (currentPage.value - 1) * itemsPerPage;
-//   const endIndex = startIndex + itemsPerPage;
-//   // return goals.value.slice(startIndex, endIndex);
-//   return goals.value.length > 0 ? goals.value.slice(startIndex, endIndex) : [];
-// });
-
-// const downloadPDF = () => {
-//   const table = document.querySelector('.table-responsive');
-
-//   html2pdf(table, {
-//     margin: 10,
-//     filename: 'table-data.pdf',
-//     image: { type: 'jpeg', quality: 0.98 },
-//     html2canvas: { scale: 2 },
-//     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-//   });
-// };
    
 
 const options = ref([
@@ -221,17 +191,15 @@ const updateGoal = async () => {
 const showExpandModal = ref(false);
 const expandTitle = ref('');
 const expandValue = ref('');
-const activeField = ref(''); // To track which field is being edited
+const activeField = ref(''); 
 
-// Function to open the expand modal for textarea
 const expandText = (title, value, field) => {
   expandTitle.value = title;
   expandValue.value = value;
-  activeField.value = field; // Store the field that is being edited
+  activeField.value = field; 
   showExpandModal.value = true;
 };
 
-// Function to save the expanded text back to the appropriate textarea
 const saveExpandedText = () => {
   if (activeField.value === 'goalSummary') {
     goalSummary.value = expandValue.value;
@@ -267,6 +235,79 @@ const planTypeMap = {
       2: 'Mid Term Goal',
       3: 'Long Term Goal',
     };
+
+const currentIndex = ref(0);
+const modalInstance = ref(null);
+const initializeModal = () => {
+  const modalElement = document.getElementById('myModal4');
+  modalInstance.value = Modal.getOrCreateInstance(modalElement);
+};
+
+const selectItem = (item, index) => {
+  selectedItem.value = item;
+  currentIndex.value = index;
+  modalInstance.value.show();
+};
+
+const loadGoal = (index) => {
+  if (index >= 0 && index < goals.value.length) {
+    selectedItem.value = goals.value[index];
+  }
+};
+
+const nextGoal = () => {
+  if (currentIndex.value < goals.value.length - 1) {
+    currentIndex.value++;
+    loadGoal(currentIndex.value);
+  }
+};
+
+const prevGoal = () => {
+  if (currentIndex.value > 0) {
+    currentIndex.value--;
+    loadGoal(currentIndex.value);
+  }
+};
+
+
+watch(currentIndex, (newIndex) => {
+  loadGoal(newIndex);
+});
+
+const clickTimeout = ref(null);
+const singleClickModal = ref(null);
+const doubleClickModal = ref(null);
+
+const handleClick = (item) => {
+  if (clickTimeout.value) {
+    clearTimeout(clickTimeout.value);  
+  }
+
+  clickTimeout.value = setTimeout(() => {
+    selectedItem.value = item;
+    showModal(singleClickModal.value);
+  }, 250); 
+};
+
+const handleDoubleClick = (item) => {
+  if (clickTimeout.value) {
+    clearTimeout(clickTimeout.value);  
+    clickTimeout.value = null;         
+  }
+
+  selectedItem.value = item;
+  showModal(doubleClickModal.value);  
+  editGoal(item);  
+};
+
+const showModal = (modal) => {
+  modal.style.display = 'block';
+};
+
+const closeModal = (modalRef) => {
+  const modal = modalRef === 'singleClickModal' ? singleClickModal.value : doubleClickModal.value;
+  modal.style.display = 'none';
+};
 </script>
 <template>
   <div class="scrollable-container">
@@ -274,12 +315,12 @@ const planTypeMap = {
       <teleport to="body">
 
         <form method="post" action="" @submit.prevent="editingGoal ? updateGoal() : handleSubmit">
-          <div class="modal" id="myModal3" tabindex="-1">
+          <div class="modal" id="myModal3" tabindex="-1" ref="doubleClickModal">
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="modal-header">
                   <h4 class="modal-title">Update Development Plan Form</h4>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><b></b></button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal('doubleClickModal')"><b></b></button>
                 </div>
 
                 <div class="modal-body">
@@ -402,6 +443,138 @@ const planTypeMap = {
         </form>
 
       </teleport>
+
+      <teleport to="body">
+        <form method="post">
+          <div class="modal" id="myModal4" tabindex="-1" ref="singleClickModal">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Development Plan</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal('singleClickModal')"></button>
+                </div>
+
+                <div class="modal-body">
+                  <div class="row mb-2">
+                    <div class="col-md-6">
+                      <label for="planTypeId" class="form-label">Development Plan Type</label>
+                      <select class="form-select" v-if="selectedItem" v-model="selectedItem.planTypeId" disabled>
+                        <option value="">Select Type</option>
+                        <option value="1">Area of Interest</option>
+                        <option value="2">Career Goals and Aspirations</option>
+                        <option value="3">Mentorship and Skill Building</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="planTermId" class="form-label">Duration</label>
+                      <select class="form-select" v-if="selectedItem" v-model="selectedItem.planTermId" disabled>
+                        <option value="">Select Term</option>
+                        <option value="1">Short Term Goal</option>
+                        <option value="2">Mid Term Goal</option>
+                        <option value="3">Long Term Goal</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2">
+                    <div class="col-md-6">
+                      <label for="goalSummary" class="form-label">Goal</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.goalSummary" class="form-control" rows="3" placeholder="Goal"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="achievementApproach" class="form-label">What I will do to achieve this</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.achievementApproach" class="form-control" rows="3" placeholder="What I will do to achieve this"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2">
+                    <div class="col-md-6">
+                      <label for="requiredResources" class="form-label">Resources and Support Needed</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.requiredResources" class="form-control" rows="3" placeholder="Resources and Support Needed"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="successCriteria" class="form-label">What does success look like?</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.successCriteria" class="form-control" rows="3" placeholder="What I will do to achieve this"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2">
+                    <div class="col-md-6">
+                      <label for="potentialChallenges" class="form-label">Potential Challenges</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.potentialChallenges" class="form-control" rows="3" placeholder="Potential Challenges"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="solutionToChallenges" class="form-label">Solution</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.solutionToChallenges" class="form-control" rows="3" placeholder="Solution"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2">
+                    <div class="col-md-6 d-flex flex-column">
+                      <label for="goalSummary" class="form-label">Target Date for Completion</label>
+                      <div v-if="selectedItem">
+                        <p>{{ selectedItem.targetCompletionDate }}</p>
+
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="progressMetrics" class="form-label">Progress Metrics(Outcome Based)</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.progressMetrics" class="form-control" rows="3" placeholder="Progress Metrics"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2">
+                    <div class="col-md-6 d-flex flex-column">
+                      <label for="goalSummary" class="form-label">Status</label>
+                      <select class="form-select" v-if="selectedItem" v-model="selectedItem.status" disabled>
+                        <option value="Select Type">Select Type</option>
+                        <option class="opt" value="Completed">Completed</option>
+                        <option class="opt" value="On-going">On-going</option>
+                        <option class="opt" value="Not started">Not started</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="feedback" class="form-label">Feedback</label>
+                      <textarea readonly v-if="selectedItem" v-model="feedback" class="form-control" rows="3" placeholder="Feedback"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2">
+                    <div class="col-md-6 d-flex flex-column">
+                      <label for="Evidence" class="form-label">Evidence</label>
+                      <input readonly type="file" class="form-control" @change="handleFileChange" style="height:40px;padding:10px">
+                    </div>
+                    <div class="col-md-6 d-flex flex-column">
+                      <label for="Actual Completion Date" class="form-label">Actual Completion Date</label>
+                      <div v-if="selectedItem">
+                        <p>{{ selectedItem.actualCompletionDate }}</p>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div v-if="showExpandModal" class="modal-overlay">
+                    <div class="expanded-modal-content">
+                      <h5>{{ expandTitle }}</h5>
+                      <textarea v-model="expandValue" class="form-control" rows="10"></textarea>
+                      <button @click="saveExpandedText" class="btn btn-success mt-2">Save</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <div class="prev">
+                    <button type="button" class="btn btn-secondary" @click="prevGoal">Previous</button>
+                  </div>
+                  <div class="next">
+                    <button type="button" class="btn btn-secondary" @click="nextGoal">Next</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </teleport>
     </div>
 
     <div class="title">
@@ -455,7 +628,8 @@ const planTypeMap = {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index) in paginatedGoals" :key="index" @dblclick="editGoal(item)">
+              <!-- <tr v-for="(item, index) in paginatedGoals" :key="index" @click="selectItem(item, index)" @dblclick="editGoal(item)"> -->
+              <tr v-for="(item, index) in paginatedGoals" :key="index" @click="handleClick(item)" @dblclick="handleDoubleClick(item)">
                 <td>{{item.id}}</td>
                 <td>{{ planTypeMap[item.planTypeId] }}</td>
                 <td>{{ planTermMap[item.planTermId] }}</td>
@@ -519,6 +693,12 @@ const planTypeMap = {
   z-index: 1060;
 }
 
+.expanded-modal-content textarea {
+  max-height: none;
+  overflow: visible;
+  white-space: normal;
+}
+
 .col-md-6 input {
   border: 1px solid #808080;
   border-radius: 5px;
@@ -574,6 +754,46 @@ const planTypeMap = {
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
   color: #fff;
+}
+
+#myModal4 .area,
+#myModal4 textarea {
+  width: 390px;
+  height: 110px;
+  border-radius: 5px;
+  background: #eeeeee;
+  padding: 10px;
+}
+
+#myModal4 p {
+  width: 390px;
+  height: 40px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#myModal4 .modal-footer {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  gap: 20px;
+}
+
+.prev {
+  float: left;
+  width: 370px;
+  height: 110px;
+  display: flex;
+  justify-content: start;
+}
+
+.next {
+  float: right;
+  width: 370px;
+  height: 110px;
+  display: flex;
+  justify-content: end;
 }
 
 .wrap {
