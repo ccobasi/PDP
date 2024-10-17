@@ -1,17 +1,18 @@
-<script setup>
+
+<!-- <script setup>
+    import authService from '../../services/authService';
     import { useGoalsStore } from "@/store/goals";
-    import { ref, computed, onMounted/*, watchEffect*/ } from 'vue';
-    import html2pdf from 'html2pdf.js';
+    import { ref, computed, onMounted, watch } from 'vue';
     import { Modal } from 'bootstrap';
 
-    
+    // import { useRoute } from 'vue-router';
+    // import html2pdf from 'html2pdf.js';
 
 const store = useGoalsStore();
-var goals = ref([])
+const goals = ref([]);
 const goals_ = ref([])
 goals_.value = store.goals
-
-const selectedItem = ref(null);
+console.log(goals_);
 const planTypeId = ref('');
 const planTermId = ref('');
 const goalSummary = ref('')
@@ -24,12 +25,39 @@ const targetCompletionDate = ref('')
 const progressMetrics = ref('')
 const status = ref('')
 const feedback = ref('')
+const selectedItem = ref(null);
 const editingGoal = ref(null);
 
 
-onMounted(async () => {
+const fetchData = async () => {
   try {
     await store.fetchGoals();
+
+    goals.value = store.goals;
+
+    console.log('Goals:', goals.value);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+const selectedOwner = ref('');
+
+onMounted(async () => {
+  initializeModal();
+  try {
+    await store.fetchGoals();
+
+    try {
+        await authService.initialize();
+        const msalInstance = authService.getMsalInstance();
+        const accounts = msalInstance.getAllAccounts();
+        if (accounts.length) {
+          selectedOwner.value = accounts[0].username;
+        }
+      } catch (error) {
+        console.error('Error during MSAL initialization:', error);
+      }
 
     if (Array.isArray(store.goals)) {
       goals.value = store.goals;
@@ -37,40 +65,25 @@ onMounted(async () => {
       console.error('Error: store.goals is not an array');
     }
 
+    watch(
+      () => store.goals,
+      (newGoals) => {
+        if (Array.isArray(newGoals)) {
+          goals.value = newGoals;
+        } else {
+          console.error('Error: store.goals is not an array');
+        }
+      }
+    );
+    fetchData()
     console.log('Goals:', goals.value);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
 });
 
-const selectItem = (item) => {
-  selectedItem.value = item;
-  console.log(selectedItem)
-};
-
-const itemsPerPage = 15; 
+const itemsPerPage = 20; 
 const currentPage = ref(1);
-
-const totalPages = computed(() => Math.ceil(goals.value.length / itemsPerPage));
-
-const paginatedGoals = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  // return goals.value.slice(startIndex, endIndex);
-  return goals.value.length > 0 ? goals.value.slice(startIndex, endIndex) : [];
-});
-
-const downloadPDF = () => {
-  const table = document.querySelector('.table-responsive');
-
-  html2pdf(table, {
-    margin: 10,
-    filename: 'table-data.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-  });
-};
 
 const options = ref([
   { value: '2', text: 'Career Goals and Aspirations' },
@@ -78,8 +91,8 @@ const options = ref([
   { value: '3', text: 'Mentorship and Skills Building' },
 ]);
 
-const selectedOption = ref('3');
-const selectedTerm = ref('3');
+const selectedOption = ref('2');
+const selectedTerm = ref('1');
 
 const filteredGoals = computed(() => {
   console.log('Selected Option:', selectedOption.value);
@@ -91,6 +104,308 @@ const filteredGoals = computed(() => {
     return item.planTypeId === parseInt(selectedOption.value) && item.planTermId === parseInt(selectedTerm.value);
   }) : [];
 });
+
+const paginatedGoals = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return filteredGoals.value.slice(startIndex, endIndex);
+});
+
+const totalPages = computed(() => Math.ceil(filteredGoals.value.length / itemsPerPage));
+
+const goToPage = (pageNumber) => {
+  if (pageNumber >= 1 && pageNumber <= totalPages.value) {
+    currentPage.value = pageNumber;
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+
+const editGoal = (goal) => {
+  console.log('Editing Goal:', goal);
+  if (!goal) {
+    console.error('Error: goal is undefined');
+    return;
+  }
+  editingGoal.value = { ...goal };
+  
+  planTypeId.value = goal.planTypeId;
+  planTermId.value = goal.planTermId;
+  goalSummary.value = goal.goalSummary;
+  achievementApproach.value = goal.achievementApproach;
+  requiredResources.value = goal.requiredResources;
+  successCriteria.value = goal.successCriteria;
+  potentialChallenges.value = goal.potentialChallenges;
+  solutionToChallenges.value = goal.solutionToChallenges;
+  targetCompletionDate.value = goal.targetCompletionDate;
+  progressMetrics.value = goal.progressMetrics;
+  status.value = goal.status;
+  feedback.value = goal.feedback;
+  
+  document.getElementById('myModal3').style.display = 'block';
+  //  const modalElement = document.getElementById('myModal3');
+  // const modalInstance = Modal.getOrCreateInstance(modalElement);
+  // modalInstance.show();
+};
+
+const updateGoal = async () => {
+  if (editingGoal.value) {
+    editingGoal.value.planTypeId = planTypeId.value;
+    editingGoal.value.planTermId = planTermId.value;
+    editingGoal.value.goalSummary = goalSummary.value;
+    editingGoal.value.achievementApproach = achievementApproach.value;
+    editingGoal.value.requiredResources = requiredResources.value;
+    editingGoal.value.successCriteria = successCriteria.value;
+    editingGoal.value.potentialChallenges = potentialChallenges.value;
+    editingGoal.value.solutionToChallenges = solutionToChallenges.value;
+    editingGoal.value.targetCompletionDate = targetCompletionDate.value;
+    editingGoal.value.progressMetrics = progressMetrics.value;
+    editingGoal.value.status = status.value;
+    editingGoal.value.feedback = feedback.value;
+
+    await store.modifyGoal(editingGoal.value);
+    editingGoal.value = null;
+
+    document.getElementById('myModal3').style.display = 'none';
+  }
+};
+
+// const deleteGoal = async (goalId) => {
+//   if (confirm('Are you sure you want to delete this goal?')) {
+//     await store.deleteGoal(goalId);
+//   }
+// };
+
+const showExpandModal = ref(false);
+const expandTitle = ref('');
+const expandValue = ref('');
+const activeField = ref(''); 
+
+const expandText = (title, value, field) => {
+  expandTitle.value = title;
+  expandValue.value = value;
+  activeField.value = field; 
+  showExpandModal.value = true;
+};
+
+
+const saveExpandedText = () => {
+  if (activeField.value === 'goalSummary') {
+    goalSummary.value = expandValue.value;
+  } else if (activeField.value === 'achievementApproach') {
+    achievementApproach.value = expandValue.value;
+  }  else if (activeField.value === 'requiredResources') {
+    requiredResources.value = expandValue.value;
+  } else if (activeField.value === 'successCriteria') {
+    successCriteria.value = expandValue.value;
+  } else if (activeField.value === 'potentialChallenges') {
+    potentialChallenges.value = expandValue.value;
+  } else if (activeField.value === 'solutionToChallenges') {
+    solutionToChallenges.value = expandValue.value;
+  } else if (activeField.value === 'progressMetrics') {
+    progressMetrics.value = expandValue.value;
+  } else if (activeField.value === 'feedback') {
+    feedback.value = expandValue.value;
+  }
+  
+  showExpandModal.value = false;
+};
+
+const planTypeMap = {
+      1: 'Area of Interest',
+      2: 'Career Goals and Aspirations',
+      3: 'Mentorship and Skill Building',
+    };
+
+    const planTermMap = {
+      1: 'Short Term Goal',
+      2: 'Mid Term Goal',
+      3: 'Long Term Goal',
+    };
+
+  
+const currentIndex = ref(0);
+const modalInstance = ref(null);
+const initializeModal = () => {
+  const modalElement = document.getElementById('myModal4');
+  modalInstance.value = Modal.getOrCreateInstance(modalElement);
+};
+
+const selectItem = (item, index) => {
+  selectedItem.value = item;
+  currentIndex.value = index;
+  modalInstance.value.show();
+};
+
+const loadGoal = (index) => {
+  if (index >= 0 && index < goals.value.length) {
+    selectedItem.value = goals.value[index];
+  }
+};
+
+const nextGoal = () => {
+  if (currentIndex.value < goals.value.length - 1) {
+    currentIndex.value++;
+    loadGoal(currentIndex.value);
+  }
+};
+
+const prevGoal = () => {
+  if (currentIndex.value > 0) {
+    currentIndex.value--;
+    loadGoal(currentIndex.value);
+  }
+};
+
+
+watch(currentIndex, (newIndex) => {
+  loadGoal(newIndex);
+});
+</script> -->
+<script setup>
+    import authService from '../../services/authService';
+    import { useGoalsStore } from "@/store/goals";
+    import { ref, computed, onMounted, watch } from 'vue';
+    import { Modal } from 'bootstrap';
+
+    // import { useRoute } from 'vue-router';
+    // import html2pdf from 'html2pdf.js';
+
+
+const store = useGoalsStore();
+const goals = ref([]);
+const goals_ = ref([])
+goals_.value = store.goals
+console.log(goals_);
+const planTypeId = ref('');
+const planTermId = ref('');
+const goalSummary = ref('')
+const achievementApproach = ref('')
+const requiredResources = ref('')
+const successCriteria  = ref('')
+const potentialChallenges = ref('')
+const solutionToChallenges = ref('')
+const targetCompletionDate = ref('')
+const progressMetrics = ref('')
+const status = ref('')
+const feedback = ref('')
+const selectedItem = ref(null);
+const editingGoal = ref(null);
+
+
+const fetchData = async () => {
+  try {
+    await store.fetchGoals();
+
+    goals.value = store.goals;
+
+    console.log('Goals:', goals.value);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
+const selectedOwner = ref('');
+
+onMounted(async () => {
+  initializeModal();
+
+  try {
+    await store.fetchGoals();
+
+    try {
+        await authService.initialize();
+        const msalInstance = authService.getMsalInstance();
+        const accounts = msalInstance.getAllAccounts();
+        if (accounts.length) {
+          selectedOwner.value = accounts[0].username;
+        }
+      } catch (error) {
+        console.error('Error during MSAL initialization:', error);
+      }
+
+    if (Array.isArray(store.goals)) {
+      goals.value = store.goals;
+    } else {
+      console.error('Error: store.goals is not an array');
+    }
+
+    watch(
+      () => store.goals,
+      (newGoals) => {
+        if (Array.isArray(newGoals)) {
+          goals.value = newGoals;
+        } else {
+          console.error('Error: store.goals is not an array');
+        }
+      }
+    );
+    fetchData()
+    console.log('Goals:', goals.value);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+});
+
+const itemsPerPage = 20; 
+const currentPage = ref(1);
+   
+
+const options = ref([
+  { value: '2', text: 'Career Goals and Aspirations' },
+  { value: '1', text: 'Areas of Interest' },
+  { value: '3', text: 'Mentorship and Skills Building' },
+]);
+
+const selectedOption = ref('1');
+const selectedTerm = ref('2');
+
+const filteredGoals = computed(() => {
+  console.log('Selected Option:', selectedOption.value);
+  console.log('Selected Term:', selectedTerm.value);
+  console.log('Goals:', goals.value);
+
+  return goals.value.length > 0 ? goals.value.filter(item => {
+    console.log('Item PlanTypeId:', item.planTypeId, 'Item PlanTermId:', item.planTermId);
+    return item.planTypeId === parseInt(selectedOption.value) && item.planTermId === parseInt(selectedTerm.value);
+  }) : [];
+});
+
+const paginatedGoals = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return filteredGoals.value.slice(startIndex, endIndex);
+});
+
+const totalPages = computed(() => Math.ceil(filteredGoals.value.length / itemsPerPage));
+
+const goToPage = (pageNumber) => {
+  if (pageNumber >= 1 && pageNumber <= totalPages.value) {
+    currentPage.value = pageNumber;
+  }
+};
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
 
 const editGoal = (goal) => {
   console.log('Editing Goal:', goal);
@@ -114,7 +429,7 @@ const editGoal = (goal) => {
   feedback.value = goal.feedback;
   
   // document.getElementById('myModal3').style.display = 'block';
-  const modalElement = document.getElementById('myModal3');
+   const modalElement = document.getElementById('myModal3');
   const modalInstance = Modal.getOrCreateInstance(modalElement);
   modalInstance.show();
 };
@@ -134,11 +449,10 @@ const updateGoal = async () => {
     editingGoal.value.status = status.value;
     editingGoal.value.feedback = feedback.value;
 
-    await store.updateGoal(editingGoal.value);
+    await store.modifyGoal(editingGoal.value);
     editingGoal.value = null;
 
     document.getElementById('myModal3').style.display = 'none';
-    
   }
 };
 
@@ -151,17 +465,15 @@ const updateGoal = async () => {
 const showExpandModal = ref(false);
 const expandTitle = ref('');
 const expandValue = ref('');
-const activeField = ref(''); // To track which field is being edited
+const activeField = ref(''); 
 
-// Function to open the expand modal for textarea
 const expandText = (title, value, field) => {
   expandTitle.value = title;
   expandValue.value = value;
-  activeField.value = field; // Store the field that is being edited
+  activeField.value = field; 
   showExpandModal.value = true;
 };
 
-// Function to save the expanded text back to the appropriate textarea
 const saveExpandedText = () => {
   if (activeField.value === 'goalSummary') {
     goalSummary.value = expandValue.value;
@@ -197,412 +509,438 @@ const planTypeMap = {
       2: 'Mid Term Goal',
       3: 'Long Term Goal',
     };
+
+const currentIndex = ref(0);
+const modalInstance = ref(null);
+const initializeModal = () => {
+  const modalElement = document.getElementById('myModal4');
+  modalInstance.value = Modal.getOrCreateInstance(modalElement);
+};
+
+const selectItem = (item, index) => {
+  selectedItem.value = item;
+  currentIndex.value = index;
+  modalInstance.value.show();
+};
+
+const loadGoal = (index) => {
+  if (index >= 0 && index < goals.value.length) {
+    selectedItem.value = goals.value[index];
+  }
+};
+
+const nextGoal = () => {
+  if (currentIndex.value < goals.value.length - 1) {
+    currentIndex.value++;
+    loadGoal(currentIndex.value);
+  }
+};
+
+const prevGoal = () => {
+  if (currentIndex.value > 0) {
+    currentIndex.value--;
+    loadGoal(currentIndex.value);
+  }
+};
+
+
+watch(currentIndex, (newIndex) => {
+  loadGoal(newIndex);
+});
+
+const clickTimeout = ref(null);
+const singleClickModal = ref(null);
+const doubleClickModal = ref(null);
+
+const handleClick = (item) => {
+  if (clickTimeout.value) {
+    clearTimeout(clickTimeout.value);  
+  }
+
+  clickTimeout.value = setTimeout(() => {
+    selectedItem.value = item;
+    showModal(singleClickModal.value);
+  }, 250); 
+};
+
+const handleDoubleClick = (item) => {
+  if (clickTimeout.value) {
+    clearTimeout(clickTimeout.value);  
+    clickTimeout.value = null;         
+  }
+
+  selectedItem.value = item;
+  showModal(doubleClickModal.value);  
+  editGoal(item);  
+};
+
+const showModal = (modal) => {
+  modal.style.display = 'block';
+};
+
+const closeModal = (modalRef) => {
+  const modal = modalRef === 'singleClickModal' ? singleClickModal.value : doubleClickModal.value;
+  modal.style.display = 'none';
+};
 </script>
-
 <template>
-  <teleport to="body">
+  <div class="scrollable-container">
+    <div class="d-goal">
+      <teleport to="body">
 
-    <form method="post" action="" @submit.prevent="editingGoal ? updateGoal() : handleSubmit">
-      <div class="modal" id="myModal3" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Development Plan Request Form</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><b></b></button>
-            </div>
-
-            <div class="modal-body">
-
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <label for="planTypeId" class="form-label">Development Plan Type</label>
-                  <select class="form-select" v-model="planTypeId">
-                    <option value="Select Type">Select Type</option>
-                    <option value="1">Area of Robotoest</option>
-                    <option value="2">Career Goals and Aspirations</option>
-                    <option value="3">Mentorship and Skill Building</option>
-                  </select>
+        <form method="post" action="" @submit.prevent="editingGoal ? updateGoal() : handleSubmit">
+          <div class="modal" id="myModal3" tabindex="-1" ref="doubleClickModal">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Update Development Plan Form</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal('doubleClickModal')"><b></b></button>
                 </div>
-                <div class="col-md-6">
-                  <label for="planTermId" class="form-label">Duration</label>
-                  <select class="form-select" v-model="planTermId">
-                    <option value="Select Term">Select Term</option>
-                    <option value="1">Short Term Goal</option>
-                    <option value="2">Mid Term Goal</option>
-                    <option value="3">Long Term Goal</option>
-                  </select>
+
+                <div class="modal-body">
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="planTypeId" class="form-label">Development Plan Type</label>
+                      <select class="form-select" v-model="planTypeId">
+                        <option value="Select Type">Select Type</option>
+                        <option value="1">Area of Interest</option>
+                        <option value="2">Career Goals and Aspirations</option>
+                        <option value="3">Mentorship and Skill Building</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="planTermId" class="form-label">Duration</label>
+                      <select class="form-select" v-model="planTermId">
+                        <option value="Select Term">Select Term</option>
+                        <option value="1">Short Term Goal</option>
+                        <option value="2">Mid Term Goal</option>
+                        <option value="3">Long Term Goal</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="goalSummary" class="form-label">Goal</label>
+                      <textarea v-model="goalSummary" class="form-control" rows="3" placeholder="Goal"></textarea>
+                      <button type="button" class="expand" @click="expandText('Goal', goalSummary, 'goalSummary')">Expand</button>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="achievementApproach" class="form-label">What I will do to achieve this</label>
+                      <textarea v-model="achievementApproach" class="form-control" rows="3" placeholder="What I will do to achieve this"></textarea>
+                      <button type="button" class="expand" @click="expandText('Achievement Approach', achievementApproach, 'achievementApproach')">Expand</button>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="requiredResources" class="form-label">Resources and Support Needed</label>
+                      <textarea v-model="requiredResources" class="form-control" rows="3" placeholder="Resources and Support Needed"></textarea>
+                      <button type="button" class="expand" @click="expandText('Required Resources', requiredResources, 'requiredResources')">Expand</button>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="successCriteria" class="form-label">What does success look like?</label>
+                      <textarea v-model="successCriteria" class="form-control" rows="3" placeholder="What does success look like?"></textarea>
+                      <button type="button" class="expand" @click="expandText('What does success look like?', successCriteria, 'successCriteria')">Expand</button>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label for="potentialChallenges" class="form-label">Potential Challenges</label>
+                      <textarea v-model="potentialChallenges" class="form-control" rows="3" placeholder="Potential Challenges"></textarea>
+                      <button type="button" class="expand" @click="expandText('Potential Challenges', potentialChallenges, 'potentialChallenges')">Expand</button>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="solutionToChallenges" class="form-label">Solution</label>
+                      <textarea v-model="solutionToChallenges" class="form-control" rows="3" placeholder="Solution"></textarea>
+                      <button type="button" class="expand" @click="expandText('Solution', solutionToChallenges, 'solutionToChallenges')">Expand</button>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6 d-flex flex-column">
+                      <label for="goalSummary" class="form-label">Target Date for Completion</label>
+                      <input type="date" v-model="targetCompletionDate">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="progressMetrics" class="form-label">Progress Metrics(Outcome Based)</label>
+                      <textarea v-model="progressMetrics" class="form-control" rows="3" placeholder="Progress Metrics"></textarea>
+                      <button type="button" class="expand" @click="expandText('Solution', progressMetrics, 'progressMetrics')">Expand</button>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6 d-flex flex-column">
+                      <label for="goalSummary" class="form-label">Status</label>
+                      <select class="form-select" v-model="status">
+                        <option value="Select Type">Select Type</option>
+                        <option class="opt" value="Completed">Completed</option>
+                        <option class="opt" value="On-going">On-going</option>
+                        <option class="opt" value="Not started">Not started</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="feedback" class="form-label">Feedback</label>
+                      <textarea v-model="feedback" class="form-control" rows="3" placeholder="Feedback"></textarea>
+                      <button type="button" class="expand" @click="expandText('Feedback', feedback, 'feedback')">Expand</button>
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6 d-flex flex-column">
+                      <label for="Evidence" class="form-label">Evidence</label>
+                      <input type="file" class="form-control" @change="handleFileChange" style="height:40px;padding:10px">
+                    </div>
+                    <div class="col-md-6 d-flex flex-column">
+                      <label for="Actual Completion Date" class="form-label">Actual Completion Date</label>
+                      <input type="date" v-model="actualCompletionDate">
+                    </div>
+                  </div>
+
+                  <div v-if="showExpandModal" class="modal-overlay">
+                    <div class="expanded-modal-content">
+                      <h5>{{ expandTitle }}</h5>
+                      <textarea v-model="expandValue" class="form-control" rows="10"></textarea>
+                      <button @click="saveExpandedText" class="btn btn-success mt-2">Save</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success" data-bs-dismiss="modal">{{ editingGoal ? 'Update' : 'Submit' }}</button>
                 </div>
               </div>
-
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <label for="goalSummary" class="form-label">Goal</label>
-                  <textarea v-model="goalSummary" class="form-control" rows="3" placeholder="Goal"></textarea>
-                  <button type="button" class="expand" @click="expandText('Goal', goalSummary, 'goalSummary')">Expand</button>
-                </div>
-                <div class="col-md-6">
-                  <label for="achievementApproach" class="form-label">What I will do to achieve this</label>
-                  <textarea v-model="achievementApproach" class="form-control" rows="3" placeholder="What I will do to achieve this"></textarea>
-                  <button type="button" class="expand" @click="expandText('Achievement Approach', achievementApproach, 'achievementApproach')">Expand</button>
-                </div>
-              </div>
-
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <label for="requiredResources" class="form-label">Resources and Support Needed</label>
-                  <textarea v-model="requiredResources" class="form-control" rows="3" placeholder="Resources and Support Needed"></textarea>
-                  <button type="button" class="expand" @click="expandText('Required Resources', requiredResources, 'requiredResources')">Expand</button>
-                </div>
-                <div class="col-md-6">
-                  <label for="successCriteria" class="form-label">What does success look like?</label>
-                  <textarea v-model="successCriteria" class="form-control" rows="3" placeholder="What does success look like?"></textarea>
-                  <button type="button" class="expand" @click="expandText('What does success look like?', successCriteria, 'successCriteria')">Expand</button>
-                </div>
-              </div>
-
-              <div class="row mb-3">
-                <div class="col-md-6">
-                  <label for="potentialChallenges" class="form-label">Potential Challenges</label>
-                  <textarea v-model="potentialChallenges" class="form-control" rows="3" placeholder="Potential Challenges"></textarea>
-                  <button type="button" class="expand" @click="expandText('Potential Challenges', potentialChallenges, 'potentialChallenges')">Expand</button>
-                </div>
-                <div class="col-md-6">
-                  <label for="solutionToChallenges" class="form-label">Solution</label>
-                  <textarea v-model="solutionToChallenges" class="form-control" rows="3" placeholder="Solution"></textarea>
-                  <button type="button" class="expand" @click="expandText('Solution', solutionToChallenges, 'solutionToChallenges')">Expand</button>
-                </div>
-              </div>
-
-              <div class="row mb-3">
-                <div class="col-md-6 d-flex flex-column">
-                  <label for="goalSummary" class="form-label">Target Date for Completion</label>
-                  <input type="date" v-model="targetCompletionDate">
-                </div>
-                <div class="col-md-6">
-                  <label for="progressMetrics" class="form-label">Progress Metrics(Outcome Based)</label>
-                  <textarea v-model="progressMetrics" class="form-control" rows="3" placeholder="Progress Metrics"></textarea>
-                  <button type="button" class="expand" @click="expandText('Solution', progressMetrics, 'progressMetrics')">Expand</button>
-                </div>
-              </div>
-
-              <div class="row mb-3">
-                <div class="col-md-6 d-flex flex-column">
-                  <label for="goalSummary" class="form-label">Status</label>
-                  <select class="form-select" v-model="status">
-                    <option value="Select Type">Select Type</option>
-                    <option class="opt" value="Completed">Completed</option>
-                    <option class="opt" value="On-going">On-going</option>
-                    <option class="opt" value="Not started">Not started</option>
-                  </select>
-                </div>
-                <div class="col-md-6">
-                  <label for="feedback" class="form-label">Feedback</label>
-                  <textarea v-model="feedback" class="form-control" rows="3" placeholder="Feedback"></textarea>
-                  <button type="button" class="expand" @click="expandText('Feedback', feedback, 'feedback')">Expand</button>
-                </div>
-              </div>
-
-              <div class="row mb-3">
-                <div class="col-md-6 d-flex flex-column">
-                  <label for="Evidence" class="form-label">Evidence</label>
-                  <input type="file" class="form-control" @change="handleFileChange">
-                </div>
-                <div class="col-md-6 d-flex flex-column">
-                  <label for="Actual Completion Date" class="form-label">Actual Completion Date</label>
-                  <input type="date" v-model="actualCompletionDate">
-                </div>
-              </div>
-
-              <div v-if="showExpandModal" class="modal-overlay">
-                <div class="expanded-modal-content">
-                  <h5>{{ expandTitle }}</h5>
-                  <textarea v-model="expandValue" class="form-control" rows="10"></textarea>
-                  <button @click="saveExpandedText" class="btn btn-success mt-2">Save</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">{{ editingGoal ? 'Update' : 'Submit' }}</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
-
-  </teleport>
-  <div class="title">
-    <div class="modal" id="myModal1">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
-          <v-btn @click="downloadPDF">Download as PDF</v-btn>
-          <!-- Modal Header -->
-          <div class="modal-header">
-            <h4 class="modal-title">Development Plans</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-          </div>
-
-          <!-- Modal body -->
-          <div class="modal-body">
-            <div class="table-responsive d-flex flex-column">
-
-              <table class="full">
-                <thead>
-                  <tr>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink">S/N</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Plan</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Term</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Achieve</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Resources</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Success</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Potential</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Solution </span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Date </span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Progress</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Status</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Feedback</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Evidence</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, index) in paginatedGoals" :key="index" @click="selectItem(item)" @dblclick="$router.push({ name: 'Skill Assessment Details', params: { id: item.id } })">
-
-                    <!-- <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
-                    <td>{{item.id}}</td>
-                    <td>{{item.plan}}</td>
-                    <td>{{item.term}}</td>
-                    <td>{{item.goal}}</td>
-                    <td>{{item.achieve}}</td>
-                    <td>{{item.resource}}</td>
-                    <td>{{item.potential}}</td>
-                    <td>{{item.solution}}</td>
-                    <td>{{item.date}}</td>
-                    <td>{{item.progress}}</td>
-                    <td>{{item.status}}</td>
-                    <td>{{item.feedback}}</td>
-                    <td>{{item.evidence}}</td>
-                  </tr>
-                </tbody>
-              </table>
-
             </div>
           </div>
+        </form>
 
-        </div>
-      </div>
+      </teleport>
+
+      <teleport to="body">
+        <form method="post">
+          <div class="modal" id="myModal4" tabindex="-1" ref="singleClickModal">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Development Plan</h4>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal('singleClickModal')"></button>
+                </div>
+
+                <div class="modal-body">
+                  <div class="row mb-2">
+                    <div class="col-md-6">
+                      <label for="planTypeId" class="form-label">Development Plan Type</label>
+                      <select class="form-select" v-if="selectedItem" v-model="selectedItem.planTypeId" disabled>
+                        <option value="">Select Type</option>
+                        <option value="1">Area of Interest</option>
+                        <option value="2">Career Goals and Aspirations</option>
+                        <option value="3">Mentorship and Skill Building</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="planTermId" class="form-label">Duration</label>
+                      <select class="form-select" v-if="selectedItem" v-model="selectedItem.planTermId" disabled>
+                        <option value="">Select Term</option>
+                        <option value="1">Short Term Goal</option>
+                        <option value="2">Mid Term Goal</option>
+                        <option value="3">Long Term Goal</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2">
+                    <div class="col-md-6">
+                      <label for="goalSummary" class="form-label">Goal</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.goalSummary" class="form-control" rows="3" placeholder="Goal"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="achievementApproach" class="form-label">What I will do to achieve this</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.achievementApproach" class="form-control" rows="3" placeholder="What I will do to achieve this"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2">
+                    <div class="col-md-6">
+                      <label for="requiredResources" class="form-label">Resources and Support Needed</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.requiredResources" class="form-control" rows="3" placeholder="Resources and Support Needed"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="successCriteria" class="form-label">What does success look like?</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.successCriteria" class="form-control" rows="3" placeholder="What I will do to achieve this"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2">
+                    <div class="col-md-6">
+                      <label for="potentialChallenges" class="form-label">Potential Challenges</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.potentialChallenges" class="form-control" rows="3" placeholder="Potential Challenges"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="solutionToChallenges" class="form-label">Solution</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.solutionToChallenges" class="form-control" rows="3" placeholder="Solution"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2">
+                    <div class="col-md-6 d-flex flex-column">
+                      <label for="goalSummary" class="form-label">Target Date for Completion</label>
+                      <div v-if="selectedItem">
+                        <p>{{ selectedItem.targetCompletionDate }}</p>
+
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="progressMetrics" class="form-label">Progress Metrics(Outcome Based)</label>
+                      <textarea readonly v-if="selectedItem" v-model="selectedItem.progressMetrics" class="form-control" rows="3" placeholder="Progress Metrics"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2">
+                    <div class="col-md-6 d-flex flex-column">
+                      <label for="goalSummary" class="form-label">Status</label>
+                      <select class="form-select" v-if="selectedItem" v-model="selectedItem.status" disabled>
+                        <option value="Select Type">Select Type</option>
+                        <option class="opt" value="Completed">Completed</option>
+                        <option class="opt" value="On-going">On-going</option>
+                        <option class="opt" value="Not started">Not started</option>
+                      </select>
+                    </div>
+                    <div class="col-md-6">
+                      <label for="feedback" class="form-label">Feedback</label>
+                      <textarea readonly v-if="selectedItem" v-model="feedback" class="form-control" rows="3" placeholder="Feedback"></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2">
+                    <div class="col-md-6 d-flex flex-column">
+                      <label for="Evidence" class="form-label">Evidence</label>
+                      <input readonly type="file" class="form-control" @change="handleFileChange" style="height:40px;padding:10px">
+                    </div>
+                    <div class="col-md-6 d-flex flex-column">
+                      <label for="Actual Completion Date" class="form-label">Actual Completion Date</label>
+                      <div v-if="selectedItem">
+                        <p>{{ selectedItem.actualCompletionDate }}</p>
+
+                      </div>
+                    </div>
+                  </div>
+
+                  <div v-if="showExpandModal" class="modal-overlay">
+                    <div class="expanded-modal-content">
+                      <h5>{{ expandTitle }}</h5>
+                      <textarea v-model="expandValue" class="form-control" rows="10"></textarea>
+                      <button @click="saveExpandedText" class="btn btn-success mt-2">Save</button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <div class="prev">
+                    <button type="button" class="btn btn-secondary" @click="prevGoal">Previous</button>
+                  </div>
+                  <div class="next">
+                    <button type="button" class="btn btn-secondary" @click="nextGoal">Next</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </teleport>
     </div>
 
-    <button class="view mt-2" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
-  </div>
-  <select class="form-select space mt-2" v-model="selectedOption">
+    <div class="title">
 
-    <option v-for="option in options" :key="option.value" :value="option.value">
-      {{ option.text }}
-    </option>
-  </select>
-  <div class="d-flex">
-    <div class="table-container flex-grow-1">
-      <div class="table-responsive mt-3">
-        <table class="table">
-          <thead>
-            <tr>
-              <th scope="col">
-                <div class="d-flex align-center gap-1">
-                  <span class="noshrink">S/N</span>
+      <button class="view" data-bs-toggle="modal" data-bs-target="#myModal2" type="button">View All</button>
+    </div>
+    <select class="form-select space mt-2" v-model="selectedOption">
 
-                </div>
-              </th>
-              <th scope="col">
-                <div class="d-flex align-center gap-1">
-                  <span class="noshrink"> Plan</span>
+      <option v-for="option in options" :key="option.value" :value="option.value">
+        {{ option.text }}
+      </option>
+    </select>
 
-                </div>
-              </th>
-              <th scope="col">
-                <div class="d-flex align-center gap-1">
-                  <span class="noshrink"> Term</span>
+    <div class="d-flex">
+      <div class="table-container">
+        <div class="table-responsive mt-3">
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">
+                  <div class="d-flex align-center gap-1">
+                    <span class="noshrink">S/N</span>
 
-                </div>
-              </th>
-              <th scope="col">
-                <div class="d-flex align-center gap-1">
-                  <span class="noshrink"> Goal</span>
+                  </div>
+                </th>
+                <th scope="col">
+                  <div class="d-flex align-center gap-1">
+                    <span class="noshrink"> Plan</span>
 
-                </div>
-              </th>
-              <th scope="col">
-                <div class="d-flex align-center gap-1">
-                  <span class="noshrink"> Status</span>
+                  </div>
+                </th>
+                <th scope="col">
+                  <div class="d-flex align-center gap-1">
+                    <span class="noshrink"> Term</span>
 
-                </div>
-              </th>
+                  </div>
+                </th>
+                <th scope="col">
+                  <div class="d-flex align-center gap-1">
+                    <span class="noshrink"> Goal</span>
 
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in filteredGoals" :key="index" @dblclick="editGoal(item)">
-              <td>{{item.id}}</td>
-              <td>{{ planTypeMap[item.planTypeId] }}</td>
-              <td>{{ planTermMap[item.planTermId] }}</td>
-              <td>
-                <div class="goal-summary" :title="item.goalSummary">
-                  {{ item.goalSummary.length > 50 ? item.goalSummary.substring(0, 50) + '...' : item.goalSummary }}
-                </div>
-              </td>
-              <td>{{item.status}}</td>
+                  </div>
+                </th>
+                <th scope="col">
+                  <div class="d-flex align-center gap-1">
+                    <span class="noshrink"> Status</span>
 
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="pagination-controls">
-        <button @click="prevPage" :disabled="currentPage === 1" class="pagination-btn">
-          Prev
-        </button>
+                  </div>
+                </th>
 
-        <span v-for="page in totalPages" :key="page">
-          <button @click="goToPage(page)" :class="{'active': currentPage === page}" class="pagination-btn">
-            {{ page }}
+              </tr>
+            </thead>
+            <tbody>
+              <!-- <tr v-for="(item, index) in paginatedGoals" :key="index" @click="selectItem(item, index)" @dblclick="editGoal(item)"> -->
+              <tr v-for="(item, index) in paginatedGoals" :key="index" @click="handleClick(item)" @dblclick="handleDoubleClick(item)">
+                <td>{{item.id}}</td>
+                <td>{{ planTypeMap[item.planTypeId] }}</td>
+                <td>{{ planTermMap[item.planTermId] }}</td>
+                <!-- <td>{{item.goalSummary}}</td> -->
+                <td>
+                  <div class="goal-summary" :title="item.goalSummary">
+                    {{ item.goalSummary.length > 50 ? item.goalSummary.substring(0, 50) + '...' : item.goalSummary }}
+                  </div>
+                </td>
+                <td>{{item.status}}</td>
+                <td>
+
+                  <!-- <v-icon icon="mdi-delete" class="icon-danger" @click="deleteGoal(item.id)"></v-icon> -->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+        <div class="pagination-controls">
+          <button @click="prevPage" :disabled="currentPage === 1" class="pagination-btn">
+            Prev
           </button>
-        </span>
 
-        <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-btn">
-          Next
-        </button>
+          <span v-for="page in totalPages" :key="page">
+            <button @click="goToPage(page)" :class="{'active': currentPage === page}" class="pagination-btn">
+              {{ page }}
+            </button>
+          </span>
+
+          <button @click="nextPage" :disabled="currentPage === totalPages" class="pagination-btn">
+            Next
+          </button>
+        </div>
       </div>
-    </div>
 
+    </div>
   </div>
 </template>
 
@@ -645,18 +983,6 @@ const planTypeMap = {
   padding-right: 15px;
 }
 
-.goal-summary {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 250px;
-}
-
-.goal-summary-wrap {
-  word-wrap: break-word;
-  max-width: 250px;
-}
-
 .modal {
   background-color: rgba(0, 0, 0, 0.5);
   overflow-y: auto;
@@ -670,7 +996,15 @@ const planTypeMap = {
   display: inline-flex;
   padding: 30px;
   border-radius: 10px;
-  background: #eee;
+  background: #eeeeee;
+}
+
+.modal-title {
+  font-family: Roboto;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: left;
 }
 
 .modal-footer {
@@ -690,12 +1024,48 @@ const planTypeMap = {
   color: #fff;
 }
 
-.wrap {
-  gap: 10px;
+#myModal4 .area,
+#myModal4 textarea {
+  width: 390px;
+  height: 110px;
+  border-radius: 5px;
+  background: #eeeeee;
+  padding: 10px;
 }
 
-input {
+#myModal4 p {
   width: 390px;
+  height: 40px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#myModal4 .modal-footer {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  gap: 20px;
+}
+
+.prev {
+  float: left;
+  width: 370px;
+  height: 110px;
+  display: flex;
+  justify-content: start;
+}
+
+.next {
+  float: right;
+  width: 370px;
+  height: 110px;
+  display: flex;
+  justify-content: end;
+}
+
+.wrap {
+  gap: 10px;
 }
 
 .title {
@@ -703,6 +1073,12 @@ input {
   justify-content: space-between;
   align-items: center;
   align-self: stretch;
+}
+
+input {
+  width: 390px;
+  height: 40px;
+  padding: 10px;
 }
 .view {
   display: flex;
@@ -721,21 +1097,44 @@ input {
 }
 .d-flex {
   display: flex;
-  align-items: flex-start; /* Prevents vertical stretching of the table */
+  align-items: flex-start;
   align-items: flex-start;
 }
 
 .table-container {
-  flex-grow: 1; /* Allows the table to grow and take up available space */
+  width: 100%;
+}
+
+.goal-summary {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+}
+
+.goal-summary-wrap {
+  word-wrap: break-word;
+  max-width: 250px;
 }
 
 .table-responsive {
-  flex-grow: 1; /* Let the table container take up available space */
+  flex-grow: 1;
+}
+
+.table-responsive {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
 }
 
 table {
   width: 100%;
 }
+
+.full {
+  width: 1080px;
+}
+
 thead tr th {
   font-size: 12px;
   font-weight: 600;
@@ -745,11 +1144,10 @@ thead tr th {
 
 tbody tr td {
   color: var(--grey-dark, #000);
-  /* Caption */
   font-size: 12px;
   font-weight: 400;
   line-height: 14.4px;
-  padding: 10px;
+  padding: 20px;
 }
 
 thead,
@@ -757,11 +1155,62 @@ tr {
   box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.05);
 }
 
-.wrap {
-  width: 100%;
+tbody tr {
+  height: 50px;
+  overflow: hidden;
 }
 
-.form-select {
+.container {
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.responsive-table li {
+  border-radius: 3px;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 25px;
+}
+
+.responsive-table .table-header {
+  background-color: #47b65c;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #fff;
+}
+
+.responsive-table .table-row {
+  background-color: #fff;
+  box-shadow: 0px 0px 9px 0px rgba(0, 0, 0, 0.1);
+}
+
+.responsive-table .col-1 {
+  flex-basis: 10%;
+}
+
+.responsive-table .col-2 {
+  flex-basis: 40%;
+}
+
+.responsive-table .col-3 {
+  flex-basis: 25%;
+}
+
+.responsive-table .col-4 {
+  flex-basis: 25%;
+}
+
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+.form-select,
+.form-selects {
   width: 390px;
   height: 40px;
   color: var(--Grey-Dark, #000);
@@ -774,8 +1223,6 @@ tr {
 
 .space {
   width: 220px;
-  color: var(--Grey-Dark, #000);
-  font-family: "Roboto", sans-serif;
 }
 
 .pagination-controls {
@@ -804,89 +1251,24 @@ tr {
   border-color: #007bff;
 }
 
-@media (max-width: 1024px) {
-  #myModal3 .modal-dialog {
-    width: 90%;
-    margin-left: 6%;
-  }
-
-  .form-select {
-    width: 100%;
-  }
-
-  input {
-    width: 100%;
-  }
-}
-
-@media (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .table-responsive {
+    width: 100%;
+    overflow-y: auto;
     flex-direction: column;
   }
-  .modal-dialog {
-    width: 100%;
-    height: auto;
-    padding: 10px;
+  table,
+  .full {
+    width: 580px;
   }
-
-  .modal-body {
-    padding: 10px;
-  }
-
-  .form-select {
-    width: 100%;
-  }
-
-  .table {
-    width: 100%;
-  }
-
   thead tr th {
     font-size: 10px;
-    padding: 10px;
+    padding: 6px;
   }
 
   tbody tr td {
     font-size: 10px;
-    padding: 8px;
-  }
-
-  .side-panel {
-    width: 100%;
-  }
-
-  .side-panel h3 {
-    font-size: 18px;
-  }
-
-  .accordion-item {
-    width: 100%;
-    height: auto;
     padding: 10px;
-  }
-
-  .accordion-button {
-    width: 100%;
-  }
-
-  .accordion-body textarea {
-    width: 100%;
-  }
-
-  .accordion-body input {
-    width: 100%;
-  }
-
-  .accordion-body button {
-    width: 100%;
-  }
-
-  .delete {
-    justify-content: center;
-  }
-
-  .delete button {
-    width: 100%;
   }
 }
 </style>

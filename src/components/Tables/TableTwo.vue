@@ -1,8 +1,8 @@
 <script setup>
     import { ref, computed, onMounted, watch } from 'vue';
-    import AccordionCardTwo from '../Cards/AccordionCardTwo.vue'
+    import { Modal } from 'bootstrap';
     import {useSkillsStore} from "@/store/skills"
-    import html2pdf from 'html2pdf.js';
+    // import html2pdf from 'html2pdf.js';
 
 
 const store = useSkillsStore();
@@ -21,26 +21,27 @@ const successCriteria  = ref('')
 const potentialChallenges  = ref('')
 const solutionToChallenges  = ref('')
 const targetCompletionDate  = ref('')
-const createdBy  = ref('')
-const lastModifiedBy  = ref('')
+// const createdBy  = ref('')
+// const lastModifiedBy  = ref('')
 const status = ref('')
 const feedback = ref('')
-const evidenceURL = ref(null)
+// const evidenceURL = ref(null)
 const selectedItem = ref(null);
 
-const fetchData = async () => {
-  try {
-    await store.fetchSkills();
+// const fetchData = async () => {
+//   try {
+//     await store.fetchSkills();
 
-    skills.value = store.skills;
+//     skills.value = store.skills;
 
-    console.log('Skills:', skills.value);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-};
+//     console.log('Skills:', skills.value);
+//   } catch (error) {
+//     console.error('Error fetching data:', error);
+//   }
+// };
 
 onMounted(async () => {
+  initializeModal()  
   try {
     await store.fetchSkills();
 
@@ -82,7 +83,10 @@ const editSkill = (skill) => {
   feedback.value = skill.feedback;
   // evidenceURL.value = skill.evidenceURL;
   
-  document.getElementById('myModal1').style.display = 'block';
+  // document.getElementById('myModal1').style.display = 'block';
+   const modalElement = document.getElementById('myModal1');
+  const modalInstance = Modal.getOrCreateInstance(modalElement);
+  modalInstance.show();
 };
 
 const updateSkill = async () => {
@@ -106,17 +110,17 @@ const updateSkill = async () => {
   }
 };
 
-const deleteSkill = async (skillId) => {
-  if (confirm('Are you sure you want to delete this skill?')) {
-    await store.deleteSkill(skillId);
-  }
-};
+// const deleteSkill = async (skillId) => {
+//   if (confirm('Are you sure you want to delete this skill?')) {
+//     await store.deleteSkill(skillId);
+//   }
+// };
 
 
-const selectItem = (item) => {
-  selectedItem.value = item;
-  console.log(selectedItem)
-};
+// const selectItem = (item) => {
+//   selectedItem.value = item;
+//   console.log(selectedItem)
+// };
 
 const itemsPerPage = 15; 
 const currentPage = ref(1);
@@ -129,161 +133,109 @@ const paginatedSkills = computed(() => {
   return skills.value.slice(startIndex, endIndex);
 });
 
-const downloadPDF = () => {
-  const table = document.querySelector('.table-responsive');
+// const downloadPDF = () => {
+//   const table = document.querySelector('.table-responsive');
 
-  html2pdf(table, {
-    margin: 10,
-    filename: 'table-data.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-  });
+//   html2pdf(table, {
+//     margin: 10,
+//     filename: 'table-data.pdf',
+//     image: { type: 'jpeg', quality: 0.98 },
+//     html2canvas: { scale: 2 },
+//     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+//   });
+// };
+
+const currentStageMap = {
+      1: 'Proficient',
+      2: 'Very Proficient',
+      3: 'Expert',
+      4: 'Advance',
+      5: 'Expert',
+    };
+
+    const desiredStageMap = {
+      1: 'Proficient',
+      2: 'Very Proficient',
+      3: 'Expert',
+      5: 'Expert',
+    };
+
+const currentIndex = ref(0);
+
+const initializeModal = () => {
+  const singleClickModalElement = document.getElementById('myModal4');
+  const doubleClickModalElement = document.getElementById('myModal1');
+
+  singleClickModal.value = Modal.getOrCreateInstance(singleClickModalElement);
+  doubleClickModal.value = Modal.getOrCreateInstance(doubleClickModalElement);
 };
 
-const submitFile = () => {
-  const fileInput = document.getElementById('getFile');
-  const file = fileInput.files[0];
-  const reader = new FileReader();
-  reader.onload = () => {
-    evidenceURL.value = reader.result; // base64-encoded string
-  };
-  reader.readAsDataURL(file);
+const loadSkill = (index) => {
+  if (index >= 0 && index < skills.value.length) {
+    selectedItem.value = skills.value[index];
+  }
+};
+
+const nextSkill = () => {
+  if (currentIndex.value < skills.value.length - 1) {
+    currentIndex.value++;
+    loadSkill(currentIndex.value);
+  }
+};
+
+const prevSkill = () => {
+  if (currentIndex.value > 0) {
+    currentIndex.value--;
+    loadSkill(currentIndex.value);
+  }
+};
+
+
+watch(currentIndex, (newIndex) => {
+  loadSkill(newIndex);
+});
+
+const clickTimeout = ref(null);
+const singleClickModal = ref(null);
+const doubleClickModal = ref(null);
+
+const closeModal = (modalRef) => {
+  const modal = modalRef === 'singleClickModal' ? singleClickModal.value : doubleClickModal.value;
+  modal.style.display = 'none';
+};
+
+const showModal = (modalInstance) => {
+  if (modalInstance) {
+    modalInstance.show(); 
+  } else {
+    console.error('Modal instance not found.');
+  }
+};
+
+const handleClick = (item) => {
+  if (clickTimeout.value) {
+    clearTimeout(clickTimeout.value);
+  }
+  clickTimeout.value = setTimeout(() => {
+    selectedItem.value = item;
+    showModal(singleClickModal.value);
+  }, 250); 
+};
+
+const handleDoubleClick = (item) => {
+  if (clickTimeout.value) {
+    clearTimeout(clickTimeout.value);
+    clickTimeout.value = null;
+  }
+  selectedItem.value = item;
+  showModal(doubleClickModal.value);
+  editSkill(item);
 };
 </script>
 <template>
   <div class="scrollable-container">
     <div class="d-goal">
-      <!-- <div class="modal" id="myModal2">
-      <div class="modal-dialog">
-        <div class="modal-content">
 
-          <div class="modal-header">
-            <h4 class="modal-title">Skill Assessment</h4>
-            <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
-          </div>
-
-         
-          <div class="modal-body">
-            <div class="table-responsive d-flex flex-column">
-              <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
-              <v-btn @click="downloadPDF">Download as PDF</v-btn>
-              <table class="full">
-                <thead>
-                  <tr>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink">S/N</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Skills</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Current State</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Gap</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Desired State</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Initiatives</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Status </span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Feedbacks </span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(item, index) in paginatedSkills" :key="index" @click="selectItem(item)">
-
-                    <td>{{item.id}}</td>
-                    <td>{{item.skillDescription}}</td>
-                    <td>{{item.currentStageId}}</td>
-                    <td>{{item.skillGapDetails}}</td>
-                    <td>{{item.desiredStageId}}</td>
-                    <td>{{item.initiatives}}</td>
-                    <td>{{item.status}}</td>
-                    <td>{{item.feedback}}</td>
-
-                  </tr>
-                </tbody>
-              </table>
-
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </div> -->
       <teleport to="body">
         <form method="post" action="" @submit.prevent="editingSkill ? updateSkill() : handleSubmit">
           <div class="modal" id="myModal1" tabindex="-1">
@@ -345,6 +297,79 @@ const submitFile = () => {
 
                 <div class="modal-footer">
                   <button type="submit" @click="$router.push('/skillassessment')" data-bs-dismiss="modal">{{ editingSkill ? 'Update' : 'Submit' }}</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </teleport>
+
+      <teleport to="body">
+        <form>
+          <div class="modal" id="myModal4" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Skill Assessment</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal('singleClickModal')"><b></b></button>
+                </div>
+
+                <div class="modal-body">
+                  <div class="one">
+                    <div class="frame">
+                      <h6>Skill</h6>
+                      <select v-if="selectedItem" v-model="selectedItem.skillDescription" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example" disabled>
+                        <option selected>Select Skill</option>
+                        <option value="Skill One">Skill One</option>
+                        <option value="Skill Two">Skill Two</option>
+                        <option value="Skill Three">Skill Three</option>
+                      </select>
+                    </div>
+                    <div class="frame">
+                      <h6>Current state</h6>
+                      <select v-if="selectedItem" v-model="selectedItem.currentStageId" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example" disabled>
+                        <option selected>Proficient</option>
+                        <option value="1">Proficient</option>
+                        <option value="2">Highly Proficient</option>
+                        <option value="3">Expert</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="one mt-3">
+                    <div class="frame">
+                      <h6>Gap</h6>
+                      <textarea v-if="selectedItem" v-model="selectedItem.skillGapDetails" name="Gap" id="" cols="30" rows="10" placeholder="Gap" readonly></textarea>
+                    </div>
+                    <div class="frame">
+                      <h6>Desired state</h6>
+                      <select v-if="selectedItem" v-model="selectedItem.desiredStageId" class="form-select" aria-label="Default select example" disabled>
+                        <option selected>Proficient</option>
+                        <option value="1">Proficient</option>
+                        <option value="2">Highly Proficient</option>
+                        <option value="3">Expert</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="one mt-3">
+                    <div class="frame">
+                      <h6>Action Plan</h6>
+                      <textarea v-if="selectedItem" v-model="selectedItem.actionPlan" name="Action Plan" id="" cols="30" rows="50" placeholder="Action Plan" readonly></textarea>
+                    </div>
+                    <div class="frame">
+                      <h6>Comment</h6>
+                      <textarea v-if="selectedItem" v-model="selectedItem.comment" name="Comment" id="" cols="30" rows="50" placeholder="Comment" readonly></textarea>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="modal-footer">
+                  <div class="prev">
+                    <button type="button" class="btn btn-secondary" @click="prevSkill">Previous</button>
+                  </div>
+                  <div class="next">
+                    <button type="button" class="btn btn-secondary" @click="nextSkill">Next</button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -442,12 +467,12 @@ const submitFile = () => {
         </thead>
         <tbody>
           <!-- <tr v-for="item in skills" @click="selectItem(item)"> -->
-          <tr v-for="(item, index) in paginatedSkills" :key="index" @dblclick="editSkill(item)">
+          <tr v-for="(item, index) in paginatedSkills" :key="index" @click="handleClick(item)" @dblclick="handleDoubleClick(item)">
             <td>{{item.id}}</td>
             <td>{{item.skillDescription}}</td>
-            <td>{{item.currentStageId}}</td>
+            <td>{{currentStageMap[item.currentStageId]}}</td>
             <td>{{item.skillGapDetails}}</td>
-            <td>{{item.desiredStageId}}</td>
+            <td>{{desiredStageMap[item.desiredStageId]}}</td>
             <td>
 
               <!-- <v-icon icon="mdi-delete" class="icon-danger" @click="deleteSkill(item.id)"></v-icon> -->
@@ -654,6 +679,46 @@ tr {
   color: #fff;
 }
 
+#myModal4 .area,
+#myModal4 textarea {
+  width: 370px;
+  height: 110px;
+  border-radius: 5px;
+  background: #eeeeee;
+  padding: 10px;
+}
+
+#myModal4 p {
+  width: 390px;
+  height: 40px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#myModal4 .modal-footer {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  gap: 20px;
+}
+
+.prev {
+  float: left;
+  width: 370px;
+  height: 110px;
+  display: flex;
+  justify-content: start;
+}
+
+.next {
+  float: right;
+  width: 370px;
+  height: 110px;
+  display: flex;
+  justify-content: end;
+}
+
 .one {
   display: flex;
   gap: 30px;
@@ -742,16 +807,16 @@ tr {
   color: #fff;
   margin-top: 30px;
 }
-/* Make columns flexible based on content */
+
 .col-1 {
   flex: 1;
-  min-width: 50px; /* Minimum width to avoid being too narrow */
+  min-width: 50px;
 }
 
 .col-2,
 .col-3 {
   flex: 2;
-  min-width: 200px; /* Minimum width to accommodate content */
+  min-width: 200px;
 }
 
 @media screen and (max-width: 992px) {
