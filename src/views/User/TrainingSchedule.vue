@@ -4,11 +4,12 @@ import TabMenu from '../../components/Tabs/TabMenu.vue';
 import DoughnutChart from '../../components/Charts/DoughnutChart.vue'
 import TrainingTable from '../../components/TrainingTable.vue'
 import {useTrainingsStore} from "@/store/trainings"
-import { ref, onMounted} from 'vue'
+import { ref, onMounted, computed} from 'vue'
+import { useUsersStore } from '@/store/users';
 
 const store = useTrainingsStore();
 console.log(store.trainings);
-
+const usersStore = useUsersStore();
 // eslint-disable-next-line no-unused-vars
 const trainings = ref([])
   const trainingStartDate = ref('')
@@ -21,10 +22,10 @@ const trainings = ref([])
   const status = ref('')
   const rating = ref(null)
   const evidenceURL = ref(null)
-  const recordOwner = ref('')
+  const recordOwner = ref(null)
 const department = ref('');
 const feedback = ref('');
-  const createdBy = ref('')
+  const createdBy = ref(null)
   const lastModifiedBy = ref('')
   const selectedValue = ref('')
   // const loadingUpload = ref(false);
@@ -43,6 +44,7 @@ const fetchData = async () => {
 };
 
 onMounted(async () => {
+  await usersStore.fetchUsers();
   await fetchData();
 
   try {
@@ -59,26 +61,28 @@ onMounted(async () => {
   }
 });
 
+ const defaultUser = {
+    id: 4, 
+    username: 'James Bond',
+  };
 
 const addTraining = async() => {
-  console.log('addTraining function called');
 
   const fieldsToValidate = {
-    trainingStartDate: trainingStartDate.value.trim(),
-    trainingTopic: trainingTopic.value.trim(),
-    learningOutcome: learningOutcome.value.trim(),
-    trainingMethod: trainingMethod.value.trim(),
-    trainingInitiator: trainingInitiator.value.trim(),
-    skillMatrixMapping: skillMatrixMapping.value.trim(),
-    dueDate: dueDate.value.trim(),
-    status: status.value.trim(),
-    selectedRating: selectedRating.value,
+    trainingStartDate: trainingStartDate.value,
+    trainingTopic: trainingTopic.value,
+    learningOutcome: learningOutcome.value,
+    trainingMethod: trainingMethod.value,
+    trainingInitiator: trainingInitiator.value,
+    skillMatrixMapping: skillMatrixMapping.value,
+    dueDate: dueDate.value,
+    status: status.value,
+    rating: selectedRating.value,
     evidenceURL: evidenceURL.value,
-    department: department.value.trim(),
-    feedback: feedback.value.trim(),
-    createdBy: createdBy.value.trim(),
-    lastModifiedBy: lastModifiedBy.value.trim(),
-    recordOwner: recordOwner.value.trim(),
+    department: department.value,
+    feedback: feedback.value,
+    createdBy: createdBy.value || defaultUser.id,
+    recordOwner: recordOwner.value,
   };
 
   let isValid = true;
@@ -91,21 +95,21 @@ const addTraining = async() => {
 
  if (isValid) {
     const trainingData = {
-     trainingStartDate: trainingStartDate.value.trim(),
-    trainingTopic: trainingTopic.value.trim(),
-    learningOutcome: learningOutcome.value.trim(),
-    trainingMethod: trainingMethod.value.trim(),
-    trainingInitiator: trainingInitiator.value.trim(),
-    skillMatrixMapping: skillMatrixMapping.value.trim(),
-    status: status.value.trim(),
-    dueDate: dueDate.value.trim(),
+     trainingStartDate: trainingStartDate.value,
+    trainingTopic: trainingTopic.value,
+    learningOutcome: learningOutcome.value,
+    trainingMethod: trainingMethod.value,
+    trainingInitiator: trainingInitiator.value,
+    skillMatrixMapping: skillMatrixMapping.value,
+    status: status.value,
+    dueDate: dueDate.value,
     selectedRating: selectedRating.value,
     evidenceURL: evidenceURL.value,
-    department: department.value.trim(),
-    feedback: feedback.value.trim(),
-    createdBy: createdBy.value.trim(),
-    lastModifiedBy: lastModifiedBy.value.trim(),
-    recordOwner: recordOwner.value.trim(),
+    department: department.value,
+    feedback: feedback.value,
+    createdBy: createdBy.value,
+    lastModifiedBy: lastModifiedBy.value,
+    recordOwner: recordOwner.value,
     };
 
     console.log('Preparing to add training:', trainingData);
@@ -140,6 +144,19 @@ const handleFileChange = (event) => {
   loading.value = false;
 };
 
+const usersOptions = computed(() =>
+  usersStore.users.map(user => ({
+    label: user.userFullName,
+    value: user.userId
+  }))
+);
+
+const userNamesMap = computed(() =>
+  usersStore.users.reduce((map, user) => {
+    map[user.id] = user.name;
+    return map;
+  }, {})
+);
 </script>
 
 
@@ -159,7 +176,7 @@ const handleFileChange = (event) => {
 
               <div class="first">
                 <div class="frame">
-                  <h6>Month</h6>
+                  <h6>Start Date</h6>
                   <input class="month" type="date" v-model="trainingStartDate">
                 </div>
                 <div class="frame">
@@ -264,6 +281,22 @@ const handleFileChange = (event) => {
                   <h6>Feedback</h6>
 
                   <textarea v-model="feedback" name="feedback" id="" cols="30" rows="50" placeholder="Feedback"></textarea>
+                </div>
+              </div>
+              <div class="sixth mt-2">
+                <div class="frame">
+                  <h6 class="recordOwner">Record Owner</h6>
+                  <select v-model="recordOwner" class="form-select">
+                    <option value="" disabled>Select Record Owner</option>
+                    <option v-for="user in usersOptions" :key="user.value" :value="user.value">
+                      {{ user.label }}
+                    </option>
+                  </select>
+                </div>
+                <div class="frame">
+                  <h6>Created By</h6>
+
+                  <input type="text" id="createdBy" class="form-control" :value="userNamesMap[createdBy] || defaultUser.id" disabled />
                 </div>
               </div>
             </div>
@@ -379,7 +412,7 @@ main {
 .modal-dialog {
   --bs-modal-width: 960px;
   width: 960px;
-  height: 900px;
+  height: 980px;
   margin-left: 8%;
   display: inline-flex;
   padding: 30px;
@@ -395,7 +428,7 @@ main {
 
 .modal-content {
   width: 900px;
-  height: 850px;
+  height: 920px;
   z-index: 1;
   --bs-backdrop-zindex: 1;
   display: flex;
@@ -629,7 +662,7 @@ label[for]:hover {
   .frame textarea,
   .frame input,
   .rating {
-    width: 280px;
+    width: 370px;
   }
   /*.form-select,
   .frame textarea,

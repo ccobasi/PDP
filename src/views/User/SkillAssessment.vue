@@ -3,13 +3,14 @@ import authService from '../../services/authService';
 import TabMenu from '../../components/Tabs/TabMenu.vue';
 import BarChart from '../../components/Charts/BarChart.vue';
 import SkillMetrics from '../../components/SkillMetrics.vue';
-import { ref, onMounted, watch } from 'vue';
+import { ref, onMounted, watch, computed } from 'vue';
 import { useSkillsStore } from "@/store/skills";
-import emailjs from 'emailjs-com';
+// import emailjs from 'emailjs-com';
+import { useUsersStore } from '@/store/users';
 
 const store = useSkillsStore();
 console.log('Store initialized:', store.skills);
-
+const usersStore = useUsersStore();
 const skills = ref([]);
 const skillDescription = ref('');
 const currentStageId = ref('');
@@ -17,10 +18,10 @@ const skillGapDetails = ref('');
 const desiredStageId = ref('');
 const actionPlan = ref('');
 const comment = ref('');
-const createdBy = ref('');
-const lastModifiedBy = ref('');
-const recordOwner = ref('');
+const createdBy = ref(null)
+const recordOwner = ref(null)
 const selectedValue = ref('')
+// const selectedDate = ref(new Date());  
 
 const fetchData = async () => {
   try {
@@ -33,26 +34,29 @@ const fetchData = async () => {
 };
 
 onMounted(async () => {
+  await usersStore.fetchUsers();
   await fetchData();
   try {
     await authService.initialize();
     const msalInstance = authService.getMsalInstance();
     const accounts = msalInstance.getAllAccounts();
-    console.log('MSAL accounts fetched:', accounts);
+
     if (accounts.length) {
       createdBy.value = accounts[0].username;
-      lastModifiedBy.value = accounts[0].username;
-      recordOwner.value = accounts[0].username;
-      console.log('createdBy:', createdBy.value);
-      console.log('lastModifiedBy:', lastModifiedBy.value);
-      console.log('recordOwner:', recordOwner.value);
     } else {
-      console.log('No accounts found');
+       console.warn("No accounts found; using default user.");
+      createdBy.value = defaultUser.id;
     }
   } catch (error) {
-    console.error('Error during MSAL initialization:', error);
+    console.error("Error during MSAL initialization:", error);
+    createdBy.value = defaultUser.id;
   }
 });
+
+ const defaultUser = {
+    id: 4, 
+    username: 'James Bond',
+  };
 
 const addSkill = async () => {
   console.log('addSkill function called');
@@ -64,9 +68,8 @@ const addSkill = async () => {
     desiredStageId: desiredStageId.value.trim(),
     actionPlan: actionPlan.value.trim(),
     comment: comment.value.trim(),
-    createdBy: createdBy.value.trim(),
-    lastModifiedBy: lastModifiedBy.value.trim(),
-    recordOwner: recordOwner.value.trim(),
+    createdBy: createdBy.value || defaultUser.id,
+    recordOwner: recordOwner.value,
   };
 
   let isValid = true;
@@ -77,8 +80,10 @@ const addSkill = async () => {
     }
   }
 
- if (isValid) {
+  if (isValid) {
+ 
     const parsedDesiredStageId = parseInt(desiredStageId.value, 10);
+
     const skillData = {
       skillDescription: skillDescription.value.trim(),
       currentStageId: currentStageId.value.trim(),
@@ -86,49 +91,26 @@ const addSkill = async () => {
       desiredStageId: parsedDesiredStageId,
       actionPlan: actionPlan.value.trim(),
       comment: comment.value.trim(),
-      createdBy: createdBy.value.trim(),
-      lastModifiedBy: lastModifiedBy.value.trim(),
-      recordOwner: recordOwner.value.trim(),
+      createdBy: createdBy.value || defaultUser.id,
+      recordOwner: recordOwner.value,
     };
 
     console.log('Preparing to add skill:', skillData);
 
-    await store.addSkill(skillData); 
+    try {
 
-    console.log('Skill added successfully');
+      await store.addSkill(skillData);
+      console.log('Skill added successfully');
 
-    // Send email notification using EmailJS
-    const emailParams = {
-      to_name: createdBy.value,
-      skill_description: skillDescription.value,
-      current_stage: currentStageId.value,
-      desired_stage: desiredStageId.value,
-      action_plan: actionPlan.value,
-    };
-
-    emailjs.send('service_m2mjawc', 'template_1d0qqkb', emailParams, 'WxvKMfIDsiWn1QUgM')
-      .then((response) => {
-        console.log('Email sent successfully:', response);
-      })
-      .catch((error) => {
-        console.error('Error sending email:', error);
-      });
-
-    console.log("Notification email called!");
-    
-    skillDescription.value = '';
-    currentStageId.value = '';
-    skillGapDetails.value = '';
-    desiredStageId.value = '';
-    actionPlan.value = '';
-    comment.value = '';
-    createdBy.value = '';
-    lastModifiedBy.value = '';
-    recordOwner.value = '';
+      // sendNotificationEmail(skillData);
+    } catch (error) {
+      console.error('Failed to add skill:', error);
+    }
   } else {
-    console.log('Validation failed');
+    console.log('Skill submission failed due to validation errors.');
   }
 };
+
 
 const handleSubmit = async () => {
   console.log('handleSubmit called');
@@ -149,6 +131,21 @@ watch(
   // eslint-disable-next-line no-self-assign
   selectedValue.value = selectedValue.value
 }
+
+const usersOptions = computed(() =>
+  usersStore.users.map(user => ({
+    label: user.userFullName,
+    value: user.userId
+  }))
+);
+
+const userNamesMap = computed(() =>
+  usersStore.users.reduce((map, user) => {
+    map[user.id] = user.name;
+    return map;
+  }, {})
+);
+
 </script>
 
 <template>
@@ -209,7 +206,21 @@ watch(
                   <textarea v-model="comment" name="Comment" id="" cols="30" rows="50" placeholder="Comment"></textarea>
                 </div>
               </div>
-
+              <div class="one mt-3">
+                <div class="frame">
+                  <h6>Record Owner</h6>
+                  <select v-model="recordOwner" class="form-select">
+                    <option value="" disabled>Select Record Owner</option>
+                    <option v-for="user in usersOptions" :key="user.value" :value="user.value">
+                      {{ user.label }}
+                    </option>
+                  </select>
+                </div>
+                <div class="frame">
+                  <h6>Created By</h6>
+                  <input type="text" id="createdBy" class="form-control" :value="userNamesMap[createdBy] || defaultUser.id" disabled />
+                </div>
+              </div>
             </div>
 
             <div class="modal-footer">
@@ -312,7 +323,7 @@ main {
 .modal-dialog {
   --bs-modal-width: 900px;
   width: 900px;
-  height: 740px;
+  height: 790px;
   margin-left: 13%;
   display: inline-flex;
   padding: 30px;
@@ -322,7 +333,7 @@ main {
 
 .modal-content {
   width: 840px;
-  height: 680px;
+  height: 730px;
   z-index: 1;
   --bs-backdrop-zindex: 1;
   display: flex;

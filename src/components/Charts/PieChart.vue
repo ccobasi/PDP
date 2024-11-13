@@ -195,6 +195,7 @@ const props = defineProps({
   },
 });
 
+const chartRef = ref();
 const pieChartId = `pie-${props.chartId}`;
 const selectedStatus = ref(null);
 const allDevelopmentPlans = ref([]);
@@ -213,18 +214,21 @@ const backgroundColors = {
 
 const fetchData = async () => {
   try {
-    const response = await axios.get('https://infracredit2.pythonanywhere.com/api/v1/development-plans/');
-    allDevelopmentPlans.value = response.data.data;
-    console.log(allDevelopmentPlans);
-    
+    const response = await axios.get('https://infracredit.pythonanywhere.com/api/v1/development-plans');
+    allDevelopmentPlans.value = response.data;
   } catch (error) {
     console.error('Error fetching data:', error);
   }
 };
 
 const countStatuses = () => {
-  const filteredPlans = allDevelopmentPlans.value.filter(plan => plan.planType === 2);
-  const statusCounts = { 1: 0, 2: 0, 3: 0 };
+  const filteredPlans = allDevelopmentPlans.value.filter(plan => plan.planType === 2); // Filter by planTypeId for career goals and aspirations
+
+  const statusCounts = {
+    1: 0, // Not started
+    2: 0, // On-going
+    3: 0, // Completed
+  };
 
   filteredPlans.forEach(plan => {
     switch (plan.status) {
@@ -237,6 +241,8 @@ const countStatuses = () => {
       case 'Completed':
         statusCounts[3]++;
         break;
+      default:
+        break;
     }
   });
 
@@ -246,16 +252,11 @@ const countStatuses = () => {
 const updateChart = () => {
   const chart = chartRef.value;
   const statusCounts = countStatuses();
+
   const total = Object.values(statusCounts).reduce((sum, count) => sum + count, 0);
   const labels = Object.keys(statusCounts).map(status => statusLabels[status]);
   const data = Object.values(statusCounts).map(count => ((count / total) * 100).toFixed(2));
   const backgroundColorsArray = Object.keys(statusCounts).map(status => backgroundColors[status]);
-
-  console.log('Updating chart with data:', {
-    labels,
-    data,
-    backgroundColorsArray,
-  });
 
   chart.data.labels = labels;
   chart.data.datasets[0].data = data;
@@ -263,56 +264,71 @@ const updateChart = () => {
   chart.update();
 };
 
-const chartRef = ref();
-
 onMounted(async () => {
   await fetchData();
 
   const ctx = document.getElementById(pieChartId);
   const data = {
     labels: Object.values(statusLabels),
-    datasets: [{
-      label: 'Status Distribution',
-      data: [],
-      backgroundColor: [],
-      datalabels: { anchor: 'center' },
-      hoverOffset: 4,
-    }],
-  };
-
-  const options = {
-    responsive: true,
-    maintainAspectRatio: true,
-    plugins: {
-      legend: { display: false },
-      datalabels: {
-        color: 'white',
-        display: 'auto',
-        formatter: (value, context) => `${context.chart.data.labels[context.dataIndex]}\n${Math.round(value)}%`,
-        anchor: 'center',
-        align: 'center',
+    datasets: [
+      {
+        label: 'Dataset 1',
+        data: [], // Initial data, will be updated dynamically
+        backgroundColor: [], // Background colors will be updated dynamically
+        datalabels: {
+          anchor: 'center',
+        },
+        hoverOffset: 4,
       },
-      tooltip: {
-        callbacks: {
-          label: tooltipItem => `${tooltipItem.label}: ${Math.round(tooltipItem.raw)}%`,
+    ],
+  };
+  const options = {
+  responsive: true,
+  maintainAspectRatio: true,
+  plugins: {
+    legend: {
+      display: false,
+    },
+    title: {
+      display: false,
+      text: 'Chart.js Pie Chart',
+    },
+    datalabels: {
+      color: 'white', // Text color
+      display: 'auto',
+      formatter: (value, context) => {
+        // Combine the label and percentage
+        const label = context.chart.data.labels[context.dataIndex];
+        return `${label}\n${Math.round(value)}%`; // Show label and percentage
+      },
+      anchor: 'center', // Position label in the center of each segment
+      align: 'center',  // Align text to the center
+    },
+    tooltip: {
+      callbacks: {
+        label: (tooltipItem) => {
+          return `${tooltipItem.label}: ${Math.round(tooltipItem.raw)}%`;
         },
       },
     },
-  };
-
+  },
+};
   const config = {
     type: props.doughnut ? 'doughnut' : 'pie',
-    data,
-    options,
+    data: data,
+    options: options,
     plugins: [ChartDataLabels],
   };
 
-  chartRef.value = markRaw(new Chart(ctx, config));
+  const createdChart = new Chart(ctx, config);
+  chartRef.value = markRaw(createdChart);
 
-  updateChart();
+  updateChart(); // Initial chart update with fetched data
 });
 
-watch(selectedStatus, updateChart);
+watch(selectedStatus, () => {
+  updateChart(); // Update chart when selectedStatus changes
+});
 </script>
 
 

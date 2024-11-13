@@ -3,18 +3,19 @@ import authService from '../../services/authService';
 import TabMenu from '../../components/Tabs/TabMenu.vue';
 import TableSeven from '../../components/Tables/TableSeven.vue'
 import {useEngagementStore} from "@/store/engagements"
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useUsersStore } from '@/store/users';
 
 const store = useEngagementStore();
 console.log(store.engagements);
-
+const usersStore = useUsersStore();
 
 // eslint-disable-next-line no-unused-vars
 const engagements = ref([])
   const eventDescription = ref('')
   // const organization = ref('')
   const eventDate = ref('')
-  const eventCountry = ref('')
+  const country = ref('')
   const eventCategory  = ref('')
   const representative = ref('')
   const contactPerson = ref('')
@@ -23,9 +24,9 @@ const engagements = ref([])
   const status = ref('')
   const topicTheme = ref('')
   const sponsorship = ref('')
-  const createdBy = ref('')
+  const createdBy = ref(null)
   const lastModifiedBy = ref('')
-  const recordOwner = ref('')
+  const recordOwner = ref(null)
   const selectedValue = ref('')
 
 const fetchData = async () => {
@@ -53,7 +54,7 @@ const fetchData = async () => {
 
 
 onMounted(async () => {
-  
+  await usersStore.fetchUsers();
   await fetchData();
 
   try {
@@ -70,40 +71,34 @@ onMounted(async () => {
   }
 });
 
-// const addEngagement = async () => {
-//   if (eventDescription.value.trim() !== '' || eventDate.value.trim() !== ''
-//     || eventCountry.value.trim() !== ''
-//     || eventCategory.value.trim() !== '' || representative.value.trim() !== '' || contactEmail.value.trim() !== '' || contactPerson.value.trim() !== '' || contactPhone.value.trim() !== '' || status.value.trim() !== '' || topicTheme.value.trim() !== '' || sponsorship.value.trim() !== '' || createdBy.value.trim() !== '' || lastModifiedBy.value.trim() !== '' || recordOwner.value.trim() !== '') {
-//     await store.addEngagement(eventDescription.value.trim(), eventDate.value.trim(),
-//        eventCountry.value.trim(), eventCategory.value.trim(), representative.value.trim(), contactEmail.value.trim(), contactPerson.value.trim(), contactPhone.value.trim(), status.value.trim(), topicTheme.value.trim(), sponsorship.value.trim(), createdBy.value.trim(), lastModifiedBy.value.trim(), recordOwner.value.trim());
-  
-//   }
-// };
+ const defaultUser = {
+    id: 4, 
+    username: 'James Bond',
+  };
 
 const addEngagement = async () => {
-  // Fallback to empty strings in case values are null or undefined
+  
   const trimmedValues = {
-    eventDescription: (eventDescription.value || '').trim(),
-    eventDate: (eventDate.value || '').trim(),
-    eventCountry: (eventCountry.value || '').trim(),
-    eventCategory: (eventCategory.value || '').trim(),
-    representative: (representative.value || '').trim(),
-    contactPerson: (contactPerson.value || '').trim(),
-    contactPhone: (contactPhone.value || '').trim(),
-    contactEmail: (contactEmail.value || '').trim(),
-    status: (status.value || '').trim(),
-    topicTheme: (topicTheme.value || '').trim(),
-    sponsorship: (sponsorship.value || '').trim(),
-    createdBy: (createdBy.value || '').trim(),
-    lastModifiedBy: (lastModifiedBy.value || '').trim(),
-    recordOwner: (recordOwner.value || '').trim(),
+    eventDescription: eventDescription.value,
+    eventDate: eventDate.value,
+    country: country.value,
+    eventCategory: eventCategory.value,
+    representative: representative.value,
+    contactPerson: contactPerson.value,
+    contactPhone: contactPhone.value,
+    contactEmail: contactEmail.value,
+    status: status.value,
+    topicTheme: topicTheme.value,
+    sponsorship: sponsorship.value,
+    createdBy: createdBy.value || defaultUser.id,
+    recordOwner: recordOwner.value,
   };
 
   // Check if all required fields are filled
   const requiredFields = [
-    'eventDescription', 'eventDate', 'eventCountry', 'eventCategory', 
+    'eventDescription', 'country', 'eventCategory', 
     'representative', 'contactPerson', 'contactPhone', 'contactEmail', 
-    'status', 'topicTheme', 'sponsorship', 'createdBy', 'lastModifiedBy', 'recordOwner'
+    'status', 'topicTheme', 'sponsorship', 'createdBy', 'recordOwner'
   ];
 
   const allFieldsFilled = requiredFields.every(field => trimmedValues[field] !== '');
@@ -130,6 +125,21 @@ const handleSubmit = () => {
   // eslint-disable-next-line no-self-assign
   selectedValue.value = selectedValue.value
 }
+
+const usersOptions = computed(() =>
+  usersStore.users.map(user => ({
+    label: user.userFullName,
+    value: user.userId
+  }))
+);
+
+const userNamesMap = computed(() =>
+  usersStore.users.reduce((map, user) => {
+    map[user.id] = user.name;
+    return map;
+  }, {})
+);
+
 
 </script>
 
@@ -331,7 +341,7 @@ const handleSubmit = () => {
                 <div class="frame">
                   <h6>Country</h6>
 
-                  <textarea v-model="eventCountry" name="Country" id="" cols="30" rows="10" placeholder="Country"></textarea>
+                  <textarea v-model="country" name="Country" id="" cols="30" rows="10" placeholder="Country"></textarea>
                 </div>
               </div>
               <div class="second">
@@ -402,12 +412,17 @@ const handleSubmit = () => {
               </div>
               <div class="fifth">
                 <div class="frame">
-                  <h6>Created By</h6>
-                  <input type="text" v-model="createdBy" placeholder="Created By" disabled>
+                  <h6>Record Owner</h6>
+                  <select v-model="recordOwner" class="form-select">
+                    <option value="" disabled>Select Record Owner</option>
+                    <option v-for="user in usersOptions" :key="user.value" :value="user.value">
+                      {{ user.label }}
+                    </option>
+                  </select>
                 </div>
                 <div class="frame">
-                  <h6>Modified By</h6>
-                  <input type="text" v-model="lastModifiedBy" placeholder="Last Modified By" disabled>
+                  <h6>Created By</h6>
+                  <input type="text" id="createdBy" class="form-control" :value="userNamesMap[createdBy] || defaultUser.id" disabled />
                 </div>
 
               </div>

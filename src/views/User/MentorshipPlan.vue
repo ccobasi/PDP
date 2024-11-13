@@ -3,27 +3,29 @@ import authService from '../../services/authService';
 import TabMenu from '../../components/Tabs/TabMenu.vue';
 import TableSix from '../../components/Tables/TableSix.vue'
 import {useMentorshipStore} from "@/store/mentorship"
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
+import { useUsersStore } from '@/store/users';
 // import html2pdf from 'html2pdf.js';
 
 const store = useMentorshipStore();
 console.log(store.mentorships);
-
+const usersStore = useUsersStore();
 
 // eslint-disable-next-line no-unused-vars
 const mentorships = ref([])
   const month = ref('')
-  const financialYearId = ref('')
+  const financialYear = ref('')
   const mentor = ref('')
   const goals = ref('')
   const actionPlans  = ref('')
   const targetCompletionDate = ref('')
+  const actualCompletionDate = ref('')
   const progressMetrics = ref('')
   const feedback = ref('')
-  const evidenceURL = ref('')
-  const createdBy = ref('')
+  const evidence = ref(null)
+  const createdBy = ref(null)
   const lastModifiedBy = ref('')
-  const recordOwner = ref('')
+  const recordOwner = ref(null)
   const status = ref('')
   const selectedValue = ref('')
 
@@ -42,7 +44,7 @@ const fetchData = async () => {
 
 onMounted(async () => {
   await fetchData();
-
+  await usersStore.fetchUsers();
   try {
     await authService.initialize();
     const msalInstance = authService.getMsalInstance();
@@ -50,32 +52,57 @@ onMounted(async () => {
     if (accounts.length) {
       createdBy.value = accounts[0].username; 
       lastModifiedBy.value = accounts[0].username; 
-      recordOwner.value = accounts[0].username;
+    } else {
+      createdBy.value = defaultUser;
+      lastModifiedBy.value = defaultUser;
     }
   } catch (error) {
     console.error('Error during MSAL initialization:', error);
+    createdBy.value = defaultUser;
+    lastModifiedBy.value = defaultUser;
   }
 });
 
+const usersOptions = computed(() =>
+  usersStore.users.map(user => ({
+    label: user.userFullName,
+    value: user.userId
+  }))
+);
+
+const userNamesMap = computed(() =>
+  usersStore.users.reduce((map, user) => {
+    map[user.id] = user.name;
+    return map;
+  }, {})
+);
+
+  const defaultUser = {
+    id: 4, 
+    username: 'James Bond',
+  };
+
 const addMentorship = async () => {
+    const createdById = createdBy.value?.id || defaultUser.id
+
   console.log('Preparing to add mentorship with the following details:', {
-    financialYearId: financialYearId.value,
+    financialYear: financialYear.value,
     month: month.value,
     mentor: mentor.value,
     goals: goals.value,
     actionPlans: actionPlans.value,
     targetCompletionDate: targetCompletionDate.value,
+    actualCompletionDate: actualCompletionDate.value,
     progressMetrics: progressMetrics.value,
     feedback: feedback.value,
-    evidenceURL: evidenceURL.value,
+    evidence: evidence.value,
     status: status.value,
-    createdBy: createdBy.value,
-    lastModifiedBy: lastModifiedBy.value,
+    createdBy: createdById,
     recordOwner: recordOwner.value
   });
 
   if (
-    financialYearId.value.trim() !== '' &&
+    financialYear.value.trim() !== '' &&
     month.value.trim() !== '' &&
     mentor.value.trim() !== '' &&
     goals.value.trim() !== '' &&
@@ -83,19 +110,19 @@ const addMentorship = async () => {
     targetCompletionDate.value.trim() !== ''
   ) {
     await store.addMentorship({
-      financialYearId: financialYearId.value.trim(),
+      financialYear: financialYear.value.trim(),
       month: month.value.trim(),
       mentor: mentor.value.trim(),
       goals: goals.value.trim(),
       actionPlans: actionPlans.value.trim(),
       targetCompletionDate: targetCompletionDate.value.trim(),
+      actualCompletionDate: actualCompletionDate.value.trim(),
       progressMetrics: progressMetrics.value.trim(),
       feedback: feedback.value.trim(),
-      evidenceURL: evidenceURL.value,
+      evidence: evidence.value,
       status: status.value.trim(),
-      createdBy: createdBy.value.trim(),
-      lastModifiedBy: lastModifiedBy.value.trim(),
-      recordOwner: recordOwner.value.trim()
+      createdBy: createdById,
+      recordOwner: recordOwner.value
     });
   }
 };
@@ -105,7 +132,7 @@ const handleFileChange = (event) => {
   loading.value = true;
   const file = event.target.files[0];
   if (file) {
-    evidenceURL.value = file;
+    evidence.value = file;
   }
   loading.value = false;
 };
@@ -284,7 +311,7 @@ const handleSubmit = () => {
               <div class="first">
                 <div class="frame">
                   <h6>Financial Year</h6>
-                  <select v-model="financialYearId" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                  <select v-model="financialYear" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
                     <option selected>Select Financial Year</option>
                     <option value="2023">FY23</option>
                     <option value="2024">FY24</option>
@@ -374,12 +401,18 @@ const handleSubmit = () => {
               </div>
               <div class="fifth">
                 <div class="frame">
-                  <h6>CreatedBy</h6>
-                  <input type="text" v-model="createdBy" placeholder="Created By" disabled>
+                  <h6>Record Owner</h6>
+                  <select v-model="recordOwner" class="form-select">
+                    <option value="" disabled>Select Record Owner</option>
+                    <option v-for="user in usersOptions" :key="user.value" :value="user.value">
+                      {{ user.label }}
+                    </option>
+                  </select>
                 </div>
                 <div class="frame">
-                  <h6>Modified By</h6>
-                  <input type="text" v-model="lastModifiedBy" placeholder="Last Modified By" disabled>
+                  <h6>Created By</h6>
+                  <!-- <input type="text" id="createdBy" class="form-control" :value="userNamesMap[createdBy] || defaultUser.id" disabled /> -->
+                  <input type="text" id="createdBy" class="form-control" :value="createdBy?.value?.id ? userNamesMap[createdBy.value.id] : userNamesMap[defaultUser.id]" disabled />
                 </div>
               </div>
             </div>
@@ -702,7 +735,7 @@ main {
   .form-select,
   .frame textarea,
   .frame input {
-    width: 280px;
+    width: 370px;
   }
 }
 
