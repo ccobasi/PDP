@@ -347,9 +347,25 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-canvas {
-  max-width: 400px;
+div {
+  position: relative;
+  height: 100%;
+  max-height: 400px;
   margin: auto;
+  width: 90%;
+}
+
+@media (max-width: 1024px) {
+  div {
+    margin-left: 10px;
+    width: 95%;
+  }
+}
+
+@media (max-width: 768px) {
+  div {
+    margin-left: 33px;
+  }
 }
 </style>
 
