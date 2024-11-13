@@ -3,18 +3,38 @@
     import { useGoalsStore } from "@/store/goals";
     import { ref, computed, onMounted, watch } from 'vue';
     import { Modal } from 'bootstrap';
+    import { useUsersStore } from '@/store/users';
 
     // import { useRoute } from 'vue-router';
     // import html2pdf from 'html2pdf.js';
 
+const props = defineProps({
+  level: {
+    type: String,
+    required: true
+  },
+  department: {
+    type: String,
+    required: true
+  },
+  quarter: {
+    type: String,
+    required: true
+  },
+  year: {
+    type: String,
+    required: true
+  }
+});
 
 const store = useGoalsStore();
+const usersStore = useUsersStore()
 const goals = ref([]);
 const goals_ = ref([])
 goals_.value = store.goals
 console.log(goals_);
-const planTypeId = ref('');
-const planTermId = ref('');
+const planType = ref(null);
+const planTerm = ref(null);
 const goalSummary = ref('')
 const achievementApproach = ref('')
 const requiredResources = ref('')
@@ -27,7 +47,8 @@ const status = ref('')
 const feedback = ref('')
 const selectedItem = ref(null);
 const editingGoal = ref(null);
-
+const createdBy = ref(null)
+const recordOwner = ref(null)
 
 const fetchData = async () => {
   try {
@@ -41,46 +62,46 @@ const fetchData = async () => {
   }
 };
 
-const selectedOwner = ref('');
+
+// const selectedOwner = ref('');
 
 onMounted(async () => {
   initializeModal();
 
   try {
     await store.fetchGoals();
-
-    try {
-        await authService.initialize();
-        const msalInstance = authService.getMsalInstance();
-        const accounts = msalInstance.getAllAccounts();
-        if (accounts.length) {
-          selectedOwner.value = accounts[0].username;
-        }
-      } catch (error) {
-        console.error('Error during MSAL initialization:', error);
-      }
+    console.log('Store Goals:', store.goals); // Log the goals to check their value
 
     if (Array.isArray(store.goals)) {
-      goals.value = store.goals;
+      goals.value = store.goals; // Assign the array to goals.value
     } else {
       console.error('Error: store.goals is not an array');
     }
 
-    watch(
-      () => store.goals,
-      (newGoals) => {
-        if (Array.isArray(newGoals)) {
-          goals.value = newGoals;
-        } else {
-          console.error('Error: store.goals is not an array');
-        }
-      }
-    );
-    fetchData()
-    console.log('Goals:', goals.value);
+    await authService.initialize();
+    const msalInstance = authService.getMsalInstance();
+    const accounts = msalInstance.getAllAccounts();
+    if (accounts.length) {
+      createdBy.value = accounts[0].email; 
+    }
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.error('Error during initialization or fetching data:', error);
   }
+
+  watch(
+    () => store.goals,
+    (newGoals) => {
+      if (Array.isArray(newGoals)) {
+        goals.value = newGoals; // Update the goals when store.goals changes
+      } else {
+        console.error('Error: store.goals is not an array');
+      }
+    }
+  );
+
+  fetchData();
+  console.log('Goals:', goals.value);
+  watch([() => props.level, () => props.department, () => props.quarter, () => props.year], fetchData);
 });
 
 const itemsPerPage = 20; 
@@ -97,17 +118,48 @@ const selectedOption = ref('2');
 const selectedTerm = ref('1');
 
 const filteredGoals = computed(() => {
-  console.log('Selected Option:', selectedOption.value);
-  console.log('Selected Term:', selectedTerm.value);
-  console.log('Goals:', goals.value);
+  const goalData = goals.value && Array.isArray(goals.value) ? goals.value : [];
 
-  return goals.value.length > 0 ? goals.value.filter(item => {
-    console.log('Item PlanTypeId:', item.planTypeId, 'Item PlanTermId:', item.planTermId);
-    return item.planTypeId === parseInt(selectedOption.value) && item.planTermId === parseInt(selectedTerm.value);
-  }) : [];
+  return goalData.filter(item => {
+    const createdDate = item.createdDate ? new Date(item.createdDate) : null;
+    const itemYear = createdDate ? createdDate.getFullYear() : null;
+    const itemMonth = createdDate ? createdDate.getMonth() : null;
+    const itemQuarter = itemMonth !== null ? Math.floor(itemMonth / 3) + 1 : null;
+
+    const matchesYear = !props.year || (itemYear !== null && itemYear === parseInt(props.year));
+    const matchesQuarter = !props.quarter || (itemQuarter !== null && itemQuarter === parseInt(props.quarter.slice(-1))); 
+
+    // Adjusted to access nested `id` fields in planType and planTerm
+    const matchesOption = selectedOption.value === null || (item.planType?.id === parseInt(selectedOption.value));
+    const matchesTerm = selectedTerm.value === null || (item.planTerm?.id === parseInt(selectedTerm.value));
+
+    const matchesDepartment = !props.department || (item.recordOwner?.department.option === props.department);
+    const matchesLevel = !props.level || (item.recordOwner?.role?.option === props.level);
+
+    const matchesRecordOwner = !props.recordOwner || (item.recordOwner === props.recordOwner);
+
+    const criteria = {
+      item,
+      matchesYear,
+      matchesQuarter,
+      matchesOption,
+      matchesTerm,
+      matchesDepartment,
+      matchesLevel,
+      matchesRecordOwner,
+    };
+
+    console.log("Matching Criteria:", criteria);
+
+    return matchesYear && matchesQuarter && matchesOption && matchesTerm && matchesDepartment && matchesLevel && matchesRecordOwner;
+  });
 });
 
+
 const paginatedGoals = computed(() => {
+  console.log("Filtered Goals:", filteredGoals.value);
+  console.log("Goals Data:", goals.value);
+
   const startIndex = (currentPage.value - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   return filteredGoals.value.slice(startIndex, endIndex);
@@ -141,8 +193,8 @@ const editGoal = (goal) => {
   }
   editingGoal.value = { ...goal };
   
-  planTypeId.value = goal.planTypeId;
-  planTermId.value = goal.planTermId;
+  planType.value = parseInt(goal.planType, 10);
+  planTerm.value = parseInt(goal.planTerm, 10);
   goalSummary.value = goal.goalSummary;
   achievementApproach.value = goal.achievementApproach;
   requiredResources.value = goal.requiredResources;
@@ -153,7 +205,8 @@ const editGoal = (goal) => {
   progressMetrics.value = goal.progressMetrics;
   status.value = goal.status;
   feedback.value = goal.feedback;
-  
+  recordOwner.value = goal.recordOwner.userId;
+  createdBy.value = goal.createdBy;
   // document.getElementById('myModal3').style.display = 'block';
    const modalElement = document.getElementById('myModal3');
   const modalInstance = Modal.getOrCreateInstance(modalElement);
@@ -162,8 +215,8 @@ const editGoal = (goal) => {
 
 const updateGoal = async () => {
   if (editingGoal.value) {
-    editingGoal.value.planTypeId = planTypeId.value;
-    editingGoal.value.planTermId = planTermId.value;
+    editingGoal.value.planType = parseInt(planType.value, 10);
+    editingGoal.value.planTerm = parseInt(planTerm.value, 10);
     editingGoal.value.goalSummary = goalSummary.value;
     editingGoal.value.achievementApproach = achievementApproach.value;
     editingGoal.value.requiredResources = requiredResources.value;
@@ -174,6 +227,11 @@ const updateGoal = async () => {
     editingGoal.value.progressMetrics = progressMetrics.value;
     editingGoal.value.status = status.value;
     editingGoal.value.feedback = feedback.value;
+    editingGoal.value.recordOwner = recordOwner.value;
+    editingGoal.value.createdBy = createdBy.value;
+
+    console.log(planTerm.value);
+    console.log(planType.value);
 
     await store.modifyGoal(editingGoal.value);
     editingGoal.value = null;
@@ -243,12 +301,6 @@ const initializeModal = () => {
   modalInstance.value = Modal.getOrCreateInstance(modalElement);
 };
 
-const selectItem = (item, index) => {
-  selectedItem.value = item;
-  currentIndex.value = index;
-  modalInstance.value.show();
-};
-
 const loadGoal = (index) => {
   if (index >= 0 && index < goals.value.length) {
     selectedItem.value = goals.value[index];
@@ -308,6 +360,25 @@ const closeModal = (modalRef) => {
   const modal = modalRef === 'singleClickModal' ? singleClickModal.value : doubleClickModal.value;
   modal.style.display = 'none';
 };
+
+  const defaultUser = {
+    id: 4, 
+    username: 'James Bond',
+  };
+
+const usersOptions = computed(() =>
+  usersStore.users.map(user => ({
+    label: user.userFullName,
+    value: user.userId
+  }))
+);
+
+const userNamesMap = computed(() =>
+  usersStore.users.reduce((map, user) => {
+    map[user.id] = user.name;
+    return map;
+  }, {})
+);
 </script>
 <template>
   <div class="scrollable-container">
@@ -328,7 +399,7 @@ const closeModal = (modalRef) => {
                   <div class="row mb-3">
                     <div class="col-md-6">
                       <label for="planTypeId" class="form-label">Development Plan Type</label>
-                      <select class="form-select" v-model="planTypeId">
+                      <select class="form-select" v-model="planType">
                         <option value="Select Type">Select Type</option>
                         <option value="1">Area of Interest</option>
                         <option value="2">Career Goals and Aspirations</option>
@@ -337,7 +408,7 @@ const closeModal = (modalRef) => {
                     </div>
                     <div class="col-md-6">
                       <label for="planTermId" class="form-label">Duration</label>
-                      <select class="form-select" v-model="planTermId">
+                      <select class="form-select" v-model="planTerm">
                         <option value="Select Term">Select Term</option>
                         <option value="1">Short Term Goal</option>
                         <option value="2">Mid Term Goal</option>
@@ -425,6 +496,22 @@ const closeModal = (modalRef) => {
                     </div>
                   </div>
 
+                  <div class="row mb-3">
+                    <div class="col-sm-12 col-md-6">
+                      <label for="RecordOwner" class="form-label">Record Owner</label>
+                      <select v-model="recordOwner" class="form-select">
+                        <option value="" disabled>Select Record Owner</option>
+                        <option v-for="user in usersOptions" :key="user.value" :value="user.value">
+                          {{ user.label }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                      <label for="actualCompletionDate" class="form-label">Created By</label>
+                      <input type="text" id="createdBy" class="form-control" :value="userNamesMap[createdBy] || defaultUser.id" disabled />
+                    </div>
+                  </div>
+
                   <div v-if="showExpandModal" class="modal-overlay">
                     <div class="expanded-modal-content">
                       <h5>{{ expandTitle }}</h5>
@@ -458,7 +545,7 @@ const closeModal = (modalRef) => {
                   <div class="row mb-2">
                     <div class="col-md-6">
                       <label for="planTypeId" class="form-label">Development Plan Type</label>
-                      <select class="form-select" v-if="selectedItem" v-model="selectedItem.planTypeId" disabled>
+                      <select class="form-select" v-if="selectedItem" v-model="selectedItem.planType" disabled>
                         <option value="">Select Type</option>
                         <option value="1">Area of Interest</option>
                         <option value="2">Career Goals and Aspirations</option>
@@ -467,7 +554,7 @@ const closeModal = (modalRef) => {
                     </div>
                     <div class="col-md-6">
                       <label for="planTermId" class="form-label">Duration</label>
-                      <select class="form-select" v-if="selectedItem" v-model="selectedItem.planTermId" disabled>
+                      <select class="form-select" v-if="selectedItem" v-model="selectedItem.planTerm" disabled>
                         <option value="">Select Term</option>
                         <option value="1">Short Term Goal</option>
                         <option value="2">Mid Term Goal</option>
@@ -631,9 +718,9 @@ const closeModal = (modalRef) => {
               <!-- <tr v-for="(item, index) in paginatedGoals" :key="index" @click="selectItem(item, index)" @dblclick="editGoal(item)"> -->
               <tr v-for="(item, index) in paginatedGoals" :key="index" @click="handleClick(item)" @dblclick="handleDoubleClick(item)">
                 <td>{{item.id}}</td>
-                <td>{{ planTypeMap[item.planTypeId] }}</td>
-                <td>{{ planTermMap[item.planTermId] }}</td>
-                <!-- <td>{{item.goalSummary}}</td> -->
+                <td>{{ planTypeMap[item.planType?.id] || 'N/A' }}</td>
+                <td>{{ planTermMap[item.planTerm?.id] || 'N/A' }}</td>
+
                 <td>
                   <div class="goal-summary" :title="item.goalSummary">
                     {{ item.goalSummary.length > 50 ? item.goalSummary.substring(0, 50) + '...' : item.goalSummary }}
@@ -693,16 +780,10 @@ const closeModal = (modalRef) => {
   z-index: 1060;
 }
 
-.expanded-modal-content textarea {
-  max-height: none;
-  overflow: visible;
-  white-space: normal;
-}
-
 .col-md-6 input {
   border: 1px solid #808080;
   border-radius: 5px;
-  height: 30px;
+  height: 40px;
 }
 
 .expand {
@@ -723,7 +804,7 @@ const closeModal = (modalRef) => {
 .modal-dialog {
   --bs-modal-width: 900px;
   width: 900px;
-  height: 1150px;
+  height: 1250px;
   margin-left: 13%;
   display: inline-flex;
   padding: 30px;
@@ -983,6 +1064,54 @@ button:not(:disabled) {
   border-color: #007bff;
 }
 
+@media (max-width: 1200px) {
+  .modal {
+    margin: auto;
+  }
+  .modal-dialog {
+    --bs-modal-width: 700px;
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+  }
+  .modal-body {
+    width: 100%;
+  }
+  .form-select {
+    width: 100%;
+  }
+
+  #myModal4 .area,
+  #myModal4 textarea {
+    width: 100%;
+    height: 110px;
+  }
+
+  #myModal4 p {
+    width: 100%;
+  }
+
+  .prev {
+    width: 300px;
+    height: 110px;
+  }
+
+  .next {
+    width: 300px;
+    height: 110px;
+  }
+
+  input {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 820px) {
+  .modal-dialog {
+    height: 1850px;
+  }
+}
+
 @media only screen and (max-width: 768px) {
   .table-responsive {
     width: 100%;
@@ -1001,6 +1130,82 @@ button:not(:disabled) {
   tbody tr td {
     font-size: 10px;
     padding: 10px;
+  }
+
+  #myModal4 .area,
+  #myModal4 textarea {
+    width: 100%;
+    height: 110px;
+  }
+
+  #myModal4 p {
+    width: 100%;
+  }
+
+  #myModal4 .modal-footer {
+    width: 100%;
+    margin: 0;
+    gap: 20px;
+  }
+
+  .prev {
+    width: 230px;
+    height: 110px;
+  }
+
+  .next {
+    width: 230px;
+    height: 110px;
+  }
+
+  input {
+    width: 100%;
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .view {
+    font-size: 14px;
+    height: 30px;
+  }
+
+  .form-select {
+    width: 150px;
+    font-size: 10px;
+  }
+
+  #myModal4 .modal-dialog {
+    height: 1850px;
+  }
+
+  #myModal4 .area,
+  #myModal4 textarea {
+    width: 100%;
+    height: 110px;
+  }
+
+  #myModal4 p {
+    width: 100%;
+  }
+
+  input {
+    width: 100%;
+  }
+
+  #myModal4 .modal-footer {
+    width: 100%;
+    margin: 0;
+    gap: 20px;
+  }
+
+  .prev {
+    width: 100px;
+    height: 110px;
+  }
+
+  .next {
+    width: 100px;
+    height: 110px;
   }
 }
 </style>

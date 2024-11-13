@@ -30,9 +30,9 @@
           <router-link to="/engagement" class="nav-link">Speaking Engagement</router-link>
         </li>
 
-        <li :class="{ 'nav-item': true, 'active': $route.path === '/settings' }">
+        <!-- <li :class="{ 'nav-item': true, 'active': $route.path === '/settings' }">
           <router-link to="/settings" class="nav-link">Settings</router-link>
-        </li>
+        </li> -->
       </ul>
 
     </nav>
@@ -119,18 +119,22 @@ label select {
   }
 }
 
-@media screen and (max-width: 820px) {
-  .menu {
+@media (max-width: 850px) {
+  .navbar {
     flex-direction: row;
-    justify-content: center;
+    flex-wrap: nowrap;
   }
 
-  .navbar {
-    flex-wrap: wrap;
+  .navbar-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
   }
 
   .nav-item {
-    margin-right: 20px;
+    margin-right: 10px;
+    margin-top: 0;
   }
 }
 
@@ -151,6 +155,23 @@ label select {
   .navbar-nav {
     width: 100%;
     text-align: center;
+  }
+
+  .active::after {
+    bottom: -8px;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .navbar-nav {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .nav-item {
+    margin-right: 0;
+    margin-top: 10px;
   }
 
   .active::after {

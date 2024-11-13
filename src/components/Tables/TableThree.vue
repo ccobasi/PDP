@@ -1,7 +1,9 @@
 <script setup>
     import { ref, computed, onMounted, watch } from 'vue';
     import {useTrainingsStore} from "@/store/trainings"
-    import html2pdf from 'html2pdf.js';
+    // import html2pdf from 'html2pdf.js';
+    import { Modal } from 'bootstrap';
+    
   
 const store = useTrainingsStore();
 const trainings = ref([]);
@@ -17,27 +19,17 @@ const editingTraining = ref(null);
   const status = ref('')
   const rating = ref(null)
   const evidenceURL = ref(null)
-  const recordOwner = ref('')
+  // const recordOwner = ref('')
 const department = ref({ id: 3, name: 'Knowledge Management' });
-  const createdBy = ref('')
-  const lastModifiedBy = ref('')
+  // const createdBy = ref('')
+  // const lastModifiedBy = ref('')
 const selectedItem = ref(null);
 
-const fetchData = async () => {
-  try {
-    await store.fetchTrainingSchedules();
-
-    trainings.value = store.trainings;
-
-    console.log('Trainings:', trainings.value);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-};
-
 onMounted(async () => {
+  initializeModal();
+
   try {
-    await store.fetchTrainingSchedules();
+    await store.fetchTrainings();
 
     if (Array.isArray(store.trainings)) {
       trainings.value = store.trainings;
@@ -98,6 +90,8 @@ const updateTraining = async () => {
     editingTraining.value = null;
 
     document.getElementById('myModal2').style.display = 'none';
+
+  
   }
 };
 
@@ -107,12 +101,7 @@ const updateTraining = async () => {
 //   }
 // };
 
-const selectItem = (item) => {
-  selectedItem.value = item;
-  console.log(selectedItem)
-};
-
-const itemsPerPage = 15; 
+const itemsPerPage = 10; 
 const currentPage = ref(1);
 
 const totalPages = computed(() => Math.ceil(trainings.value.length / itemsPerPage));
@@ -123,22 +112,82 @@ const paginatedTrainings = computed(() => {
   return trainings.value.slice(startIndex, endIndex);
 });
 
-const downloadPDF = () => {
-  const table = document.querySelector('.table-responsive');
-
-  html2pdf(table, {
-    margin: 10,
-    filename: 'table-data.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-  });
-};
-
 const formatDate = (dateString) => {
   const date = new Date(dateString);
-  return date.toISOString().split('T')[0]; // Outputs YYYY-MM-DD format
+  return date.toISOString().split('T')[0]; 
 }
+
+const currentIndex = ref(0);
+
+const initializeModal = () => {
+  const singleClickModalElement = document.getElementById('myModal4');
+  const doubleClickModalElement = document.getElementById('myModal2');
+
+  singleClickModal.value = Modal.getOrCreateInstance(singleClickModalElement);
+  doubleClickModal.value = Modal.getOrCreateInstance(doubleClickModalElement);
+};
+
+const loadTraining = (index) => {
+  if (index >= 0 && index < trainings.value.length) {
+    selectedItem.value = trainings.value[index];
+  }
+};
+
+const nextTraining = () => {
+  if (currentIndex.value < trainings.value.length - 1) {
+    currentIndex.value++;
+    loadTraining(currentIndex.value);
+  }
+};
+
+const prevTraining = () => {
+  if (currentIndex.value > 0) {
+    currentIndex.value--;
+    loadTraining(currentIndex.value);
+  }
+};
+
+
+watch(currentIndex, (newIndex) => {
+  loadTraining(newIndex);
+});
+
+const clickTimeout = ref(null);
+const singleClickModal = ref(null);
+const doubleClickModal = ref(null);
+
+const closeModal = (modalRef) => {
+  const modal = modalRef === 'singleClickModal' ? singleClickModal.value : doubleClickModal.value;
+  modal.style.display = 'none';
+};
+
+const showModal = (modalInstance) => {
+  if (modalInstance) {
+    modalInstance.show(); 
+  } else {
+    console.error('Modal instance not found.');
+  }
+};
+
+const handleClick = (item) => {
+  if (clickTimeout.value) {
+    clearTimeout(clickTimeout.value);
+  }
+  clickTimeout.value = setTimeout(() => {
+    selectedItem.value = item;
+    showModal(singleClickModal.value);
+  }, 250); 
+};
+
+const handleDoubleClick = (item) => {
+  if (clickTimeout.value) {
+    clearTimeout(clickTimeout.value);
+    clickTimeout.value = null;
+  }
+  selectedItem.value = item;
+  showModal(doubleClickModal.value);
+  editTraining(item);
+};
 </script>
 <template>
   <main class="wrapper">
@@ -150,7 +199,7 @@ const formatDate = (dateString) => {
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">Training Request Form</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><b></b></button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal('singleClickModal')"><b></b></button>
                 </div>
 
                 <div class="modal-body">
@@ -158,7 +207,7 @@ const formatDate = (dateString) => {
                   <div class="first">
                     <div class="frame">
                       <h6>Month</h6>
-                      <input type="date" v-model="trainingStartDate">
+                      <input type="day" v-model="trainingStartDate">
                     </div>
                     <div class="frame">
                       <h6>Training Topic</h6>
@@ -274,17 +323,152 @@ const formatDate = (dateString) => {
 
         </form>
       </teleport>
-      <div class="modal" id="myModal1">
+
+      <teleport to="body">
+        <form>
+          <div class="modal" id="myModal4" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Training Request</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal('singleClickModal')"><b></b></button>
+                </div>
+
+                <div class="modal-body">
+
+                  <div class="first">
+                    <div class="frame">
+                      <h6>Month</h6>
+                      <input type="" v-if="selectedItem" v-model="selectedItem.trainingStartDate" disabled>
+                    </div>
+                    <div class="frame">
+                      <h6>Training Topic</h6>
+
+                      <input type="text" class="form-control inputField" id="trainingTopic" v-if="selectedItem" v-model="selectedItem.trainingTopic" placeholder="Digital marketing" disabled />
+                    </div>
+                  </div>
+                  <div class="second mt-3">
+                    <div class="frame">
+                      <h6>Learning Outcome</h6>
+
+                      <input type="text" class="form-control inputField" id="learningOutcome" v-if="selectedItem" v-model="selectedItem.learningOutcome" placeholder="Learning Outcome" disabled />
+                    </div>
+                    <div class="frame">
+                      <h6>Training Method</h6>
+                      <select v-if="selectedItem" v-model="selectedItem.trainingMethod" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example" disabled>
+                        <option selected>Online</option>
+                        <option value="Physical">Physical</option>
+                        <option value="Online">Online</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="third mt-3">
+                    <div class="frame">
+                      <h6>Training Initiator</h6>
+                      <select v-if="selectedItem" v-model="selectedItem.trainingInitiator" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example" disabled>
+                        <option selected>Self</option>
+                        <option value="Self">Self</option>
+                        <option value="Manager">Manager</option>
+                        <option value="Knowledge Mgt">Knowledge Mgt</option>
+                      </select>
+                    </div>
+                    <div class="frame">
+                      <h6>Skill Matrix Mapping</h6>
+                      <select v-if="selectedItem" v-model="selectedItem.skillMatrixMapping" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example" disabled>
+                        <option selected>Select</option>
+                        <option value="Matrix One">Matrix One</option>
+                        <option value="Matrix Two">Matrix Two</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="fourth mt-3">
+                    <div class="frame">
+                      <h6>Due Date</h6>
+                      <input type="date" v-if="selectedItem" v-model="selectedItem.dueDate" disabled>
+                    </div>
+                    <div class="frame">
+                      <h6>Status</h6>
+                      <select v-if="selectedItem" v-model="selectedItem.status" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example" disabled>
+                        <option class="opt" selected>Status</option>
+                        <option class="opt" value="Completed">Completed</option>
+                        <option class="opt" value="On-going">On-going</option>
+                        <option class="opt" value="Not started">Not started</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="fifth mt-3">
+                    <div class="frame">
+                      <h6>Rating</h6>
+                      <div class="rating">
+                        <input v-if="selectedItem" id="demo-1" type="radio" name="demo" value="1" v-model.number="selectedItem.selectedRating" disabled>
+                        <label for="demo-1">1 star</label>
+                        <input v-if="selectedItem" id="demo-2" type="radio" name="demo" value="2" v-model.number="selectedItem.selectedRating" disabled>
+                        <label for="demo-2">2 stars</label>
+                        <input v-if="selectedItem" id="demo-3" type="radio" name="demo" value="3" v-model.number="selectedItem.selectedRating" disabled>
+                        <label for="demo-3">3 stars</label>
+                        <input v-if="selectedItem" id="demo-4" type="radio" name="demo" value="4" v-model.number="selectedItem.selectedRating" disabled>
+                        <label for="demo-4">4 stars</label>
+                        <input v-if="selectedItem" id="demo-5" type="radio" name="demo" value="5" v-model.number="selectedItem.selectedRating" disabled>
+                        <label for="demo-5">5 stars</label>
+
+                        <div class="stars">
+                          <label for="demo-1" aria-label="1 star" title="1 star"></label>
+                          <label for="demo-2" aria-label="2 stars" title="2 stars"></label>
+                          <label for="demo-3" aria-label="3 stars" title="3 stars"></label>
+                          <label for="demo-4" aria-label="4 stars" title="4 stars"></label>
+                          <label for="demo-5" aria-label="5 stars" title="5 stars"></label>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div class="frame">
+                      <h6>Evidence</h6>
+                      <input type="file" class="form-control" @change="handleFileChange">
+                    </div>
+                  </div>
+                  <div class="sixth mt-3">
+                    <div class="frame">
+                      <h6 class="department">Department</h6>
+                      <select v-if="selectedItem" class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="selectedItem.department" disabled>
+
+                        <option class="opt" value="Administration">Administration</option>
+                        <option class="opt" value="Procurement">Procurement</option>
+                        <option class="opt" value="Knowledge Management">Knowledge Management</option>
+                        <option class="opt" value="Credit Risk Management">Credit Risk Management</option>
+                        <option class="opt" value="Information Technology">Information Technology</option>
+                      </select>
+                    </div>
+                    <div class="frame">
+                      <h6>Feedback</h6>
+
+                      <textarea v-if="selectedItem" v-model="selectedItem.feedback" name="feedback" id="" cols="30" rows="50" placeholder="Feedback" readonly></textarea>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <div class="prev">
+                    <button type="button" class="btn btn-secondary" @click="prevTraining">Previous</button>
+                  </div>
+                  <div class="next">
+                    <button type="button" class="btn btn-secondary" @click="nextTraining">Next</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </teleport>
+      <!-- <div class="modal" id="myModal1">
         <div class="modal-dialog">
           <div class="modal-content">
 
-            <!-- Modal Header -->
             <div class="modal-header">
               <h4 class="modal-title">Training Schedule</h4>
               <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
             </div>
 
-            <!-- Modal body -->
             <div class="modal-body">
               <div class="table-responsive d-flex flex-column">
                 <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
@@ -358,17 +542,7 @@ const formatDate = (dateString) => {
 
                         </div>
                       </th>
-                      <!-- <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Skill Matrix Mapping </span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th> -->
+                      
                       <th scope="col">
                         <div class="d-flex align-center gap-1">
                           <span class="noshrink"> Due Date </span>
@@ -417,15 +591,13 @@ const formatDate = (dateString) => {
                   </thead>
                   <tbody>
                     <tr v-for="(item, index) in paginatedTrainings" :key="index">
-
-                      <!-- <tr v-for="item in trainings" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
                       <td>{{item.id}}</td>
                       <td>{{item.trainingStartDate}}</td>
                       <td>{{item.trainingTopic}}</td>
                       <td>{{item.learningOutcome}}</td>
                       <td>{{item.trainingMethod}}</td>
                       <td>{{item.trainingInitiator}}</td>
-                      <!-- <td>{{item.skillMatrixMapping}}</td> -->
+                     
                       <td>{{item.dueDate}}</td>
                       <td>{{item.status}}</td>
                       <td>{{item.selectedRating}}</td>
@@ -439,7 +611,7 @@ const formatDate = (dateString) => {
 
           </div>
         </div>
-      </div>
+      </div> -->
 
       <button class="view mb-2" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
     </div>
@@ -483,7 +655,8 @@ const formatDate = (dateString) => {
         </thead>
         <tbody>
           <!-- <tr v-for="item in skills" @click="selectItem(item)"> -->
-          <tr v-for="item in trainings" @dblclick="editTraining(item)" :class="{'expanded-row': selectedItem && selectedItem.id === item.id}">
+          <!-- <tr v-for="item in trainings" @dblclick="editTraining(item)" :class="{'expanded-row': selectedItem && selectedItem.id === item.id}"> -->
+          <tr v-for="(item, index) in paginatedTrainings" :key="index" @click="handleClick(item)" @dblclick="handleDoubleClick(item)">
             <td scope="row" style="width:30px">{{item.id}}</td>
             <td>{{formatDate(item.trainingStartDate)}}</td>
             <td>{{item.trainingTopic}}</td>
@@ -548,21 +721,19 @@ const formatDate = (dateString) => {
 }
 .table-responsive {
   width: 100%;
-  display: flex;
-  flex-direction: row;
 }
 .full {
   width: 1200px;
 }
 table {
   width: 100%;
-  table-layout: auto; /* Adjust column width based on content */
+  table-layout: auto;
   border-collapse: collapse;
 }
 
 thead th,
 tbody td {
-  text-align: left; /* Align text to the left */
+  text-align: left;
   white-space: nowrap;
   padding: 15px;
   vertical-align: middle;
@@ -581,7 +752,7 @@ tbody td {
 
 thead,
 tbody tr {
-  border-bottom: 1px solid #ddd; /* Add bottom border */
+  border-bottom: 1px solid #ddd;
 }
 
 .adjustable-column {
@@ -611,7 +782,7 @@ tbody tr {
   --bs-modal-width: 960px;
   width: 960px;
   height: 900px;
-  margin-left: 13%;
+  margin-left: 8%;
   display: inline-flex;
   padding: 30px;
   border-radius: 10px;
@@ -619,10 +790,10 @@ tbody tr {
 }
 
 .modal-dialog {
-  --bs-modal-width: 900px;
-  width: 900px;
-  height: 1150px;
-  margin-left: 13%;
+  --bs-modal-width: 960px;
+  width: 960px;
+  height: 910px;
+  margin-left: 8%;
   display: inline-flex;
   padding: 30px;
   border-radius: 10px;
@@ -646,7 +817,6 @@ tbody tr {
   align-items: flex-start;
   gap: 20px;
   border-radius: 10px;
-  background: beige;
 }
 
 .first,
@@ -675,6 +845,9 @@ tbody tr {
 .frame input {
   width: 390px;
   height: 40px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
 }
 .frame textarea {
   display: flex;
@@ -697,6 +870,7 @@ tbody tr {
   font-weight: 400;
   line-height: 14.4px;
 }
+
 .form-select {
   width: 390px;
   height: 40px;
@@ -707,6 +881,7 @@ tbody tr {
   font-weight: 400;
   line-height: 14.4px;
 }
+
 .modal-footer {
   display: flex;
   height: 40px;
@@ -720,17 +895,47 @@ tbody tr {
   background: var(--Secondary, #47b65c);
   color: #fff;
 }
-.wright textarea {
-  width: 320px;
-  height: 70px;
+
+#myModal4 .area,
+#myModal4 textarea {
+  width: 390px;
+  height: 110px;
+  border-radius: 5px;
+  background: #eeeeee;
+  padding: 10px;
 }
-.lefts input {
-  width: 320px;
+
+#myModal4 p {
+  width: 390px;
   height: 40px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--White, #fff);
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
 }
+
+#myModal4 .modal-footer {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  gap: 20px;
+}
+
+.prev {
+  float: left;
+  width: 370px;
+  height: 110px;
+  display: flex;
+  justify-content: start;
+}
+
+.next {
+  float: right;
+  width: 370px;
+  height: 110px;
+  display: flex;
+  justify-content: end;
+}
+
 .form-selects {
   display: flex;
   width: 320px;
@@ -870,53 +1075,222 @@ label[for]:hover {
   border: 1px solid #ccc;
 }
 
-@media (max-width: 576px) {
-  .table thead {
-    display: none;
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+@media (max-width: 350px) {
+  .frame input,
+  .frame .form-select,
+  .frame textarea {
+    width: 150px !important;
   }
 
-  .table tbody tr {
-    display: block;
-    margin-bottom: 15px;
-  }
-
-  .table tbody td {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    font-size: 12px;
-    border-bottom: 1px solid #ddd;
-  }
-
-  .table tbody td::before {
-    content: attr(data-label);
-    flex: 1;
-    font-weight: bold;
-  }
-
-  .noshrink {
-    white-space: nowrap;
-    font-size: 12px;
-  }
-
-  .adjustable-column {
-    flex-direction: column;
-    text-align: right;
-  }
-
-  .pagination-controls {
-    display: flex;
-    justify-content: center;
-    padding: 10px 0;
-  }
-
-  .pagination-btn {
-    padding: 8px 12px;
-    font-size: 12px;
+  #myModal4 textarea {
+    width: 150 !important;
+    height: 110px;
   }
 }
 
-@media (min-width: 577px) and (max-width: 768px) {
+@media (max-width: 400px) {
+  .frame input,
+  .frame .form-select,
+  .frame textarea {
+    width: 210px !important;
+  }
+
+  #myModal4 .modal-dialog {
+    width: 95%;
+    height: 1450px;
+    margin-left: 5%;
+  }
+
+  .modal-content {
+    height: 1400px;
+  }
+
+  .modal-body {
+    width: 100%;
+  }
+
+  #myModal4 .area,
+  #myModal4 textarea {
+    width: 100%;
+    height: 110px;
+  }
+
+  .first,
+  .second,
+  .third,
+  .fourth,
+  .fifth,
+  .sixth {
+    flex-direction: column;
+  }
+
+  #myModal4 .modal-footer {
+    width: 100%;
+    margin: 0;
+    gap: 5px;
+    flex-direction: column;
+  }
+
+  .prev {
+    width: 80px !important;
+    height: 110px;
+    font-size: 8px;
+  }
+
+  .next {
+    width: 100px;
+    height: 110px;
+  }
+}
+
+@media (max-width: 576px) {
+  .frame input,
+  .frame textarea {
+    width: 210px !important;
+  }
+
+  table {
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  thead th,
+  tbody td {
+    font-size: 10px;
+    padding: 8px;
+    text-align: center;
+  }
+
+  .adjustable-column {
+    min-width: 100px;
+    max-width: 150px;
+    white-space: normal;
+  }
+
+  .noshrink {
+    width: 40px;
+  }
+
+  /* Stack table rows on small screens */
+  tbody td {
+    display: block;
+    text-align: right;
+    padding-left: 50%;
+    position: relative;
+  }
+
+  tbody td:before {
+    content: attr(data-label);
+    position: absolute;
+    left: 0;
+    width: 45%;
+    padding-left: 15px;
+    font-weight: bold;
+    text-align: left;
+    font-size: 10px;
+  }
+
+  #myModal4 .modal-dialog {
+    width: 90%;
+    height: 1450px;
+    margin-left: 5%;
+  }
+
+  .modal-content {
+    height: 1400px;
+  }
+
+  .modal-body {
+    width: 100%;
+  }
+
+  #myModal4 .area,
+  #myModal4 textarea {
+    width: 100%;
+    height: 110px;
+  }
+
+  .first,
+  .second,
+  .third,
+  .fourth,
+  .fifth,
+  .sixth {
+    flex-direction: column;
+  }
+
+  .frame input {
+    width: 200px;
+  }
+
+  .frame .form-select {
+    width: 200px;
+  }
+
+  #myModal4 .modal-footer {
+    width: 100%;
+    margin: 0;
+    gap: 20px;
+  }
+
+  .prev {
+    width: 100px;
+    height: 110px;
+  }
+
+  .next {
+    width: 100px;
+    height: 110px;
+  }
+}
+
+@media (max-width: 768px) {
+  #myModal4 .modal-dialog {
+    width: 90%;
+    margin-left: 5%;
+  }
+
+  .modal-body {
+    width: 100%;
+  }
+
+  #myModal4 .area,
+  #myModal4 textarea {
+    width: 260px;
+    height: 110px;
+  }
+
+  .frame input {
+    width: 260px;
+  }
+
+  .frame .form-select,
+  .frame .rating {
+    width: 270px;
+  }
+
+  #myModal4 .modal-footer {
+    width: 100%;
+    margin: 0;
+    gap: 20px;
+  }
+
+  .prev {
+    width: 250px;
+    height: 110px;
+  }
+
+  .next {
+    width: 250px;
+    height: 110px;
+  }
+
   .table thead th {
     font-size: 10px;
     padding: 15px 5px;
@@ -951,6 +1325,32 @@ label[for]:hover {
   }
 }
 
+@media (max-width: 820px) {
+  .frame input {
+    width: 240px !important;
+  }
+
+  .frame .form-select,
+  .frame .rating {
+    width: 240px !important;
+  }
+
+  #myModal4 textarea {
+    width: 240px !important;
+    height: 110px;
+  }
+
+  .prev {
+    width: 240px !important;
+    height: 110px;
+  }
+
+  .next {
+    width: 240px !important;
+    height: 110px;
+  }
+}
+
 @media screen and (max-width: 992px) {
   .modal-dialog {
     width: 800px;
@@ -962,9 +1362,42 @@ label[for]:hover {
     width: 100%;
   }
 
-  .form-select,
+  .modal-body {
+    width: 100%;
+  }
+
+  .form-select {
+    width: 270px !important;
+  }
+
   .frame textarea {
-    width: 320px;
+    width: 270px;
+  }
+
+  .frame input,
+  .frame .rating {
+    width: 270px;
+  }
+
+  #myModal4 textarea {
+    width: 270px;
+    height: 110px;
+  }
+
+  #myModal4 .modal-footer {
+    width: 100%;
+    margin: 0;
+    gap: 20px;
+  }
+
+  .prev {
+    width: 270px;
+    height: 110px;
+  }
+
+  .next {
+    width: 270px;
+    height: 110px;
   }
 
   .table-responsive {

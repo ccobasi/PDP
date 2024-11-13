@@ -1,20 +1,35 @@
-<script>
+<script setup>
 import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
 import DoughNut from '../../components/DoughNut.vue'
 import CareerGoal from '../../components/CareerGoal.vue'
+import { defineProps } from 'vue';
+import TableOne from '../../components/Tables/TableOne.vue'
+import { useTeamMemberStore } from '../../store/goals'
+import { ref, computed, onMounted } from 'vue';
+import { useRoute  } from 'vue-router';
+
+const props = defineProps({
+  selectedName: String,
+  recordOwner: String,
+});
+
+const store =  useTeamMemberStore()
+var teams = ref(store.teamMemberData)
+
+console.log(teams.value);
+
+const route = useRoute();
+
+const teamMemberDetails = computed(() => {
+  return store.getTeamMemberData(props.selectedName)?.[0] || {};
+});
 
 
-export default {
-    data: () => ({
-        tab: null,
-        
-    }),
-    components: {
-        
-        TabMenu: TabMenu,DoughNut,CareerGoal,
-    }
-    
-}
+
+onMounted(() => {
+  const overlay = document.getElementById("myModal5"); // Replace "overlay" with the actual ID or class
+  if (overlay) overlay.style.display = "none"; // Hide or remove overlay
+});
 </script>
 
 
@@ -25,8 +40,9 @@ export default {
     <div class="development mt-5">
       <div class="dev">
         <div class="d-flex">
-          <h3>Development Plan:<span> Lola Oyebola</span></h3>
-
+          <h3>Development Plan:<span> {{ selectedName }}</span></h3>
+          <p>Level: {{ teamMemberDetails.level }}</p>
+          <p>Record Owner: {{ teamMemberDetails.recordOwner }}</p>
         </div>
 
       </div>
@@ -47,7 +63,8 @@ export default {
 
       </div>
       <div class="table">
-        <CareerGoal />
+        <!-- <CareerGoal /> -->
+        <TableOne />
       </div>
 
     </div>

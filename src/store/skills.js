@@ -5,260 +5,143 @@
 //   state: () => ({
 //     skills: [],
 //     selectedFile: null,
-//     baseUrl: 'https://infracreditpdp.azurewebsites.net/api/SkillAssessments',
-//     endpoints: {
-//       getSkillAssessments: '/getSkillAssessments',
-//       createSkillAssessments: '/createSkillAssessments',
-//       editSkillAssessments: '/editSkillAssessments',
-//     },
-//   }),
-
-//   actions: {
-//     async fetchSkills() {
-//       try {
-//         const response = await axios.get(`${this.baseUrl}${this.endpoints.getSkillAssessments}`);
-//         this.skills = response.data;
-//         console.log(this.skills); 
-//       } catch (error) {
-//         console.error('Error fetching skills:', error);
-//       }
-//     },
-
-//     async addSkill(skillDescription, currentStageId, desiredStageId, skillGapDetails, initiatives, requiredResources, successCriteria, potentialChallenges, solutionToChallenges, targetCompletionDate, status, feedback, evidenceURL, createdBy, lastModifiedBy  ) {
-//       try {
-//         const response = await axios.post(`${this.baseUrl}${this.endpoints.createSkillAssessments}`, { skillDescription, currentStageId, desiredStageId, skillGapDetails, initiatives, requiredResources, successCriteria, potentialChallenges, solutionToChallenges, targetCompletionDate, status, feedback, evidenceURL, createdBy, lastModifiedBy  });
-//         this.skills.push(response.data);
-//         console.log(response.data);
-//       } catch (error) {
-//         console.error('Error adding user:', error);
-//       }
-//     },
-
-//     async updateSkill(skill) {
-//       try {
-//         const skillIndex = this.skills.findIndex(d => d.id === skill.id);
-//         if (skillIndex !== -1) {
-//           const response = await axios.put(`${this.baseUrl}${this.endpoints.editSkillAssessments}/${skill.id}`, skill);
-//           this.skills.splice(skillIndex, 1, response.data);
-//         } else {
-//           console.error('Skill to update not found:', skill.id);
-//         }
-//       } catch (error) {
-//         console.error('Error updating skill:', error);
-//       }
-//     },
-
-//     async deleteSkill(skillId) {
-//       try {
-//         await axios.delete(`${this.baseUrl}${this.endpoints.editSkillAssessments}/${skillId}`);
-//         this.skills = this.skills.filter(d => d.id !== skillId);
-//       } catch (error) {
-//         console.error('Error deleting skill:', error);
-//       }
-//     },
-//   },
-// });
-
-// import { defineStore } from 'pinia';
-// import axios from 'axios';
-
-// export const useSkillsStore = defineStore('skills', {
-//   state: () => ({
-//     skills: [],
-//     selectedFile: null,
 //     baseUrl: 'https://infracredit.pythonanywhere.com/api/v1/skill-assessments',
 //   }),
 
 //   actions: {
 //     async fetchSkills() {
+//       console.log('fetchSkills called');
 //       try {
 //         const response = await axios.get(`${this.baseUrl}`);
 //         this.skills = response.data;
-//         console.log(this.skills); 
+//         console.log('Fetched skills:', this.skills);
 //       } catch (error) {
-//         console.error('Error fetching skills:', error);
+//         console.error('Error fetching skills:', error.response?.data || error.message);
 //       }
 //     },
 
-//     async addSkill(
+//     async addSkill({
 //       skillDescription,
 //       currentStageId,
 //       skillGapDetails,
 //       desiredStageId,
-//       initiatives,
-//       status,
-//       feedback,
-//       evidenceURL,
-//       requiredResources,
-//       successCriteria,
-//       potentialChallenges,
-//       solutionToChallenges,
-//       targetCompletionDate,
+//       actionPlan,
+//       comment,
 //       createdBy,
 //       lastModifiedBy,
 //       recordOwner
-//     ) {
+//     }) {
 //       try {
-//         const response = await axios.post(`${this.baseUrl}`, {
+//         const payload = {
 //           skillDescription,
 //           currentStageId,
 //           skillGapDetails,
 //           desiredStageId,
-//           initiatives,
-//           status,
-//           feedback,
-//           evidenceURL,
-//           requiredResources,
-//           successCriteria,
-//           potentialChallenges,
-//           solutionToChallenges,
-//           targetCompletionDate,
+//           actionPlan,
+//           comment,
 //           createdBy,
 //           lastModifiedBy,
 //           recordOwner
+//         };
+
+//         console.log('Submitting payload:', payload);
+
+//         const formData = new FormData();
+//         Object.keys(payload).forEach(key => {
+//           if (payload[key] !== undefined && payload[key] !== null) {
+//             formData.append(key, payload[key]);
+//           }
 //         });
-//         console.log('Skill submitted:', response.data);
-//         this.skills.push(response.data);
-//         console.log('Skill added successfully:', response.data);
-//       } catch (error) {
-//         if (error.response) {
-//           console.error('Error adding skill:', error.response?.data || error.message);
+
+//         const response = await axios.post(`${this.baseUrl}`, formData, {
+//           headers: {
+//             'Content-Type': 'multipart/form-data',
+//           }
+//         });
+
+//         console.log('Server response:', response);
+
+//         if (response.data) {
+
+//           await this.fetchSkills();
+//           console.log('Skill added and skills refetched.');
 //         } else {
-//           console.error('Error adding skill:', error.message);
+//           console.error('Server response data is empty');
 //         }
+//       } catch (error) {
+//         console.error('Error adding skill:', error.response?.data || error.message);
 //       }
 //     },
-   
 
 //     async updateSkill(skill) {
 //       try {
-//         const skillIndex = this.skills.findIndex(d => d.id === skill.id);
-//         if (skillIndex !== -1) {
-//           const response = await axios.put(`${this.baseUrl}/${skill.id}`, skill);
-//           this.skills.splice(skillIndex, 1, response.data);
-//         } else {
-//           console.error('Skill to update not found:', skill.id);
-//         }
+//         const url = `${this.baseUrl}/${skill.id}`;
+
+//         const formData = new FormData();
+//         Object.keys(skill).forEach(key => {
+//           if (skill[key] !== undefined && skill[key] !== null) {
+//             formData.append(key, skill[key]);
+//           }
+//         });
+
+//         const response = await axios.put(url, formData, {
+//           headers: {
+//             'Content-Type': 'multipart/form-data',
+//           },
+//         });
+
+//         await this.fetchSkills();
+//         console.log('Skill updated and skills refetched.');
 //       } catch (error) {
-//         console.error('Error updating skill:', error);
-//         console.log('Error details:', error.response?.data); 
+//         console.error('Error updating skill:', error.response?.data || error);
 //       }
 //     },
 
 //     async deleteSkill(skillId) {
+//       console.log('deleteSkill called with id:', skillId);
 //       try {
 //         await axios.delete(`${this.baseUrl}/${skillId}`);
-//         this.skills = this.skills.filter(d => d.id !== skillId);
+        
+//         await this.fetchSkills();
+//         console.log('Skill deleted and skills refetched.');
 //       } catch (error) {
-//         console.error('Error deleting skill:', error);
+//         console.error('Error deleting skill:', error.response?.data || error.message);
 //       }
 //     },
 //   },
 // });
 
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import { skillsService } from '../services/skillsService';
 
 export const useSkillsStore = defineStore('skills', {
   state: () => ({
     skills: [],
-    selectedFile: null,
-    baseUrl: 'https://infracredit.pythonanywhere.com/api/v1/skill-assessments',
   }),
-
   actions: {
     async fetchSkills() {
-      console.log('fetchSkills called');
-      try {
-        const response = await axios.get(`${this.baseUrl}`);
-        this.skills = response.data;
-        console.log('Fetched skills:', this.skills);
-      } catch (error) {
-        console.error('Error fetching skills:', error.response?.data || error.message);
-      }
+      // this.skills = await skillsService.fetchSkills();
+      const data = await skillsService.fetchSkills();
+      this.skills = data; 
     },
-    async addSkill(skillDescription,
-      currentStageId,
-      skillGapDetails,
-      desiredStageId,
-      actionPlan,
-      comment,
-      createdBy,
-      lastModifiedBy,
-      recordOwner) {
-      try {
-
-        const payload = {
-          skillDescription,
-      currentStageId,
-      skillGapDetails,
-      desiredStageId,
-      actionPlan,
-      comment,
-      createdBy,
-      lastModifiedBy,
-      recordOwner
-        };
-
-        // Log the payload to the console
-        console.log('Submitting payload:', payload);
-
-        const formData = new FormData();
-        Object.keys(payload).forEach(key => {
-          if (payload[key] !== undefined && payload[key] !== null) {
-            formData.append(key, payload[key]);
-          }
-        });
-
-        const response = await axios.post(`${this.baseUrl}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          }
-        });
-
-        console.log('Server response:', response);
-
-        if (response.data) {
-          this.skills.push(response.data);
-          console.log('Skill added:', response.data);
-        } else {
-          console.error('Server response data is empty');
-        }
-      } catch (error) {
-        if (error.response) {
-          console.error('Error adding skill:', error.response.data);
-        } else {
-          console.error('Error adding skill:', error);
-        }
-      }
+    async addSkill(newSkill) {
+      const addedSkill = await skillsService.addSkill(newSkill);
+      this.skills.push(addedSkill);
     },
-
-    
-    async updateSkill(skill) {
-      console.log('updateSkill called with', skill);
-      try {
-        const skillIndex = this.skills.findIndex(d => d.id === skill.id);
-        if (skillIndex !== -1) {
-          const response = await axios.put(`${this.baseUrl}/${skill.id}`, skill);
-          this.skills.splice(skillIndex, 1, response.data);
-          console.log('Skill updated successfully:', response.data);
-        } else {
-          console.error('Skill to update not found:', skill.id);
-        }
-      } catch (error) {
-        console.error('Error updating skill:', error.response?.data || error.message);
+    async updateSkill(updatedSkill) {
+      console.log(updatedSkill);
+      
+      const updated = await skillsService.updateSkill(updatedSkill);
+      const index = this.skills.findIndex(skill => skill.id === updated.id);
+      if (index !== -1) {
+        this.skills[index] = updated;
       }
+      console.log(updatedSkill);
+      
     },
-
     async deleteSkill(skillId) {
-      console.log('deleteSkill called with id:', skillId);
-      try {
-        await axios.delete(`${this.baseUrl}/${skillId}`);
-        this.skills = this.skills.filter(d => d.id !== skillId);
-        console.log('Skill deleted successfully:', skillId);
-      } catch (error) {
-        console.error('Error deleting skill:', error.response?.data || error.message);
-      }
+      await skillsService.deleteSkill(skillId);
+      this.skills = this.skills.filter(skill => skill.id !== skillId);
     },
   },
 });

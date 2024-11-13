@@ -5,6 +5,7 @@ import BarChart from '../../components/Charts/BarChart.vue';
 import SkillMetrics from '../../components/SkillMetrics.vue';
 import { ref, onMounted, watch } from 'vue';
 import { useSkillsStore } from "@/store/skills";
+import emailjs from 'emailjs-com';
 
 const store = useSkillsStore();
 console.log('Store initialized:', store.skills);
@@ -76,10 +77,9 @@ const addSkill = async () => {
     }
   }
 
-  if (isValid) {
+ if (isValid) {
     const parsedDesiredStageId = parseInt(desiredStageId.value, 10);
-
-    console.log('Preparing to add skill:', {
+    const skillData = {
       skillDescription: skillDescription.value.trim(),
       currentStageId: currentStageId.value.trim(),
       skillGapDetails: skillGapDetails.value.trim(),
@@ -89,21 +89,32 @@ const addSkill = async () => {
       createdBy: createdBy.value.trim(),
       lastModifiedBy: lastModifiedBy.value.trim(),
       recordOwner: recordOwner.value.trim(),
-    });
+    };
 
-    await store.addSkill(
-      skillDescription.value.trim(),
-      currentStageId.value.trim(),
-      skillGapDetails.value.trim(),
-      parsedDesiredStageId,
-      actionPlan.value.trim(),
-      comment.value.trim(),
-      createdBy.value.trim(),
-      lastModifiedBy.value.trim(),
-      recordOwner.value.trim()
-    );
+    console.log('Preparing to add skill:', skillData);
+
+    await store.addSkill(skillData); 
 
     console.log('Skill added successfully');
+
+    // Send email notification using EmailJS
+    const emailParams = {
+      to_name: createdBy.value,
+      skill_description: skillDescription.value,
+      current_stage: currentStageId.value,
+      desired_stage: desiredStageId.value,
+      action_plan: actionPlan.value,
+    };
+
+    emailjs.send('service_m2mjawc', 'template_1d0qqkb', emailParams, 'WxvKMfIDsiWn1QUgM')
+      .then((response) => {
+        console.log('Email sent successfully:', response);
+      })
+      .catch((error) => {
+        console.error('Error sending email:', error);
+      });
+
+    console.log("Notification email called!");
     
     skillDescription.value = '';
     currentStageId.value = '';
@@ -481,6 +492,20 @@ main {
 }
 
 @media screen and (max-width: 576px) {
+  .skill h3 {
+    font-size: 14px;
+  }
+
+  .title button {
+    width: 80px;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .chart {
+    padding: 0;
+  }
+
   .one {
     flex-direction: column;
   }

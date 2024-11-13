@@ -3,12 +3,11 @@ import authService from '../../services/authService';
 import TabMenu from '../../components/Tabs/TabMenu.vue';
 import TableSix from '../../components/Tables/TableSix.vue'
 import {useMentorshipStore} from "@/store/mentorship"
-import { ref, onMounted, watch, computed} from 'vue'
-import html2pdf from 'html2pdf.js';
+import { ref, onMounted } from 'vue'
+// import html2pdf from 'html2pdf.js';
 
 const store = useMentorshipStore();
 console.log(store.mentorships);
-const editingMentorship = ref(null);
 
 
 // eslint-disable-next-line no-unused-vars
@@ -27,7 +26,6 @@ const mentorships = ref([])
   const recordOwner = ref('')
   const status = ref('')
   const selectedValue = ref('')
-  const mentorshipPlanId = ref('');
 
 const fetchData = async () => {
   try {
@@ -76,12 +74,29 @@ const addMentorship = async () => {
     recordOwner: recordOwner.value
   });
 
-  if (financialYearId.value.trim() !== '' || month.value.trim() !== '' || mentor.value.trim() !== ''
-    || goals.value.trim() !== ''
-    || actionPlans.value.trim() !== '' || targetCompletionDate.value.trim() !== '' || progressMetrics.value.trim() !== '' || feedback.value.trim() !== '' || evidenceURL.value || status.value.trim() !== '' || createdBy.value.trim() !== '' || lastModifiedBy.value.trim() !== '' || recordOwner.value.trim() !== '') {
-    await store.addMentorship(financialYearId.value.trim(), month.value.trim(), mentor.value.trim(),
-       goals.value.trim(), actionPlans.value.trim(), targetCompletionDate.value.trim(), status.value.trim(), progressMetrics.value.trim(), feedback.value.trim(), evidenceURL.value, createdBy.value.trim(), lastModifiedBy.value.trim(), recordOwner.value.trim());
-  
+  if (
+    financialYearId.value.trim() !== '' &&
+    month.value.trim() !== '' &&
+    mentor.value.trim() !== '' &&
+    goals.value.trim() !== '' &&
+    actionPlans.value.trim() !== '' &&
+    targetCompletionDate.value.trim() !== ''
+  ) {
+    await store.addMentorship({
+      financialYearId: financialYearId.value.trim(),
+      month: month.value.trim(),
+      mentor: mentor.value.trim(),
+      goals: goals.value.trim(),
+      actionPlans: actionPlans.value.trim(),
+      targetCompletionDate: targetCompletionDate.value.trim(),
+      progressMetrics: progressMetrics.value.trim(),
+      feedback: feedback.value.trim(),
+      evidenceURL: evidenceURL.value,
+      status: status.value.trim(),
+      createdBy: createdBy.value.trim(),
+      lastModifiedBy: lastModifiedBy.value.trim(),
+      recordOwner: recordOwner.value.trim()
+    });
   }
 };
 
@@ -107,25 +122,6 @@ const handleSubmit = () => {
   selectedValue.value = selectedValue.value
 }
 
-const itemsPerPage = 10; 
-const currentPage = ref(1);
-const totalPages = computed(() => Math.ceil(mentorships.value.length / itemsPerPage));
-const paginatedMentorship = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return mentorships.value.slice(startIndex, endIndex);
-});
-
-const downloadPDF = () => {
-  const table = document.querySelector('.table-responsive');
-  html2pdf(table, {
-    margin: 10,
-    filename: 'table-data.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-  });
-};
 
 </script>
 
@@ -442,6 +438,7 @@ main {
   font-weight: 400;
   line-height: 19.2px;
 }
+
 .skill {
   display: flex;
   padding: 30px;
@@ -709,6 +706,14 @@ main {
   }
 }
 
+@media (max-width: 860px) {
+  .form-select,
+  .frame textarea,
+  .frame input {
+    width: 220px !important;
+  }
+}
+
 @media (max-width: 768px) {
   .modal .modal-dialog {
     margin-left: 11%;
@@ -745,6 +750,22 @@ main {
 }
 
 @media (max-width: 576px) {
+  .title h3 {
+    font-size: 12px;
+  }
+
+  .title button {
+    width: 115px;
+    padding: 10px;
+    font-size: 10px;
+  }
+
+  .view {
+    display: flex;
+    padding: 10px;
+    font-size: 14px;
+  }
+
   .modal-dialog {
     max-width: 80%;
     margin: 5px;

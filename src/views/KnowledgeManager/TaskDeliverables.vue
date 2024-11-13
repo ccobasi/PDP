@@ -1,58 +1,140 @@
 <script setup>
+import authService from '../../services/authService';
 import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
-import TableFour from '../../components/Tables/TableFour.vue'
-import { ref, onMounted, computed } from 'vue'
+import TableFour from '../../components/Tables/TableFour.vue';
+import { useRoute } from 'vue-router';
+import { ref, onMounted, computed, watch} from 'vue'
 import {useTasksStore} from "@/store/tasks"
- import html2pdf from 'html2pdf.js';
+// import html2pdf from 'html2pdf.js';
+import emailjs from 'emailjs-com';
+import { useUsersStore } from '@/store/users';
 
+emailjs.init("WxvKMfIDsiWn1QUgM");
 
+const usersStore = useUsersStore();
 const store = useTasksStore();
-const tasks = store.tasks;
-console.log(tasks);
-
-
-  const task = ref('')
+const tasks = ref([]);
+const deliverableType = 1;
+  const taskDescription = ref('')
   const status = ref('')
   const startDate = ref('')
   const endDate = ref('')
   const comment  = ref('')
   const evidence = ref(null)
+  const createdBy = ref('')
+  const lastModifiedBy = ref('')
+  const recordOwner = ref('')
   const selectedValue = ref('')
-  // const loadingUpload = ref(false);
+
+const selectedQuarter = ref('');
+const selectedYear = ref('');
+const selectedLevel = ref('');
+const selectedDepartment = ref('');
+
+
+watch([selectedLevel, selectedDepartment, selectedQuarter, selectedYear], handleFilterChange);
+
+function handleFilterChange() {
+  console.log('Filter parameters changed:', {
+    level: selectedLevel.value,
+    department: selectedDepartment.value,
+    quarter: selectedQuarter.value,
+    year: selectedYear.value,
+  });
+  
+}
+
+ const defaultUser = {
+    id: 4, 
+    username: 'James Bond',
+  };
 
 const addTask = async () => {
-  if (
-    task.value.trim() !== '' || status.value.trim() !== '' || startDate.value.trim() !== '' ||
-    endDate.value.trim() !== '' || comment.value.trim() !== '' || evidence.value
-  ) {
-    await store.addTask(
-      task.value.trim(), status.value.trim(), startDate.value.trim(),
-      endDate.value.trim(), comment.value.trim(), evidence.value
-    );
+  console.log("Checking values before task addition:");
+  console.log("DeliverableType:", deliverableType);
+  console.log("TaskDescription:", taskDescription.value);
+  console.log("Status:", status.value);
+  console.log("StartDate:", startDate.value);
+  console.log("EndDate:", endDate.value);
+  console.log("Comment:", comment.value);
+  console.log("Evidence:", evidence.value ? evidence.value || evidence.value.name : null); 
+  console.log("CreatedBy:", createdBy.value || defaultUser.id);
+  console.log("RecordOwner:", recordOwner.value);
 
-    // Clear form inputs after submission
-    task.value = '';
-    status.value = '';
-    startDate.value = '';
-    endDate.value = '';
-    comment.value = '';
-    evidence.value = null;
+    const taskData = {
+      deliverableType,
+      taskDescription: taskDescription.value,
+      startDate: startDate.value,
+      endDate: endDate.value,
+      evidence: evidence.value.name, 
+      comment: comment.value,
+      status: status.value,
+      createdBy: createdBy.value || defaultUser.id,
+      recordOwner: recordOwner.value,
+    };
+
+  console.log('Submitting payload:', taskData);
+
+  try {
+    await store.addTask(taskData);
+    await fetchData();
+
+ taskDescription.value = '';
+        status.value = '';
+        startDate.value = '';
+        endDate.value = '';
+        comment.value = '';
+        evidence.value = null;
+        createdBy.value = '';
+        recordOwner.value = '';
 
     console.log("Task added");
+  } catch (error) {
+    console.error("Error adding task:", error);
   }
 };
 
 
-const handleSubmit = () => {
-  addTask();
+const fetchData = async () => {
+  try {
+    await store.fetchTasks();
+
+    if (store.tasks.length === 0) {
+      console.log('No tasks found');
+    } else {
+      tasks.value = store.tasks;
+      console.log('Tasks:', tasks.value);
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    
+  }
+};
+
+const handleSubmit =  async () => {
+  console.log("handleSubmit called");
+  await addTask();
   console.log("Task added")
 };
 
 
-onMounted(() => {
-  
-  store.fetchTasks();
+onMounted(async() => {
+  await usersStore.fetchUsers();
+  await fetchData();
   console.log("Fetched Tasks")
+
+   try {
+    await authService.initialize();
+    const msalInstance = authService.getMsalInstance();
+    const accounts = msalInstance.getAllAccounts();
+    if (accounts.length) {
+      createdBy.value = accounts[0].email; 
+      lastModifiedBy.value = accounts[0].email; 
+    }
+  } catch (error) {
+    console.error('Error during MSAL initialization:', error);
+  }
+
 });
 
  
@@ -61,48 +143,89 @@ onMounted(() => {
   // eslint-disable-next-line no-self-assign
   selectedValue.value = selectedValue.value
 }
-
-const itemsPerPage = 15; 
-const currentPage = ref(1);
-
-const totalPages = computed(() => Math.ceil(tasks.length / itemsPerPage));
-
-const paginatedTasks = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return tasks.slice(startIndex, endIndex);
+// const tab = null;
+ const isUserRoute = computed(() => {
+  const route = useRoute();
+  return route.path !== '/taskdeliverables';
 });
 
-const downloadPDF = () => {
-  const table = document.querySelector('.table-responsive');
+const loading = ref(false);
 
-  html2pdf(table, {
-    margin: 10,
-    filename: 'table-data.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-  });
+const handleFileChange = (event) => {
+  loading.value = true;
+  const file = event.target.files[0];
+  if (file) {
+    evidence.value = file;
+  }
+  loading.value = false;
 };
 
+const usersOptions = computed(() =>
+  usersStore.users.map(user => ({
+    label: user.userFullName,
+    value: user.userId
+  }))
+);
+createdBy.value = defaultUser.id;
+// const userNamesMap = computed(() =>
+//   usersStore.users.reduce((map, user) => {
+//     map[user.id] = user.name;
+//     return map;
+//   }, {})
+// );
 </script>
+
 
 
 <template>
   <main class="wrapper">
     <TabMenu />
+
+    <div class="filters d-flex gap-2 mt-2">
+      <select class="form-select" v-model="selectedLevel" @change="handleFilterChange">
+        <option value="Level">Level</option>
+        <option value="Manager">Manager</option>
+        <option value="HOD">HOD</option>
+        <option value="IT">IT</option>
+        <option value="User">User</option>
+        <option value="Knowledge Manager">Knowledge Manager</option>
+      </select>
+
+      <select class="form-select" v-model="selectedDepartment" @change="handleFilterChange">
+        <option value="Department">Department</option>
+        <option value="IT">IT</option>
+        <option value="Finance">Finance</option>
+        <option value="Accounting">Accounting</option>
+        <option value="Operation">Operation</option>
+        <option value="Customer Service">Customer Service</option>
+      </select>
+
+      <select class="form-select" v-model="selectedQuarter" @change="handleFilterChange">
+        <option value="">Quarterly</option>
+        <option value="Q1">Q1</option>
+        <option value="Q2">Q2</option>
+        <option value="Q3">Q3</option>
+        <option value="Q4">Q4</option>
+      </select>
+
+      <select class="form-select" v-model="selectedYear" @change="handleFilterChange">
+        <option value="">Year</option>
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+        <option value="2026">2026</option>
+        <option value="2027">2027</option>
+      </select>
+    </div>
     <div class="titles mt-3">
-      <div class="modal" id="myModal1">
-        <div class="modal-dialog" id="dialog">
+      <!-- <div class="modal" id="myModal1">
+        <div class="modal-dialog">
           <div class="modal-content">
 
-            <!-- Modal Header -->
             <div class="modal-header">
               <h4 class="modal-title">Tasks/Deliverables</h4>
               <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
             </div>
 
-            <!-- Modal body -->
             <div class="modal-body">
               <div class="table-responsive d-flex flex-column">
                 <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
@@ -193,7 +316,7 @@ const downloadPDF = () => {
                   <tbody>
                     <tr v-for="(item, index) in paginatedTasks" :key="index" @click="selectItem(item)">
                       <td>{{item.id}}</td>
-                      <td>{{item.task}}</td>
+                      <td>{{item.taskDescription}}</td>
                       <td>{{item.status}}</td>
                       <td>{{item.startDate}}</td>
                       <td>{{item.endDate}}</td>
@@ -209,29 +332,29 @@ const downloadPDF = () => {
 
           </div>
         </div>
-      </div>
+      </div> -->
 
       <button class="view" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
     </div>
     <form method="post" action="" @submit.prevent="handleSubmit">
-      <div class="modal" id="myModal2" tabindex="-1">
+      <div class="modal" id="myModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Add Task/Deliverables</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><b>X</b></button>
+              <h5 class="modal-title">Tasks/Deliverables Form</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">X</button>
             </div>
 
             <div class="modal-body">
 
-              <div class="goal">
-                <div class="left">
-                  <h4>Task/Deliverables</h4>
-                  <textarea name="Task" placeholder="Task" id="" cols="30" rows="10" v-model="task"></textarea>
+              <div class="first">
+                <div class="frame">
+                  <h6>Tasks/Deliverables</h6>
+                  <textarea v-model="taskDescription" name="training topic" id="" cols="30" rows="10" placeholder="Tasks/Deliverables"></textarea>
                 </div>
-                <div class="right">
-                  <h4>Status</h4>
-                  <select v-model="status" v-on:change="onSelectChange(e)" class="form-selects" aria-label="Default select example">
+                <div class="frame">
+                  <h6>Status</h6>
+                  <select v-model="status" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
                     <option class="opt" selected>Status</option>
                     <option class="opt" value="Completed">Completed</option>
                     <option class="opt" value="On-going">On-going</option>
@@ -239,27 +362,48 @@ const downloadPDF = () => {
                   </select>
                 </div>
               </div>
-              <div class="goal">
-                <div class="left">
-                  <h4>Start Time</h4>
+              <div class="second">
+                <div class="frame">
+                  <h6>Start Time</h6>
                   <input type="date" v-model="startDate">
                 </div>
-                <div class="right">
-                  <h4 class="">End Time</h4>
+                <div class="frame">
+                  <h6>End Time</h6>
                   <input type="date" v-model="endDate">
                 </div>
               </div>
-              <div class="goal">
-                <div class="left">
-                  <h4>Comment</h4>
-                  <textarea name="Comment" placeholder="Comment" id="" cols="30" rows="10" v-model="comment"></textarea>
+              <div class="third">
+                <div class="frame">
+                  <h6>Comment</h6>
+                  <textarea v-model="comment" name="Comment" id="" cols="30" rows="10" placeholder="Comment"></textarea>
                 </div>
-                <div class="right" style="width:320px">
-
+                <div class="frame">
+                  <h6>Evidence of Completion</h6>
+                  <input type="file" class="form-control" @change="handleFileChange">
+                  <h6>Deliverable Type</h6>
+                  <input type="text" id="deliverableType" class="form-control" v-model="deliverableType" />
                 </div>
               </div>
+              <div class="third">
+                <div class="frame">
+                  <h6>Record Owner</h6>
+                  <select v-model="recordOwner" class="form-select">
+                    <option value="" disabled>Select Record Owner</option>
+                    <option v-for="user in usersOptions" :key="user.value" :value="user.value">
+                      {{ user.label }}
+                    </option>
+                  </select>
+                </div>
+                <div class="frame">
+                  <h6>Created By</h6>
+                  <input type="text" id="createdBy" class="form-control" v-model="createdBy" />
+                </div>
+
+              </div>
+
             </div>
-            <div class="modal-footer">
+
+            <div class="modal-footer mb-3">
 
               <button type="submit" class="btn btn-success" data-bs-dismiss="modal" @click="$router.push('/km/taskdeliverables')">Submit Request</button>
             </div>
@@ -268,236 +412,36 @@ const downloadPDF = () => {
         </div>
       </div>
     </form>
+
     <div class="task mt-5">
       <div class="header">
         <div class="title mb-4">
           <h3>Task Deliverables</h3>
-          <button data-bs-toggle="modal" data-bs-target="#myModal2" type="button">Add Task/Deliverables</button>
+          <button data-bs-toggle="modal" data-bs-target="#myModal" type="button" v-if="isUserRoute">Add Task/Deliverables</button>
 
         </div>
 
         <div class="lines"></div>
       </div>
-
-      <TableFour />
+      <TableFour :level="selectedLevel" :department="selectedDepartment" :quarter="selectedQuarter" :year="selectedYear" />
     </div>
   </main>
 </template>
 
 <style scoped>
 main {
-  height: 950px;
-}
-.header {
-  display: flex;
-  flex-direction: column;
-  align-self: stretch;
-}
-.title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-self: stretch;
-}
-.title h3 {
-  font-family: "Inter", sans-serif;
-}
-.title button {
-  display: flex;
-  padding: 10px 30px;
-  align-items: center;
-  gap: 10px;
-  border-radius: 5px;
-  background: var(--Secondary, #47b65c);
-  color: var(--White, #fff);
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 19.2px;
-}
-.lines {
-  width: 100%;
-  height: 1px;
-  background: #808080;
-}
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  align-self: stretch;
-  height: 30px !important;
-}
-.modal-body {
-  gap: 20px;
-  background: #fff;
-  margin-top: 0px !important;
-}
-form .modal-dialog {
-  width: 900px;
-  height: 600px;
-  margin-left: 20%;
-  display: inline-flex;
-  padding: 30px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-  border-radius: 10px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--Grey-Light, #eee);
-}
-.modal-content {
-  z-index: 1;
-  --bs-backdrop-zindex: 1;
-  display: flex;
-  padding: 30px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 20px;
-  border-radius: 10px;
+  height: 1200px;
 }
 
-.form-select {
-  display: flex;
-  width: 320px;
-  height: 40px;
-  padding: 10px;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 5px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--White, #fff);
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
-}
-.goal {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-start;
-  gap: 20px;
-  margin-top: 20px;
-}
-.left {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
-}
-.left input,
-.right input {
-  width: 320px;
-  height: 40px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--White, #fff);
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
-}
-.right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 5px;
-}
-.left h4,
-.right h4,
-.wright h4,
-.lefts h4 {
-  color: var(--Black, #000);
-  font-family: "Inter", sans-serif;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 19.2px;
-}
-.goal textarea {
-  display: flex;
-  width: 320px;
-  height: 70px;
-  padding: 10px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-  border: 1px solid #808080;
-  border-radius: 5px;
-}
-.type input {
-  display: flex;
-  width: 320px;
-  height: 40px;
-  padding: 10px;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 5px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--White, #fff);
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
-}
-.modal-footer {
-  display: flex;
-  height: 40px;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-end;
-  align-self: stretch;
-}
-.modal-footer .btn {
-  border-radius: 5px;
-  background: var(--Secondary, #47b65c);
-  color: #fff;
-}
-.wright textarea {
-  width: 320px;
-  height: 70px;
-}
-.lefts input {
-  width: 320px;
-  height: 40px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--White, #fff);
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
-}
-.form-selects {
-  display: flex;
-  width: 320px;
-  height: 40px;
-  padding: 10px;
-  justify-content: space-between;
-  align-items: center;
-  border-radius: 5px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--White, #fff);
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
-}
-.types button {
-  display: flex;
-  padding: 10px 50px;
-  align-items: center;
-  gap: 10px;
-  align-self: stretch;
-  border-radius: 5px;
-  background: var(--Secondary, #47b65c);
-  color: #fff;
-  margin-top: 10px;
-}
-#myModal1,
-#dialog {
-  margin-left: 2.5%;
-}
-#two {
-  --bs-modal-width: 1280px;
-  width: 1280px;
-  height: 550px;
-  display: inline-flex;
-  padding: 20px;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
+.filters .form-select {
+  width: 100px;
   border-radius: 10px;
-  margin-left: 2%;
-  border: none;
-  background: none;
+  font-size: 14px;
+  color: #000;
 }
-.modal-header .btn-close {
-  background: transparent;
-  color: #808080;
+
+.title h3 {
+  font-family: "Roboto", sans-serif;
 }
 .titles {
   display: flex;
@@ -512,9 +456,8 @@ form .modal-dialog {
   gap: 10px;
   border-radius: 5px;
   background: var(--Secondary, #47b65c);
-
   color: var(--White, #fff);
-  font-family: "Inter", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -523,15 +466,266 @@ form .modal-dialog {
 .full {
   width: 1080px;
 }
-.modal-dialog {
-  --bs-modal-width: 1200px;
+.header {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+}
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+}
+.title button {
+  display: flex;
+  padding: 10px 30px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+  color: var(--White, #fff);
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
+.lines {
   width: 100%;
-  height: auto;
+  height: 1px;
+  background: #808080;
+}
+.modal {
+  margin-left: 1%;
+}
+#myModal1 .modal-dialog {
+  --bs-modal-width: 1200px;
+}
+.modal-dialog {
+  --bs-modal-width: 900px;
+  width: 100%;
+  height: 810px;
+  margin-left: 14% !important;
   display: inline-flex;
   padding: 20px;
   flex-direction: column;
   align-items: flex-start;
   gap: 10px;
+  background: #eee;
   border-radius: 10px;
+}
+
+.modal-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  color: var(--Black, #000);
+  font-family: "Roboto", sans-serif;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+.modal-body {
+  display: flex;
+  padding: 20px 30px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 10px;
+  background: #fff;
+}
+.first,
+.second,
+.third,
+.fourth,
+.fifth {
+  display: flex;
+  gap: 30px;
+}
+.frame {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+.frame h6 {
+  color: var(--Black, #000);
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
+.frame input {
+  width: 390px;
+  height: 40px;
+}
+.frame textarea {
+  display: flex;
+  width: 390px;
+  height: 150px;
+  padding: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.frame textarea::placeholder {
+  color: var(--Grey-Dark, #808080);
+  font-family: "Roboto", sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 14.4px;
+}
+
+.frame .form-select {
+  width: 390px !important;
+  height: 40px;
+  color: var(--Grey-Dark, #000);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 14.4px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px 0px 0px 0px;
+  justify-content: space-between;
+  display: flex;
+  width: 320px;
+  height: 40px;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+input {
+  width: 390px !important;
+  height: 40px;
+  border: 1px solid var(--Grey-Light, #ddd);
+  background: var(--White, #fff);
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.modal-footer {
+  display: flex;
+  height: 60px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  align-self: stretch;
+}
+.modal-footer button {
+  display: flex;
+  padding: 10px 30px;
+  align-items: center;
+  gap: 10px;
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+  color: var(--White, #fff);
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
+.modal-header .btn-close {
+  background: transparent;
+  color: #808080;
+}
+button:not(:disabled) {
+  cursor: poRoboto;
+  background: #47b65c;
+  color: #fff;
+}
+
+@media (max-width: 1200px) {
+  .modal-dialog {
+    width: 700px;
+    margin-left: 10%;
+  }
+
+  .modal-content {
+    width: 100%;
+  }
+
+  .frame textarea,
+  .frame input,
+  .frame .form-select {
+    width: 290px !important;
+  }
+}
+
+@media (max-width: 860px) {
+  .modal-dialog {
+    width: 700px;
+    margin-left: 2%;
+  }
+
+  .modal-content {
+    width: 100%;
+  }
+
+  .frame textarea,
+  .frame input,
+  .frame .form-select {
+    width: 290px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .modal-title {
+    font-size: 16px;
+  }
+  .modal-dialog {
+    width: 300px;
+    height: 1100px;
+    margin-left: 8%;
+  }
+
+  .modal-content {
+    width: 100%;
+  }
+
+  h3 {
+    font-size: 12px;
+  }
+
+  .title button {
+    font-size: 12px;
+  }
+
+  .filters .form-select {
+    display: none;
+  }
+
+  .first,
+  .second,
+  .third {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .frame textarea,
+  .frame input,
+  .frame .form-select {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 400px) {
+  h3 {
+    font-size: 12px;
+  }
+
+  .title button {
+    font-size: 12px;
+    padding: 5px;
+  }
 }
 </style>

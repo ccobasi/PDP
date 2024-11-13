@@ -20,7 +20,7 @@ const setActiveButton = (button) => {
 };
 
 const closeModal = () => {
-  const modalElement = document.getElementById('myModal');
+  const modalElement = document.getElementById('myModal5');
   const modal = bootstrap.Modal.getInstance(modalElement);
 
 
@@ -35,7 +35,7 @@ const closeModal = () => {
 </script>
 <template>
   <div class="menu">
-    <div class="modal" id="myModal" tabindex="-1">
+    <div class="modal" id="myModal5" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -178,7 +178,7 @@ const closeModal = () => {
 
     <div class="profile">
       <button class="btn pl-2" :class="{ 'active': activeButton === 'My Profile' }" @click="setActiveButton('My Profile')">My Profile</button>
-      <button class="btn" data-bs-toggle="modal" data-bs-target="#myModal" type="button" :class="{ 'active': activeButton === 'Team Profile' }" @click="setActiveButton('Team Profile')">
+      <button class="btn" data-bs-toggle="modal" data-bs-target="#myModal5" type="button" :class="{ 'active': activeButton === 'Team Profile' }" @click="setActiveButton('Team Profile')">
         <span>Team Profile</span>
       </button>
     </div>
@@ -186,11 +186,7 @@ const closeModal = () => {
     <nav class="navbar navbar-expand-md ">
 
       <ul class="navbar-nav">
-        <li :class="{ 'nav-item': true, 'active': $route.path === '/it/dashboard', 'active-indicator': $route.path === '/it/dashboard' }">
-          <router-link to="/it/dashboard" class="nav-link">
-            Dashboard
-          </router-link>
-        </li>
+
         <li :class="{ 'nav-item': true, 'active': $route.path === '/it/', 'active-indicator': $route.path === '/it/' }">
           <router-link to="/it/" class="nav-link">
             Development Plans
@@ -221,6 +217,9 @@ const closeModal = () => {
         </li>
         <li :class="{ 'nav-item': true, 'active': $route.path === '/it/speakingengagement', 'active-indicator': $route.path === '/it/speakingengagement' }">
           <router-link to="/it/speakingengagement" class="nav-link">Speaking Engagement</router-link>
+        </li>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/it/settings' }">
+          <router-link to="/it/settings" class="nav-link">Settings</router-link>
         </li>
       </ul>
 
@@ -313,7 +312,7 @@ label select {
   color: var(--Grey-Dark, #808080);
 
   font-family: "Inter", sans-serif;
-  font-size: 14px;
+  font-size: 13px;
   font-style: normal;
   font-weight: 400;
   line-height: 19.2px;

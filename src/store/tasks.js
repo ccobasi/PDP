@@ -1,153 +1,154 @@
-// import {defineStore} from 'pinia';
+import { defineStore } from 'pinia';
+import axios from 'axios';
 
 // export const useTasksStore = defineStore('tasks', {
 //   state: () => ({
-//     tasks: JSON.parse(localStorage.getItem('tasks')) || [],
-//     evidence: null,
+//     tasks: [],
+//     selectedFile: null,
+//     baseUrl: 'https://infracreditpdp.azurewebsites.net/api/Deliverables',
+//     endpoints: {
+//       getDeliverables: '/getDeliverables',
+//       createDeliverables: '/createDeliverables',
+//       editDeliverables: '/editDeliverables',
+//     },
 //   }),
 
-//   mutations: {
-//     setTasks(tasks) {
-//       this.tasks = tasks;
-//     },
-//   },
-//   getters: {
-//     getTasks() {
-//       return this.tasks;
-//     },
-//     getEvidence() {
-//       return this.evidence;
-//     },
-//   },
- 
 //   actions: {
-//     addTask(task, status, startDate, endDate, comment, evidence) {
+ 
+//     async fetchTasks() {
 //       try {
-//         const nextId = this.tasks.length + 1;
+//         const response = await axios.get(`${this.baseUrl}${this.endpoints.getDeliverables}`);
+//         this.tasks = response.data;
+//         console.log('Fetched tasks:', this.tasks);
+//       } catch (error) {
+//         console.error('Error fetching tasks:', error);
+//       }
+//     },
 
-//         if (!Array.isArray(this.getTasks)) {
-//           this.setTasks([]);
-//         }
-
-//         this.tasks.push({
-//           id: nextId,
-//           task: task,
-//           status: status,
-//           startDate: startDate,
-//           endDate: endDate,
-//           comment: comment,
-//           evidence: evidence,
+//     async addTask({ /*deliverableTypeId,*/ taskDescription, startDate, endDate, evidence, comment, status, createdBy, lastModifiedBy }) {
+//       try {
+//         const response = await axios.post(`${this.baseUrl}${this.endpoints.createDeliverables}`, { 
+//           /*deliverableTypeId*/
+//           taskDescription, 
+//           startDate, 
+//           endDate, 
+//           evidence, 
+//           comment, 
+//           status, 
+//           createdBy, 
+//           lastModifiedBy 
 //         });
+        
+//         console.log('Server response:', response.data);
 
-//         this.saveTasks();
+//         await this.fetchTasks();
+//         console.log('Task added and tasks refetched.');
 //       } catch (error) {
-//         console.error('Error adding task:', error);
-//       }
-//     },
-//     updateTask(taskId, updatedData) {
-//       const index = this.tasks.findIndex(task => task.id === taskId);
-      
-//       if (index !== -1) {
-//         // Update the task with the new data
-//         this.tasks[index] = { ...this.tasks[index], ...updatedData };
-//         this.saveTasks(); // Save the updated tasks to localStorage
-//       } else {
-//         console.error('Task not found for ID:', taskId);
+//         console.error('Error adding task:', error.response?.data || error);
 //       }
 //     },
 
-//     fetchTasks() {
-//       return this.tasks;
-//     },
-
-//     saveTasks() {
+//     async updateTask(task) {
 //       try {
-//         localStorage.setItem('tasks', JSON.stringify(this.tasks));
+//         const response = await axios.put(`${this.baseUrl}${this.endpoints.editDeliverables}/${task.deliverableId}`, task);
+
+//         console.log('Updated task:', response.data);
+
+//         await this.fetchTasks();
+//         console.log('Task updated and tasks refetched.');
 //       } catch (error) {
-//         console.error('Error saving tasks to localStorage:', error);
+//         console.error('Error updating task:', error.response?.data || error);
 //       }
-//     },
-//      setEvidence(file) {
-//       this.evidence = file;
-//     },
-//     deleteTask(taskId) {
+//     },    
+
+//     async deleteTask(taskId) {
 //       try {
-//         const taskIndex = this.tasks.findIndex(task => task.id === taskId);
+//         await axios.delete(`${this.baseUrl}${this.endpoints.editDeliverables}/${taskId}`);
 
-//         if (taskIndex !== -1) {
-//           this.tasks.splice(taskIndex, 1);
-
-//           this.saveTasks();
-
-//           console.log('Task deleted:', taskId);
-//         } else {
-//           console.error('Task not found:', taskId);
-//         }
+//         await this.fetchTasks();
+//         console.log('Task deleted and tasks refetched.');
 //       } catch (error) {
-//         console.error('Error deleting goal:', error);
+//         console.error('Error deleting task:', error);
 //       }
 //     },
 //   },
 // });
 
-
-import { defineStore } from 'pinia';
-import axios from 'axios';
-
+// Store setup with Pinia
 export const useTasksStore = defineStore('tasks', {
   state: () => ({
     tasks: [],
     selectedFile: null,
-    baseUrl: 'https://infracreditpdp.azurewebsites.net/api/Deliverables',
+    baseUrl: 'https://infracredit2.pythonanywhere.com/api/v1/deliverables/',
     endpoints: {
-      getDeliverables: '/getDeliverables',
-      createDeliverables: '/createDeliverables',
-      editDeliverables: '/editDeliverables',
+    getDeliverables: '/',
+    createDeliverables: '/createDeliverables',
+    editDeliverables: '/editDeliverables',
     },
   }),
-
   actions: {
-    async fetchTasks() {
+     async fetchTasks({ level = '', department = '', quarter = '', year = '' } = {}) {
+      // try {
+      //   const response = await axios.get(`${this.baseUrl}${this.endpoints.getDeliverables}`);
+      //   this.tasks = response.data;
+      //   console.log("Fetched tasks:", this.tasks);
+      // } 
       try {
-        const response = await axios.get(`${this.baseUrl}${this.endpoints.getDeliverables}`);
-        this.tasks = response.data;
-        console.log(this.tasks); 
-      } catch (error) {
-        console.error('Error fetching tasks:', error);
+        const response = await axios.get(`${this.baseUrl}`, {
+          params: {
+            recordOwner_role_option: level,      
+            recordOwner_department_option: department,  
+            quarter,                              
+            year,                                
+          },
+        });
+        
+        this.tasks = response.data.data;
+        console.log("Fetched tasks:", this.tasks);
+      }catch (error) {
+        console.error("Error fetching tasks:", error);
       }
     },
+    async addTask(taskData) {
+  
+  console.log("Adding task with data:", taskData);
 
-    async addTask(deliverableTypeId, taskDescription, startDate, endDate, evidence, comment, status, createdBy, lastModifiedBy ) {
-      try {
-        const response = await axios.post(`${this.baseUrl}${this.endpoints.createUsers}`, { deliverableTypeId, taskDescription, startDate, endDate, evidence, comment, status, createdBy, lastModifiedBy });
-        this.tasks.push(response.data);
-        console.log(response.data);
-      } catch (error) {
-        console.error('Error adding task:', error);
-      }
-    },
+  try {
+    const response = await axios.post(`${this.baseUrl}`, taskData);
 
-    async updateTask(task) {
-      try {
-        const taskIndex = this.tasks.findIndex(d => d.id === task.deliverableId);
-        if (taskIndex !== -1) {
-          const response = await axios.put(`${this.baseUrl}${this.endpoints.editDeliverables}/${task.deliverableId}`, task);
-          this.tasks.splice(taskIndex, 1, response.data);
-        } else {
-          console.error('User to update not found:', task.deliverableId);
-        }
-      } catch (error) {
-        console.error('Error updating task:', error);
-      }
-    },
-
-    async deleteUser(taskId) {
+    if (response.data) {
+      this.tasks.push(response.data);
+      console.log("Task added to store:", response.data);
+      return response.data; 
+    } else {
+      console.error("Unexpected response structure:", response);
+      return null; 
+    }
+  } catch (error) {
+    console.error("Error adding task:", error);
+    return null; 
+  }
+},
+    // async updateTask(taskId, updatedData) {
+    //   try {
+    //     const response = await axios.put(`${this.baseUrl}${this.endpoints.editDeliverables}/${taskId}`, updatedData);
+    //     const index = this.tasks.findIndex(task => task.id === taskId);
+    //     if (index !== -1) {
+    //       this.tasks[index] = response.data;
+    //       console.log("Task updated in store:", response.data);
+    //     }
+    //   } catch (error) {
+    //     console.error("Error updating task:", error);
+    //   }
+    // },
+    async deleteTask(taskId) {
       try {
         await axios.delete(`${this.baseUrl}${this.endpoints.editDeliverables}/${taskId}`);
-        this.tasks = this.tasks.filter(d => d.id !== taskId);
+        this.tasks = this.tasks.filter(task => task.id !== taskId);
+        console.log("Task deleted from store:", taskId);
       } catch (error) {
-        console.error('Error deleting task:', error);
+        console.error("Error deleting task:", error);
       }
     },
-  },
+  }
 });

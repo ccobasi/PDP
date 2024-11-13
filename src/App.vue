@@ -18,4 +18,11 @@ import NavBar from '../src/components/NavBar.vue';
     align-self: stretch;
   }
 }
+
+@media only screen and (max-width: 400px) {
+  .wrapper {
+    width: 100%;
+    overflow-x: hidden;
+  }
+}
 </style>

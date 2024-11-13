@@ -48,8 +48,8 @@ const backgroundColors = {
 
 const fetchData = async () => {
   try {
-    const response = await axios.get('https://infracredit.pythonanywhere.com/api/v1/development-plans');
-    allDevelopmentPlans.value = response.data;
+    const response = await axios.get('https://infracredit2.pythonanywhere.com/api/v1/development-plans/');
+    allDevelopmentPlans.value = response.data.data;
   } catch (error) {
     console.error('Error fetching data:', error);
   }

@@ -13,7 +13,7 @@ import PieChartThree from '../components/Charts/PieChartThree.vue';
       </div>
 
       <div class=" chart-box-3 box-padded">
-        <h4 class="box-title"> Areas of Interest </h4>
+        <h4 class="box-title second"> Areas of Interest </h4>
         <PieChartTwo chart-id="regions" :doughnut="true" />
       </div>
       <div class=" chart-box-3 box-padded last">
@@ -137,6 +137,48 @@ import PieChartThree from '../components/Charts/PieChartThree.vue';
     font-weight: 600;
     line-height: 24px;
     margin: auto;
+  }
+}
+
+@media (max-width: 576px) {
+  .box-title {
+    width: 150px;
+    font-size: 11px;
+    margin: auto;
+  }
+
+  .first {
+    margin-left: 20px;
+  }
+
+  .second {
+    margin-left: 35px;
+  }
+
+  .box-titles {
+    font-size: 11px;
+    width: 200px;
+  }
+}
+
+@media (max-width: 400px) {
+  .box-title {
+    width: 150px;
+    font-size: 11px;
+    margin: auto;
+  }
+
+  .first {
+    margin-left: 20px;
+  }
+
+  .second {
+    margin-left: 35px;
+  }
+
+  .box-titles {
+    font-size: 11px;
+    width: 200px;
   }
 }
 </style>

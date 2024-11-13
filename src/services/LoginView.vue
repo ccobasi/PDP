@@ -1,14 +1,13 @@
-<script>
+<!-- <script>
 import authService from './authService';
 
-// const roleRedirectMap = {
-//   '1': '/', // Admin
-//   '8': '/', // User
-//   '9': '/km/', // Knowledge Management
-//   '2': '/m/', // Manager
-//   '4': '/it/', // Information Technology
-//   '3': '/hod/' // Head of Department
-// };
+const roleRedirectMap = {
+  '5': '/', // User
+  '3': '/km/', // Knowledge Management
+  '2': '/m/', // Manager
+  '1': '/it/', // Information Technology
+  '4': '/hod/' // Head of Department
+};
 
 
 export default {
@@ -16,7 +15,7 @@ export default {
   data() {
     return {
       account: undefined,
-      userRole: undefined,
+      // userRole: undefined,
     };
   },
   async mounted() {
@@ -27,7 +26,10 @@ export default {
       if (accounts.length) {
         this.account = accounts[0];
         this.$emit('login', this.account);
-        this.$router.replace(this.$route.query.redirect || '/');
+        // this.$router.replace(this.$route.query.redirect || '/');
+        // this.$emit('login', this.account);
+        this.handleRedirect(); 
+        
       }
       
     } catch (error) {
@@ -41,7 +43,9 @@ export default {
         const account = await authService.signIn();
         this.account = account;
         this.$emit('login', this.account);
-        this.$router.replace(this.$route.query.redirect || '/');
+        // this.$router.replace(this.$route.query.redirect || '/');
+        // await authService.initialize();
+        this.handleRedirect(); 
       } catch (error) {
         console.error("Error during sign in:", error);
       }
@@ -57,6 +61,11 @@ export default {
         console.error("Error during sign out:", error);
       }
     },
+    handleRedirect() {
+     
+      const redirectPath = this.$route.query.redirect;
+      this.$router.replace(redirectPath || '/');  
+    }
   },
 };
 </script>
@@ -83,6 +92,104 @@ export default {
         </button>
       </div>
 
+    </div>
+  </div>
+
+  <div class="split right">
+    <div class="centered">
+      <img src="../assets/banner.png" alt="">
+    </div>
+  </div>
+</template> -->
+<script>
+import authService from './authService';
+
+const roleRedirectMap = {
+  '1': '/',       // Admin
+  '8': '/',       // User
+  '9': '/km/',    // Knowledge Management
+  '2': '/m/',     // Manager
+  '4': '/it/',    // Information Technology
+  '3': '/hod/'    // Head of Department
+};
+
+export default {
+  name: 'LoginView',
+  data() {
+    return {
+      account: undefined,
+    };
+  },
+  async mounted() {
+    try {
+      await authService.initialize();
+      const msalInstance = authService.getMsalInstance();
+      const accounts = msalInstance.getAllAccounts();
+      if (accounts.length) {
+        this.account = accounts[0];
+        this.$emit('login', this.account);
+        await this.handleRedirect(); 
+      }
+    } catch (error) {
+      console.error("Error during MSAL initialization:", error);
+    }
+  },
+  methods: {
+    async SignIn() {
+      try {
+        await authService.initialize();
+        const account = await authService.signIn();
+        this.account = account;
+        this.$emit('login', this.account);
+        await this.handleRedirect(); 
+      } catch (error) {
+        console.error("Error during sign in:", error);
+      }
+    },
+    async SignOut() {
+      try {
+        await authService.initialize();
+        await authService.signOut();
+        this.account = undefined;
+        this.$emit('logout');
+        this.$router.replace('/login');
+      } catch (error) {
+        console.error("Error during sign out:", error);
+      }
+    },
+    async handleRedirect() {
+      try {
+        const userRole = await authService.getUserRole(this.account); // Get user role from account
+        const redirectPath = roleRedirectMap[userRole] || '/';  // Use role map or default to '/'
+        
+        this.$router.replace(redirectPath);
+      } catch (error) {
+        console.error("Error during role-based redirection:", error);
+        this.$router.replace('/');  // Default fallback
+      }
+    }
+  },
+};
+</script>
+
+<template>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Aladin">
+
+  <div class="split left">
+    <div class="centered">
+      <div class="row" style="margin: 20px;">
+        <div class="col m-auto">
+          <img src="../assets/InfraCredit.svg" alt="" width="150" height="50">
+        </div>
+      </div>
+
+      <div class="loginElements">
+        <h1>Login</h1>
+        <button class="loginBtn" @click="SignIn">Login</button>
+      </div>
     </div>
   </div>
 
@@ -122,7 +229,7 @@ export default {
   z-index: 3;
   right: 0;
   background-color: white;
-  background-image: url('../assets/banner.png');
+  background-image: url("../assets/banner.png");
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -138,7 +245,7 @@ export default {
 
 .loginElements h1 {
   width: 143.41px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-style: normal;
   font-weight: 800;
   font-size: 48px;
@@ -151,7 +258,7 @@ export default {
   width: 640px;
   height: 24px;
   left: 0px;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 600;
   font-size: 20px;
   line-height: 24px;

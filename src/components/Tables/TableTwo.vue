@@ -4,6 +4,24 @@
     import {useSkillsStore} from "@/store/skills"
     // import html2pdf from 'html2pdf.js';
 
+const props = defineProps({
+  level: {
+    type: String,
+    required: true
+  },
+  department: {
+    type: String,
+    required: true
+  },
+  quarter: {
+    type: String,
+    required: true
+  },
+  year: {
+    type: String,
+    required: true
+  }
+});
 
 const store = useSkillsStore();
 const skills = ref([]);
@@ -127,10 +145,39 @@ const currentPage = ref(1);
 
 const totalPages = computed(() => Math.ceil(skills.value.length / itemsPerPage));
 
+const filteredSkills = computed(() => {
+  const skillData = skills.value && Array.isArray(skills.value) ? skills.value : [];
+
+  return skillData.filter(item => {
+    const createdDate = item.createdDate ? new Date(item.createdDate) : null;
+    const itemYear = createdDate ? createdDate.getFullYear() : null;
+    const itemMonth = createdDate ? createdDate.getMonth() : null;
+    const itemQuarter = itemMonth !== null ? Math.floor(itemMonth / 3) + 1 : null;
+
+    const matchesYear = !props.year || (itemYear !== null && itemYear === parseInt(props.year));
+    const matchesQuarter = !props.quarter || (itemQuarter !== null && itemQuarter === parseInt(props.quarter.slice(-1))); 
+
+    const matchesDepartment = !props.department || (item.createdBy?.department === props.department);
+    const matchesLevel = !props.level || (item.createdBy?.role?.option === props.level);
+
+    const criteria = {
+      item,
+      matchesYear,
+      matchesQuarter,
+      matchesDepartment,
+      matchesLevel,
+    };
+
+    console.log("Matching Criteria:", criteria);
+
+    return matchesYear && matchesQuarter && matchesDepartment && matchesLevel;
+  });
+});
+
 const paginatedSkills = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  return skills.value.slice(startIndex, endIndex);
+  return filteredSkills.value.slice(startIndex, endIndex);
 });
 
 // const downloadPDF = () => {
@@ -886,6 +933,10 @@ tr {
 }
 
 @media screen and (max-width: 576px) {
+  .view {
+    width: 120px;
+    padding: 10px;
+  }
   .one {
     flex-direction: column;
   }
@@ -901,11 +952,42 @@ tr {
   }
 
   h5.modal-title {
-    font-size: 1.2rem;
+    font-size: 13px;
+    width: 200px;
   }
 
   button {
     width: 100%;
+  }
+
+  #myModal4 .modal-dialog {
+    height: 1050px;
+  }
+
+  #myModal4 .area,
+  #myModal4 textarea {
+    width: 100%;
+    height: 110px;
+  }
+
+  .form-select {
+    width: 100%;
+  }
+
+  #myModal4 .modal-footer {
+    width: 100%;
+    margin: 0;
+    gap: 20px;
+  }
+
+  .prev {
+    width: 100px;
+    height: 110px;
+  }
+
+  .next {
+    width: 100px;
+    height: 110px;
   }
 }
 </style>

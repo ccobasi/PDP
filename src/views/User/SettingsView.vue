@@ -9,17 +9,17 @@ import {useRolesStore} from "@/store/roles"
 import AdminLog from '../User/AdminLog.vue'
 
 
-
 const store = useUsersStore();
 const rolesStore = useRolesStore();
 const departmentsStore = useDepartmentsStore();
 const businessUnitsStore = useBusinessUnitsStore();
+const loading = ref(true); 
 
 const users = ref([]);
 const userData = ref([]);
 const departs = ref([]);
 // const roleType = rolesStore.roles;
-const storeRole = ref([])
+const roles = ref([])
 const businessUnits = ref([]);
 
 const lastModifiedBy = ref('');
@@ -30,27 +30,26 @@ const departments = ref([]);
 const departmentId = ref(0);
 
 const userFullName = ref('')
-const fullName = ref('')
   // const department = ref('')
   // const manager = ref('')
-  const userId  = ref('')
+  const email = ref('')
   // const level = ref('')
   // const status = ref('')
   // const role = ref('')
-  const roleId = ref(0)
   const phoneNumber = ref('')
   const jobTitle = ref('')
   const address = ref('')
-  const businessUnitId = ref(0)
-  const createdBy = ref('')
-  // const mission = ref('')
-  // const vision = ref('')
+
+  const createdBy = ref(null)
   const businessUnitDescription = ref('')
   const editingUser = ref(null);
   const editingBusinessUnit = ref(null);
   const editingRole = ref(null);
   const editingDepartment = ref(null);
   const selectedValue = ref('')
+  const businessUnit = ref('')
+  const department = ref('')
+  const role = ref(null)
 
   const userType = ref(null);
   const description = ref('')
@@ -99,13 +98,13 @@ const fetchData = async () => {
     await businessUnitsStore.fetchBusinessUnits();
 
     departs.value = departmentsStore.departments;
-    storeRole.value = rolesStore.roles;
+    roles.value = rolesStore.roles;
     businessUnits.value = businessUnitsStore.businessUnits
     users.value = store.users
     userData.value = store.users
 
 
-    console.log('Roles:', storeRole.value);
+    console.log('Roles:', roles.value);
     console.log('Users:', users.value);
     console.log('UserData:', userData.value);
     console.log('Departments:', departs.value);
@@ -116,6 +115,8 @@ const fetchData = async () => {
 };
 
 onMounted(async () => {
+  await rolesStore.fetchRoles();
+  roles.value = rolesStore.roles;
   await fetchDepartment();
   console.log('Departments fetched directly:', departments.value);
   await fetchData();
@@ -133,23 +134,26 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error during MSAL initialization:', error);
   }
+  finally {
+    loading.value = false;  
+  }
 });
 
 const addUser = async () => {
   if (
-    userId.value.trim() !== '' || fullName.value.trim() !== '' || roleId.value.trim() !== '' || jobTitle.value.trim() !== '' || phoneNumber.value.trim() !== '' || address.value.trim() !== '' || departmentId.value.trim() !== '' || businessUnitId.value.trim() !== ''  || createdBy.value.trim() !== '' 
+    email.value.trim() !== '' || userFullName.value.trim() !== '' || role.value.trim() !== '' || jobTitle.value.trim() !== '' || phoneNumber.value.trim() !== '' || address.value.trim() !== '' || department.value.trim() !== '' || businessUnit.value.trim() !== ''  || createdBy.value.trim() !== '' 
   ) {
     await store.addUser(
-      userId.value.trim(), fullName.value.trim(), roleId.value.trim(), jobTitle.value.trim(), phoneNumber.value.trim(), address.value.trim(), departmentId.value.trim(), businessUnitId.value.trim(), createdBy.value.trim()
+      email.value.trim(), userFullName.value.trim(), role.value.trim(), jobTitle.value.trim(), phoneNumber.value.trim(), address.value.trim(), department.value.trim(), businessUnit.value.trim(), createdBy.value.trim()
     );
-    userId.value = '',
+    email.value = '',
     userFullName.value = '';
-    roleId.value = '';
+    role.value = '';
     jobTitle.value = '';
     phoneNumber.value = '';
     address.value = '';
-    departmentId.value = '';
-    businessUnitId.value = '';
+    department.value = '';
+    businessUnit.value = '';
     createdBy.value = '';
 
     console.log("User added");
@@ -242,29 +246,30 @@ const handleAddRole = () => {
 
 const editUser = (user) => {
   editingUser.value = { ...user };
-  
-  fullName.value = user.fullName;
+  email.value = user.email;
+  userFullName.value = user.userFullName;
   createdBy.value = user.createdBy;
-  roleId.value = user.roleId;
-  departmentId.value = user.departmentId;
+  role.value = user.role;
+  department.value = user.department;
   jobTitle.value = user.jobTitle;
   phoneNumber.value = user.phoneNumber;
   address.value = user.address;
-  businessUnitId.value = user.businessUnitId;
+  businessUnit.value = user.businessUnit;
   
   document.getElementById('myModal').style.display = 'block';
 };
 
 const updateUser = async () => {
   if (editingUser.value) {
-    editingUser.value.fullName = fullName.value;
+    editingUser.value.email = email.value;
+    editingUser.value.userFullName = userFullName.value;
     editingUser.value.createdBy = createdBy.value;
-    editingUser.value.roleId = roleId.value;
-    editingUser.value.departmentId = departmentId.value;
+    editingUser.value.role = role.value;
+    editingUser.value.department = department.value;
     editingUser.value.jobTitle = jobTitle.value;
     editingUser.value.phoneNumber = phoneNumber.value;
     editingUser.value.address = address.value;
-    editingUser.value.businessUnitId = businessUnitId.value;
+    editingUser.value.businessUnit = businessUnit.value;
     await store.updateUser(editingUser.value);
     editingUser.value = null;
 
@@ -381,31 +386,29 @@ const tab = ref(1);
               <div class="goal">
                 <div class="left">
                   <h4>Name</h4>
-                  <textarea name="Name" placeholder="Name" id="" cols="30" rows="10" v-model="fullName"></textarea>
+
+                  <input type="text" v-model="userFullName" placeholder="Full Name" disabled>
                 </div>
                 <div class="right">
-                  <h4>Created By</h4>
-                  <input type="text" v-model="createdBy" placeholder="Created By" disabled>
+                  <h4>Email</h4>
+                  <input type="text" v-model="email" placeholder="Email" disabled>
                 </div>
               </div>
               <div class="goal">
                 <div class="left">
                   <h4>Role</h4>
-                  <select v-if="storeRole.length > 0" class="form-select" aria-label="Default select example" v-model="roleId">
-                    <option v-for="role in storeRole" :key="role.id">{{ role.name }}</option>
-                  </select>
-                  <!-- <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="roleId">
-
-                    <option class="opt" value="1">Admin</option>
-                    <option class="opt" value="2">Manager</option>
-                    <option class="opt" value="3">HOD</option>
-                    <option class="opt" value="4">IT</option>
-                    <option class="opt" value="6">test</option>
+                  <!-- <select v-if="rolesStore.roles.length > 0" class="form-select" aria-label="Default select example" v-model="role">
+                    <option v-for="role in rolesStore.roles" :key="role.id" :value="role.id">{{ role.option }}</option>
                   </select> -->
+                  <select v-if="!loading && rolesStore.roles.length > 0" class="form-select" aria-label="Default select example" v-model="selectedRole">
+                    <option v-for="role in rolesStore.roles" :key="role.id" :value="role.id">
+                      {{ role.option }}
+                    </option>
+                  </select>
                 </div>
                 <div class="right">
                   <h4 class="">Department</h4>
-                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="departmentId">
+                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="department">
 
                     <option class="opt" value="1">Administration</option>
                     <option class="opt" value="2">Procurement</option>
@@ -418,26 +421,27 @@ const tab = ref(1);
               <div class="goal">
                 <div class="left">
                   <h4>Job Title</h4>
-                  <textarea name="Job Title" placeholder="Job Title" id="" cols="30" rows="10" v-model="jobTitle"></textarea>
+                  <input type="text" v-model="jobTitle" placeholder="Job Title" disabled>
                 </div>
                 <div class="right">
                   <h4 class="">Phone Number</h4>
-                  <textarea name="Phone Number" placeholder="Phone Number" id="" cols="30" rows="10" v-model="phoneNumber"></textarea>
+                  <input type="text" v-model="phoneNumber" placeholder="Phone Number" disabled>
                 </div>
               </div>
               <div class="goal">
                 <div class="left">
                   <h4>Address</h4>
-                  <textarea name="Address" placeholder="Address" id="" cols="30" rows="10" v-model="address"></textarea>
+                  <input type="text" v-model="address" placeholder="Address" disabled>
                 </div>
                 <div class="right">
                   <h4>Business Unit</h4>
-                  <textarea name="Business Unit" placeholder="Business Unit" id="" cols="30" rows="10" v-model="businessUnitId"></textarea>
+                  <input type="text" v-model="businessUnit" placeholder="Business Unit" disabled>
                 </div>
               </div>
               <div class="goal">
                 <div class="left">
-
+                  <h4>Created By</h4>
+                  <input type="text" v-model="createdBy" placeholder="Email" disabled>
                 </div>
                 <!-- <div class="right">
                   <h4>Business Unit</h4>
@@ -803,14 +807,14 @@ const tab = ref(1);
                     <tbody>
                       <tr v-for="user in userData" :key="user.id" @dblclick="editUser(user)">
                         <td>{{ user.id }}</td>
-                        <td>{{ user.fullName }}</td>
+                        <td>{{ user.userFullName }}</td>
                         <td>{{ user.roleId }}</td>
                         <td>{{ user.jobTitle }}</td>
                         <td>{{ user.phoneNumber }}</td>
                         <td>{{ user.address }}</td>
-                        <td>{{ user.departmentId }}</td>
-                        <td>{{ user.businessUnitId }}</td>
-                        <td>{{ user.createdBy }}</td>
+                        <td>{{ user.department?.option }}</td>
+                        <td>{{ user.businessUnit?.option || 'N/A' }}</td>
+                        <td>{{ user.createdBy?.userFullName || 'N/A' }}</td>
                         <td>
                           <v-icon icon="mdi-delete" class="icon-danger" @click="deleteUser(user.id)"></v-icon>
                         </td>
@@ -1172,6 +1176,7 @@ main {
 }
 
 .goal textarea::placeholder,
+.left input::placeholder,
 .right input::placeholder {
   font-size: 12px;
 }

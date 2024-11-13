@@ -69,134 +69,153 @@ import axios from 'axios';
 export const useMentorshipStore = defineStore('mentorships', {
   state: () => ({
     mentorships: [],
-    selectedFile: null,
-    baseUrl: 'https://infracredit.pythonanywhere.com/api/v1/mentorship-plans',
-  }),
-
+    baseUrl: 'https://infracredit2.pythonanywhere.com/api/v1/mentorship-plans/',
+  }), 
   actions: {
     async fetchMentorshipPlans() {
       try {
         const response = await axios.get(`${this.baseUrl}`);
-        this.mentorships = response.data;
-        console.log(this.mentorships); 
+        this.mentorships = response.data.data;
+        console.log('Fetched mentorships:', this.mentorships);
       } catch (error) {
         console.error('Error fetching mentorships:', error);
       }
     },
-
-    // async addMentorship(financialYearId, month, mentor, goals, actionPlans, targetCompletionDate, progressMetrics, status, feedback, evidenceURL, createdBy, lastModifiedBy, recordOwner ) {
-    //   try {
-    //     const response = await axios.post(`${this.baseUrl}`, { 
-    //       financialYearId, 
-    //       month, 
-    //       mentor, 
-    //       goals, 
-    //       actionPlans, 
-    //       targetCompletionDate, 
-    //       progressMetrics, 
-    //       status, 
-    //       feedback, 
-    //       evidenceURL, 
-    //       createdBy, 
-    //       lastModifiedBy, 
-    //       recordOwner 
-    //     });
-    //     this.mentorships.push(response.data);
-    //     console.log(response.data);
-    //   } catch (error) {
-    //     console.error('Error adding mentorship:', error);
-    //     console.log('Error response data:', error.response?.data); 
-    //   }
-    // },
-    async addMentorship(financialYearId, month, mentor, goals, actionPlans, targetCompletionDate, progressMetrics, status, feedback, evidenceURL, createdBy, lastModifiedBy, recordOwner) {
+    
+  
+    async addMentorship({
+      financialYear, month, mentor, goals, actionPlans,
+      targetCompletionDate, progressMetrics, actualCompletionDate, status, feedback,
+      evidence, createdBy, recordOwner
+    }) {
       try {
-        const payload = {
-          financialYearId, 
-          month, 
-          mentor, 
-          goals, 
-          actionPlans, 
-          targetCompletionDate, 
-          progressMetrics, 
-          status, 
-          feedback, 
-          evidenceURL, 
-          createdBy, 
-          lastModifiedBy, 
-          recordOwner 
-        };
+        console.log('Mentorship Object:', {
+          financialYear, month, mentor, goals, actionPlans,
+          targetCompletionDate, progressMetrics, actualCompletionDate, status, feedback,
+          evidence, createdBy,  recordOwner
+        });
 
-        console.log('Submitting payload:', payload);
+        const requiredFields = [
+          financialYear, month, mentor, goals, targetCompletionDate
+        ];
+
+        const missingFields = requiredFields.filter(field => !field);
+        if (missingFields.length > 0) {
+          console.error('Missing required fields:', missingFields);
+          return;
+        }
 
         const formData = new FormData();
-        Object.keys(payload).forEach(key => {
-          if (payload[key] !== undefined && payload[key] !== null) {
-            formData.append(key, payload[key]);
-          }
-        });
+        formData.append('financialYear', financialYear);
+        formData.append('month', month);
+        formData.append('mentor', mentor);
+        formData.append('goals', goals);
+        formData.append('actionPlans', actionPlans);
+        formData.append('targetCompletionDate', targetCompletionDate);
+        formData.append('progressMetrics', progressMetrics);
+        formData.append('actualCompletionDate', actualCompletionDate);
+        formData.append('status', status);
+        formData.append('feedback', feedback);
+
+        if (evidence instanceof File) {
+          formData.append('evidence', evidence);
+        } else {
+          console.warn('Evidence  is not a valid File object:', evidence);
+        }
+
+        formData.append('createdBy', createdBy);
+        formData.append('recordOwner', recordOwner);
 
         const response = await axios.post(`${this.baseUrl}`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
-          }
+          },
         });
 
-        console.log('Server response:', response);
-
-        if (response.data) {
-          this.goals.push(response.data);
-          console.log('Mentorship added:', response.data);
-        } else {
-          console.error('Server response data is empty');
-        }
+        console.log('Mentorship added:', response.data.data);
+        await this.fetchMentorshipPlans();
       } catch (error) {
-        if (error.response) {
-          console.error('Error adding mentorship:', error.response.data);
-        } else {
-          console.error('Error adding mentorship:', error);
-        }
+        console.error('Error adding mentorship:', error.response?.data.data || error);
       }
     },
 
    async updateMentorship(mentorship) {
   try {
-    const url = `${this.baseUrl}/${mentorship.id}`;
-    const requestData = {
-      financialYearId: mentorship.financialYearId,
-      month: mentorship.month,
-      mentor: mentorship.mentor,
-      goals: mentorship.goals,
-      actionPlans: mentorship.actionPlans,
-      targetCompletionDate: mentorship.targetCompletionDate,
-      progressMetrics: mentorship.progressMetrics,
-      status: mentorship.status,
-      feedback: mentorship.feedback,
-      evidenceURL: mentorship.evidenceURL || '',
-      createdBy: mentorship.createdBy,
-      lastModifiedBy: mentorship.lastModifiedBy,
-    };
+    const formData = new FormData();
 
-    if (mentorship.evidenceURL) {
-      requestData.evidenceURL = mentorship.evidenceURL;
+    console.log("Updating mentorship:", mentorship);
+
+    for (const key in mentorship) {
+      if (mentorship[key] !== undefined && mentorship[key] !== null) {
+        if (key !== 'evidenceURL') {
+          formData.append(key, mentorship[key]);
+        }
+      }
     }
 
-    const response = await axios.put(url, requestData);
-    //...
+    const evidenceInput = document.querySelector('input[type="file"][name="evidence"]');
+    
+    if (evidenceInput && evidenceInput.files.length > 0) {
+      console.log("File selected for evidence:", evidenceInput.files[0]); 
+      formData.append('evidenceURL', evidenceInput.files[0]);
+    } else {
+      console.warn('No new file selected for evidenceURL, keeping the old URL.');
+    }
+
+    for (const pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
+
+    const response = await axios.put(`${this.baseUrl}${mentorship.id}/`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    await this.fetchMentorshipPlans();
+    console.log('Mentorship updated successfully.');
   } catch (error) {
-    console.error('Error updating mentorship:', error);
-    console.log('Error response data:', error.response?.data);
+    console.error('Error updating mentorship:', error.response ? error.response.data : error);
   }
 },
-
-
-
     async deleteMentorship(mentorshipId) {
       try {
         await axios.delete(`${this.baseUrl}/${mentorshipId}`);
-        this.mentorships = this.mentorships.filter(d => d.id !== mentorshipId);
+        console.log('Mentorship deleted.');
+        await this.fetchMentorshipPlans();
       } catch (error) {
         console.error('Error deleting mentorship:', error);
       }
     },
   },
 });
+
+// import { defineStore } from 'pinia';
+// import { mentorshipsService } from '../services/mentorshipsService';
+
+// export const useMentorshipStore = defineStore('mentorships', {
+//   state: () => ({
+//     mentorships: [],
+//   }),
+//   actions: {
+//     async fetchMentorshipPlans() {
+//       this.mentorships = await mentorshipsService.fetchMentorships();
+//     },
+//     async addMentorship(newMentorship) {
+//       const addedMentorship = await mentorshipsService.addMentorship(newMentorship);
+//       this.mentorships.push(addedMentorship);
+//     },
+//      async updateMentorship(updatedMentorship) {
+//       const updated = await mentorshipsService.updateMentorship(updatedMentorship);
+//       const index = this.mentorships.findIndex(mentorship => mentorship.id === updated.id);
+      
+//       if (index !== -1) {
+//         this.mentorships.splice(index, 1, updated); 
+//       }
+//     },
+//     async deleteMentorship(mentorshipId) {
+//       await mentorshipsService.deleteMentorship(mentorshipId);
+//       this.mentorships = this.mentorships.filter(mentorship => mentorship.id !== mentorshipId);
+//     },
+//   },
+// });

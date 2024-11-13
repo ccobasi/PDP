@@ -27,12 +27,12 @@ const feedback = ref('');
   const createdBy = ref('')
   const lastModifiedBy = ref('')
   const selectedValue = ref('')
-  const loadingUpload = ref(false);
+  // const loadingUpload = ref(false);
   const selectedRating = ref(0)
 
 const fetchData = async () => {
   try {
-    await store.fetchTrainingSchedules();
+    await store.fetchTrainings();
 
     trainings.value = store.trainings;
 
@@ -61,40 +61,66 @@ onMounted(async () => {
 
 
 const addTraining = async() => {
-  if (trainingStartDate.value.trim() !== '' && trainingTopic.value.trim() !== '' && learningOutcome.value.trim() !== ''
-    && trainingMethod.value.trim() !== '' && trainingInitiator.value.trim() !== '' && skillMatrixMapping.value.trim() !== '' 
-    && dueDate.value.trim() !== '' && status.value.trim() !== '' && selectedRating.value !== 0 
-    && department.value.trim() !== '' && feedback.value.trim() !== '' && createdBy.value.trim() !== '' && lastModifiedBy.value.trim() !== '' && recordOwner.value.trim() !== '') {
-    
-    try {
-      await store.addTraining(
-        trainingStartDate.value.trim(), 
-        trainingTopic.value.trim(), 
-        learningOutcome.value.trim(),
-        trainingMethod.value.trim(), 
-        trainingInitiator.value.trim(), 
-        skillMatrixMapping.value.trim(), 
-        dueDate.value.trim(), 
-        status.value.trim(),
-        selectedRating.value, 
-        evidenceURL.value, 
-        recordOwner.value.trim(), 
-        department.value.trim(), 
-        feedback.value.trim(), 
-        createdBy.value.trim(), 
-        lastModifiedBy.value.trim(),
-        recordOwner.value.trim()
-      );
-      console.log("Training added successfully");
-    } catch (error) {
-      console.error("Error adding training:", error);
+  console.log('addTraining function called');
+
+  const fieldsToValidate = {
+    trainingStartDate: trainingStartDate.value.trim(),
+    trainingTopic: trainingTopic.value.trim(),
+    learningOutcome: learningOutcome.value.trim(),
+    trainingMethod: trainingMethod.value.trim(),
+    trainingInitiator: trainingInitiator.value.trim(),
+    skillMatrixMapping: skillMatrixMapping.value.trim(),
+    dueDate: dueDate.value.trim(),
+    status: status.value.trim(),
+    selectedRating: selectedRating.value,
+    evidenceURL: evidenceURL.value,
+    department: department.value.trim(),
+    feedback: feedback.value.trim(),
+    createdBy: createdBy.value.trim(),
+    lastModifiedBy: lastModifiedBy.value.trim(),
+    recordOwner: recordOwner.value.trim(),
+  };
+
+  let isValid = true;
+  for (const [key, value] of Object.entries(fieldsToValidate)) {
+    if (value === '' || value === null || value === undefined) {
+      console.log(`Validation failed at: ${key}`);
+      isValid = false;
     }
+  }
+
+ if (isValid) {
+    const trainingData = {
+     trainingStartDate: trainingStartDate.value.trim(),
+    trainingTopic: trainingTopic.value.trim(),
+    learningOutcome: learningOutcome.value.trim(),
+    trainingMethod: trainingMethod.value.trim(),
+    trainingInitiator: trainingInitiator.value.trim(),
+    skillMatrixMapping: skillMatrixMapping.value.trim(),
+    status: status.value.trim(),
+    dueDate: dueDate.value.trim(),
+    selectedRating: selectedRating.value,
+    evidenceURL: evidenceURL.value,
+    department: department.value.trim(),
+    feedback: feedback.value.trim(),
+    createdBy: createdBy.value.trim(),
+    lastModifiedBy: lastModifiedBy.value.trim(),
+    recordOwner: recordOwner.value.trim(),
+    };
+
+    console.log('Preparing to add training:', trainingData);
+
+    await store.addTraining(trainingData); 
+
+    console.log('Training added successfully');
+  
   } else {
-    console.error("All required fields must be filled out");
+    console.log('Validation failed');
   }
 };
 
 const handleSubmit = () => {
+  console.log('handleSubmit called');
   addTraining();
   console.log("Training added")
 };
@@ -404,12 +430,12 @@ main {
   line-height: 19.2px;
 }
 .frame input {
-  width: 390px;
+  width: 370px;
   height: 40px;
 }
 .frame textarea {
   display: flex;
-  width: 390px;
+  width: 370px;
   height: 200px;
   padding: 10px;
   flex-direction: column;
@@ -430,7 +456,7 @@ main {
   line-height: 14.4px;
 }
 .form-select {
-  width: 390px;
+  width: 370px;
   height: 40px;
   color: var(--Grey-Dark, #808080);
   font-family: "Roboto", sans-serif;
@@ -452,17 +478,7 @@ main {
   background: var(--Secondary, #47b65c);
   color: #fff;
 }
-.wright textarea {
-  width: 320px;
-  height: 70px;
-}
-.lefts input {
-  width: 320px;
-  height: 40px;
-  border: 1px solid var(--Grey-Light, #eee);
-  background: var(--White, #fff);
-  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
-}
+
 .form-selects {
   display: flex;
   width: 320px;
@@ -494,7 +510,10 @@ main {
 }
 
 .rating {
-  width: 390px;
+  width: 370px;
+  border: 1px solid var(--Grey-Light, #eee);
+  padding: 0px 10px;
+  border-radius: 5px;
 }
 .frame button {
   width: 145px;
@@ -605,11 +624,44 @@ label[for]:hover {
   .modal-body {
     width: 100%;
   }
+
   .form-select,
   .frame textarea,
   .frame input,
   .rating {
     width: 280px;
+  }
+  /*.form-select,
+  .frame textarea,
+  .frame input,
+  .rating {
+    width: 280px;
+  }*/
+}
+
+@media screen and (max-width: 992px) {
+  .modal-dialog {
+    width: 800px;
+    margin-top: 10%;
+    margin-left: 60px;
+  }
+
+  .modal-content {
+    width: 100%;
+  }
+
+  .modal-body {
+    width: 100%;
+  }
+
+  .form-select,
+  .frame textarea {
+    width: 230px;
+  }
+
+  .frame input,
+  .frame .rating {
+    width: 230px;
   }
 }
 
@@ -627,6 +679,10 @@ label[for]:hover {
     --bs-modal-width: 700px;
   }
 
+  .modal-body {
+    height: 650px;
+  }
+
   .form-select,
   .frame textarea,
   .frame input,
@@ -634,25 +690,103 @@ label[for]:hover {
     width: 200px;
   }
 
-  @media (max-width: 576px) {
-    .modal-dialog {
-      max-width: 80%;
-      margin: 5px;
-    }
+  .six .frame {
+    height: 110px;
+  }
+}
+@media (max-width: 576px) {
+  .title h3 {
+    font-size: 13px;
+    width: 120px;
+  }
 
-    .modal-body {
-      padding: 10px;
-    }
+  .title button {
+    width: 120px;
+    padding: 5px;
+    font-size: 10px;
+  }
+  .modal-dialog {
+    max-width: 80%;
+    margin-left: 7%;
+    height: 1700px;
+  }
 
-    .form-control,
-    .form-select,
-    .btn {
-      font-size: 14px;
-    }
+  .modal-content {
+    padding: 10px;
+    height: 1830px;
+  }
 
-    .modal-header h4 {
-      font-size: 18px;
-    }
+  .first,
+  .second,
+  .third,
+  .fourth,
+  .fifth,
+  .sixth {
+    flex-direction: column;
+  }
+
+  .form-control,
+  .form-select,
+  .btn {
+    font-size: 14px;
+  }
+
+  .modal-header h4 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 400px) {
+  .title h3 {
+    font-size: 10px;
+    width: 120px;
+  }
+
+  .title button {
+    width: 125px;
+    padding: 5px;
+    font-size: 8px;
+  }
+
+  .modal-dialog {
+    max-width: 80%;
+    margin-left: 7%;
+    height: 1700px;
+  }
+
+  .modal-content {
+    padding: 10px;
+    height: 1730px;
+  }
+
+  .modal-title {
+    font-size: 12px;
+  }
+
+  .form-select,
+  .frame textarea,
+  .frame input,
+  .rating {
+    width: 170px;
+  }
+
+  .first,
+  .second,
+  .third,
+  .fourth,
+  .fifth,
+  .sixth {
+    flex-direction: column;
+  }
+
+  .form-control,
+  .form-select,
+  .btn {
+    font-size: 14px;
+  }
+
+  .modal-header h4 {
+    font-size: 18px;
   }
 }
 </style>

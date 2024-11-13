@@ -1,18 +1,19 @@
 <script setup>
 import authService from '../../services/authService';
-import TabMenu from '../../components/Tabs/TabMenu.vue';
+import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
 import DoughNut from '../../components/DoughNut.vue'
 import CareerGoal from '../../components/CareerGoal.vue'
 import { ref, onMounted, watch } from 'vue'
 import { useGoalsStore } from "@/store/goals"
 import MidTerm from "../../components/Tables/MidTerm.vue"
 import LongTerm from "../../components/Tables/LongTerm.vue"
-import { useUsersStore } from '@/store/users';
+import DashTable from "../../components/Tables/DashTable.vue"
+
 
 const store = useGoalsStore();
 var goals = ref(store.goals);
 console.log(store.goals);
-const usersStore = useUsersStore();
+
 const goal = ref([])
 // const planTypeId = ref('Select Type')
 // const planTermId = ref('Select Term')
@@ -215,7 +216,7 @@ const saveExpandedText = () => {
                   <label for="planTypeId" class="form-label">Development Plan Type</label>
                   <select class="form-select" v-model="planTypeId">
                     <option value="Select Type">Select Type</option>
-                    <option value="1">Area of Interest</option>
+                    <option value="1">Area of Robotoest</option>
                     <option value="2">Career Goals and Aspirations</option>
                     <option value="3">Mentorship and Skill Building</option>
                   </select>
@@ -339,7 +340,8 @@ const saveExpandedText = () => {
 
                 </div>
                 <div class="table">
-                  <CareerGoal />
+                  <!-- <CareerGoal /> -->
+                  <DashTable />
                 </div>
               </v-container>
             </v-tab-item>

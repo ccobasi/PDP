@@ -3,8 +3,7 @@ import authService from '../../services/authService';
 import TabMenu from '../../components/Tabs/TabMenu.vue';
 import TableSeven from '../../components/Tables/TableSeven.vue'
 import {useEngagementStore} from "@/store/engagements"
-import { ref, onMounted, computed} from 'vue'
-import html2pdf from 'html2pdf.js';
+import { ref, onMounted } from 'vue'
 
 const store = useEngagementStore();
 console.log(store.engagements);
@@ -71,15 +70,56 @@ onMounted(async () => {
   }
 });
 
-const addEngagement = async () => {
-  if (eventDescription.value.trim() !== '' || eventDate.value.trim() !== ''
-    || eventCountry.value.trim() !== ''
-    || eventCategory.value.trim() !== '' || representative.value.trim() !== '' || contactEmail.value.trim() !== '' || contactPerson.value.trim() !== '' || contactPhone.value.trim() !== '' || status.value.trim() !== '' || topicTheme.value.trim() !== '' || sponsorship.value.trim() !== '' || createdBy.value.trim() !== '' || lastModifiedBy.value.trim() !== '' || recordOwner.value.trim() !== '') {
-    await store.addEngagement(eventDescription.value.trim(), eventDate.value.trim(),
-       eventCountry.value.trim(), eventCategory.value.trim(), representative.value.trim(), contactEmail.value.trim(), contactPerson.value.trim(), contactPhone.value.trim(), status.value.trim(), topicTheme.value.trim(), sponsorship.value.trim(), createdBy.value.trim(), lastModifiedBy.value.trim(), recordOwner.value.trim());
+// const addEngagement = async () => {
+//   if (eventDescription.value.trim() !== '' || eventDate.value.trim() !== ''
+//     || eventCountry.value.trim() !== ''
+//     || eventCategory.value.trim() !== '' || representative.value.trim() !== '' || contactEmail.value.trim() !== '' || contactPerson.value.trim() !== '' || contactPhone.value.trim() !== '' || status.value.trim() !== '' || topicTheme.value.trim() !== '' || sponsorship.value.trim() !== '' || createdBy.value.trim() !== '' || lastModifiedBy.value.trim() !== '' || recordOwner.value.trim() !== '') {
+//     await store.addEngagement(eventDescription.value.trim(), eventDate.value.trim(),
+//        eventCountry.value.trim(), eventCategory.value.trim(), representative.value.trim(), contactEmail.value.trim(), contactPerson.value.trim(), contactPhone.value.trim(), status.value.trim(), topicTheme.value.trim(), sponsorship.value.trim(), createdBy.value.trim(), lastModifiedBy.value.trim(), recordOwner.value.trim());
   
+//   }
+// };
+
+const addEngagement = async () => {
+  // Fallback to empty strings in case values are null or undefined
+  const trimmedValues = {
+    eventDescription: (eventDescription.value || '').trim(),
+    eventDate: (eventDate.value || '').trim(),
+    eventCountry: (eventCountry.value || '').trim(),
+    eventCategory: (eventCategory.value || '').trim(),
+    representative: (representative.value || '').trim(),
+    contactPerson: (contactPerson.value || '').trim(),
+    contactPhone: (contactPhone.value || '').trim(),
+    contactEmail: (contactEmail.value || '').trim(),
+    status: (status.value || '').trim(),
+    topicTheme: (topicTheme.value || '').trim(),
+    sponsorship: (sponsorship.value || '').trim(),
+    createdBy: (createdBy.value || '').trim(),
+    lastModifiedBy: (lastModifiedBy.value || '').trim(),
+    recordOwner: (recordOwner.value || '').trim(),
+  };
+
+  // Check if all required fields are filled
+  const requiredFields = [
+    'eventDescription', 'eventDate', 'eventCountry', 'eventCategory', 
+    'representative', 'contactPerson', 'contactPhone', 'contactEmail', 
+    'status', 'topicTheme', 'sponsorship', 'createdBy', 'lastModifiedBy', 'recordOwner'
+  ];
+
+  const allFieldsFilled = requiredFields.every(field => trimmedValues[field] !== '');
+
+  if (allFieldsFilled) {
+    try {
+      // Pass the entire object instead of individual fields
+      await store.addEngagement(trimmedValues);
+    } catch (error) {
+      console.error('Error adding engagement:', error);
+    }
+  } else {
+    console.warn('Please fill out all required fields');
   }
 };
+
 
 const handleSubmit = () => {
   addEngagement();
@@ -90,29 +130,6 @@ const handleSubmit = () => {
   // eslint-disable-next-line no-self-assign
   selectedValue.value = selectedValue.value
 }
-
-const itemsPerPage = 10; 
-const currentPage = ref(1);
-
-const totalPages = computed(() => Math.ceil(engagements.value.length / itemsPerPage));
-
-const paginatedEngagement = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return engagements.value.slice(startIndex, endIndex);
-});
-
-const downloadPDF = () => {
-  const table = document.querySelector('.table-responsive');
-
-  html2pdf(table, {
-    margin: 10,
-    filename: 'table-data.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-  });
-};
 
 </script>
 
@@ -697,6 +714,32 @@ th span {
   }
 }
 
+@media (max-width: 860px) {
+  .modal-body {
+    flex-direction: column;
+  }
+
+  .frame {
+    width: 100%;
+  }
+
+  .frame textarea,
+  .form-select,
+  .frame input {
+    width: 270px;
+  }
+
+  textarea,
+  input,
+  select {
+    font-size: 12px;
+  }
+
+  .modal-lg {
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
   .modal-body {
     flex-direction: column;
@@ -744,6 +787,12 @@ th span {
     margin-bottom: 15px;
   }
 
+  .frame textarea,
+  .form-select,
+  .frame input {
+    width: 100%;
+  }
+
   textarea,
   input,
   select {
@@ -764,6 +813,15 @@ th span {
 }
 
 @media (max-width: 400px) {
+  .title h3 {
+    font-size: 10px;
+  }
+
+  .title button {
+    font-size: 8px;
+    padding: 5px;
+  }
+
   .modal-title {
     font-size: 14px;
   }
@@ -775,7 +833,7 @@ th span {
   .frame textarea,
   .form-select,
   .frame input {
-    width: 230px;
+    width: 100%;
   }
 
   textarea,

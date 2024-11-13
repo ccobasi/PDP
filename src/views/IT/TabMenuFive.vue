@@ -157,11 +157,6 @@ import { computed } from 'vue';
     <nav class="navbar navbar-expand-md ">
 
       <ul class="navbar-nav">
-        <li :class="{ 'nav-item': true, 'active': $route.path === '/it/dashboard' }">
-          <router-link to="/it/dashboard" class="nav-link">
-            Dashboard
-          </router-link>
-        </li>
 
         <li :class="{ 'nav-item': true, 'active': $route.path === '/it/' }">
           <router-link to="/it/" class="nav-link">
@@ -198,6 +193,9 @@ import { computed } from 'vue';
         </li>
         <li :class="{ 'nav-item': true, 'active': $route.path === '/it/speakingengagement' }">
           <router-link to="/it/speakingengagement" class="nav-link">Speaking Engagement</router-link>
+        </li>
+        <li :class="{ 'nav-item': true, 'active': $route.path === '/it/settings' }">
+          <router-link to="/settings" class="nav-link">Settings</router-link>
         </li>
       </ul>
 
@@ -288,7 +286,7 @@ import { computed } from 'vue';
 }
 
 .active::after {
-  content: '';
+  content: "";
   position: absolute;
   display: block;
 

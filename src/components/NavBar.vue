@@ -80,11 +80,13 @@ export default {
       </v-badge>
       <div class="avatar">
         <img src="../assets/images/ellipse.png" alt="" class="profile-image">
-        <span> John Snow </span>
+        <span v-if="account">{{ account.name || account.username || account.email }}</span>
+        <span v-else>Guest </span>
       </div>
       <div class="logout">
         <img src="../assets/images/frame67.svg" alt="">
         <span @click="SignOut"> Logout </span>
+
       </div>
     </div>
   </div>
@@ -247,9 +249,13 @@ export default {
   }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 576px) {
   .pageheader {
     padding: 10px;
+  }
+
+  .pageheader::after {
+    top: 85px;
   }
 
   .logo img {
@@ -261,8 +267,46 @@ export default {
   }
 
   .subheader {
+    display: none !important;
     font-size: 10px;
     gap: 5px;
+    background: bisque;
+  }
+
+  .avatar .profile-image,
+  .logout img {
+    width: 18px;
+    height: 18px;
+  }
+
+  .logout span,
+  .avatar span {
+    font-size: 10px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .pageheader {
+    padding: 10px;
+  }
+
+  .pageheader::after {
+    top: 85px;
+  }
+
+  .logo img {
+    width: 30%;
+  }
+
+  .brand {
+    font-size: 16px;
+  }
+
+  .subheader {
+    display: none !important;
+    font-size: 8px;
+    gap: 5px;
+    background: bisque;
   }
 
   .avatar .profile-image,

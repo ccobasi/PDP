@@ -1,4 +1,4 @@
-<script setup>
+<!-- <script setup>
 import { ref } from  'vue'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import * as bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -32,10 +32,11 @@ const closeModal = () => {
   }
 };
 
+
 </script>
 <template>
   <div class="menu">
-    <!-- <div class="modal" id="myModal" tabindex="-1">
+    <div class="modal" id="myModal5" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -174,23 +175,18 @@ const closeModal = () => {
 
         </div>
       </div>
-    </div> -->
+    </div>
 
-    <!-- <div class="profile">
+    <div class="profile">
       <button class="btn pl-2" :class="{ 'active': activeButton === 'My Profile' }" @click="setActiveButton('My Profile')">My Profile</button>
-      <button class="btn" data-bs-toggle="modal" data-bs-target="#myModal" type="button" :class="{ 'active': activeButton === 'Team Profile' }" @click="setActiveButton('Team Profile')">
+      <button class="btn" data-bs-toggle="modal" data-bs-target="#myModal5" type="button" :class="{ 'active': activeButton === 'Team Profile' }" @click="setActiveButton('Team Profile')">
         <span>Team Profile</span>
       </button>
-    </div> -->
+    </div>
 
     <nav class="navbar navbar-expand-md ">
 
       <ul class="navbar-nav">
-        <!-- <li :class="{ 'nav-item': true, 'active': $route.path === '/km/dashboard', 'active-indicator': $route.path === '/km/dashboard' }">
-          <router-link to="/km/dashboard" class="nav-link">
-            Dashboard
-          </router-link>
-        </li> -->
         <li :class="{ 'nav-item': true, 'active': $route.path === '/km/', 'active-indicator': $route.path === '/km/' }">
           <router-link to="/km/" class="nav-link">
             Development Plans
@@ -227,7 +223,215 @@ const closeModal = () => {
     </nav>
 
   </div>
+</template> -->
+<script setup>
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import * as bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { useSelectedNameStore } from '@/store/goals.js';
+import { useUsersStore } from '@/store/users.js';
+
+const selectedNameStore = useSelectedNameStore();
+const router = useRouter();
+const usersStore = useUsersStore();
+const activeButton = ref('My Profile');
+const showTeamMemberGoals = ref(false);
+
+let modalInstance;
+
+onMounted( async () => {
+  await usersStore.fetchUsers();
+  teamMembers.value = usersStore.users;
+  
+  const modalElement = document.getElementById('myModal5');
+  if (modalElement) {
+    modalInstance = new bootstrap.Modal(modalElement);
+  }
+});
+
+const toggleTeamMemberGoals = () => {
+  showTeamMemberGoals.value = !showTeamMemberGoals.value;
+};
+
+// const setSelectedName = (name) => {
+//   selectedNameStore.setSelectedName(name);
+
+//   if (modalInstance && modalInstance._isShown) {
+//     modalInstance.hide();
+//   }
+
+//   setTimeout(() => {
+//     router.push({ path: '/km/myprofile', query: { name } });
+//   }, 300); 
+// };
+
+const setSelectedName = async (name) => {
+  selectedNameStore.setSelectedName(name);
+
+  // Fetch the user's goals or records
+  await usersStore .fetchUsers(name);  // Assuming this action fetches the user-specific goals
+  
+  if (modalInstance && modalInstance._isShown) {
+    modalInstance.hide();
+  }
+
+setTimeout(() => {
+    router.push({ path: '/km/myprofile', query: { name } });
+  }, 300); 
+};
+
+const setActiveButton = (buttonName) => {
+  activeButton.value = buttonName;
+};
+const teamMembers = ref([]);
+// const teamMembers = ref([
+//   { name: 'Lola Oyebola', dateOfEmployment: '23/08/2020', department: 'User', level: 'Associate', manager: 'Chinua Azibuke', promotions: 5 },
+//   { name: 'Mark Dean', dateOfEmployment: '23/05/2019', department: 'Knowledge Management', level: 'Senior Associate', manager: 'Daniel Clinton', promotions: 3 },
+//   { name: 'Uzo Okoro', dateOfEmployment: '23/11/2015', department: 'Manager', level: 'AVP', manager: 'Mosurat Adeniyi', promotions: 1 },
+//   { name: 'Daniel Muller', dateOfEmployment: '23/03/2022', department: 'HOD', level: 'Associate', manager: 'Ayo Adenike', promotions: 2 },
+//   { name: 'Jane Doe', dateOfEmployment: '23/05/2020', department: 'IT', level: 'Senior Associate', manager: 'Segun Arinze', promotions: 7 },
+// ]);
+</script>
+<template>
+  <div>
+    <div class="menu">
+      <div class="modal" id="myModal5" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div class="input-group rounded">
+                <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+                <span class="input-group-text border-0" id="search-addon">
+                  <i class="fa fa-search"></i>
+                </span>
+              </div>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink">Full Name</span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink">Date of Employment</span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink">Department</span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink">Level</span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink">Manager</span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink">Number of Times Promoted</span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- <tr v-for="member in teamMembers" :key="member.name" @click="setSelectedName(member.name)" data-bs-dismiss="modal">
+                      <td>{{ member.name }}</td>
+                      <td>{{ member.dateOfEmployment }}</td>
+                      <td>{{ member.department }}</td>
+                      <td>{{ member.level }}</td>
+                      <td>{{ member.manager }}</td>
+                      <td>{{ member.promotions }}</td>
+                    </tr> -->
+                    <tr v-for="member in teamMembers" :key="member.name" @click="setSelectedName(member.name)" data-bs-dismiss="modal">
+                      <td>{{ member.name }}</td>
+                      <td>{{ member.dateOfEmployment }}</td>
+                      <td>{{ member.department }}</td>
+                      <td>{{ member.level }}</td>
+                      <td>{{ member.manager }}</td>
+                      <td>{{ member.promotions }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="profile">
+        <button class="btn pl-2" :class="{ 'active': activeButton === 'My Profile' }" @click="setActiveButton('My Profile')">My Profile</button>
+
+        <button class="btn" data-bs-toggle="modal" data-bs-target="#myModal5" type="button" :class="{ 'active': activeButton === 'Team Profile' }" @click="() => { setActiveButton('Team Profile'); toggleTeamMemberGoals(); }">
+          <span>Team Profile</span>
+        </button>
+      </div> -->
+
+      <nav class="navbar navbar-expand-md">
+        <ul class="navbar-nav">
+          <li :class="{ 'nav-item': true, 'active': $route.path === '/km/', 'active-indicator': $route.path === '/km/' }">
+            <router-link to="/km/" class="nav-link">Development Plans</router-link>
+          </li>
+          <li :class="{ 'nav-item': true, 'active': $route.path === '/km/skillassessment', 'active-indicator': $route.path === '/km/skillassessment' }">
+            <router-link to="/km/skillassessment" class="nav-link">Skill Assessment</router-link>
+          </li>
+          <li :class="{ 'nav-item': true, 'active': $route.path === '/km/trainingschedule', 'active-indicator': $route.path === '/km/trainingschedule' }">
+            <router-link to="/km/trainingschedule" class="nav-link">Training Schedule</router-link>
+          </li>
+          <li :class="{ 'nav-item': true, 'active': $route.path === '/km/alltrainingschedule', 'active-indicator': $route.path === '/km/alltrainingschedule' }">
+            <router-link to="/km/alltrainingschedule" class="nav-link">All Training Schedule</router-link>
+          </li>
+          <li :class="{ 'nav-item': true, 'active': $route.path === '/km/taskdeliverables', 'active-indicator': $route.path === '/km/taskdeliverables' }">
+            <router-link to="/km/taskdeliverables" class="nav-link">Task/Deliverables</router-link>
+          </li>
+          <li :class="{ 'nav-item': true, 'active': $route.path === '/km/mentorshipplan', 'active-indicator': $route.path === '/km/mentorshipplan' }">
+            <router-link to="/km/mentorshipplan" class="nav-link">Mentorship Plan</router-link>
+          </li>
+          <li :class="{ 'nav-item': true, 'active': $route.path === '/km/speakingengagement', 'active-indicator': $route.path === '/km/speakingengagement' }">
+            <router-link to="/km/speakingengagement" class="nav-link">Speaking Engagement</router-link>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
 </template>
+
 <style scoped>
 .menu {
   display: flex;
@@ -447,6 +651,26 @@ tr {
 .input-group {
   width: 297px;
 }
+
+@media (max-width: 850px) {
+  .navbar {
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+
+  .navbar-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .nav-item {
+    margin-right: 10px;
+    margin-top: 0;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .menu {
     flex-direction: column;

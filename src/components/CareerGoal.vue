@@ -20,7 +20,7 @@ const isITRoute = route.path === '/it/';
 
     <div class="d-flex justify-content-between mt-4">
       <div class="custom-table table-responsive-sm">
-        <TableOne v-if="isUserRoute" />
+        <TableOne :year="selectedYear" :quarter="selectedQuarter" v-if="isUserRoute" />
         <KMTableOne v-if="isKMRoute" />
         <MTableOne v-if="isManagerRoute" />
         <HODTableOne v-if="isHodRoute" />

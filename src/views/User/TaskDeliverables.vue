@@ -398,7 +398,7 @@ main {
   background: #808080;
 }
 .modal {
-  margin-left: 5%;
+  margin-left: 1%;
 }
 #myModal1 .modal-dialog {
   --bs-modal-width: 1200px;

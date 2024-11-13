@@ -5,7 +5,7 @@ export const useRolesStore = defineStore('roles', {
   state: () => ({
     roles: [],
     selectedFile: null,
-    baseUrl: 'https://infracreditpdp.azurewebsites.net/api/Administrations',
+    baseUrl: 'https://infracredit2.pythonanywhere.com/api/v1/user-roles/',
     endpoints: {
       getRoles: '/getRoles',
       createRoles: '/createRoles',
@@ -17,8 +17,8 @@ export const useRolesStore = defineStore('roles', {
   actions: {
     async fetchRoles() {
       try {
-        const response = await axios.get(`${this.baseUrl}${this.endpoints.getRoles}`);
-        this.roles = response.data;
+        const response = await axios.get(`${this.baseUrl}`);
+        this.roles = response.data.data;
         console.log(this.roles); 
       } catch (error) {
         console.error('Error fetching roles:', error);

@@ -109,4 +109,14 @@ div {
   height: 100%;
   max-height: 400px;
 }
+
+@media (max-width: 576px) {
+  div {
+    max-height: 300px;
+  }
+  canvas {
+    width: 100% !important;
+    height: auto !important;
+  }
+}
 </style>

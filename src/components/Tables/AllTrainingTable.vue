@@ -1,103 +1,136 @@
 <script setup>
-    import { useGoalsStore } from "@/store/goals";
-    import { ref, computed } from 'vue';
+    import {useTrainingsStore} from "@/store/trainings"
+    import { ref, computed, watch, onMounted } from 'vue';
 
+const props = defineProps({
+  level: {
+    type: String,
+    required: true
+  },
+  department: {
+    type: String,
+    required: true
+  },
+  quarter: {
+    type: String,
+    required: true
+  },
+  year: {
+    type: String,
+    required: true
+  }
+});
 
-const items = ref([
-  { 
-    id: '1',
-    name: 'Monsurat Adeniyi', 
-    department: 'Procurement',
-    months: '12/08/2023',
-    trainTopic: 'Digital Marketing',
-    learningOutcome: 'Digital Marketer',
-    trainingMethod: 'Online', 
-    skillMatrixMapping: 'Proficiency ',
-    status: 'Completed',
-    dueDate: '12/08/2023',
-    evidence: 'Attached',
-    },
-    { 
-    id: '2',
-    name: 'Chinua Azibuke', 
-    department: 'HR',
-    months: '12/08/2023',
-    trainTopic: 'Content Writing',
-    learningOutcome: 'Digital Marketer',
-    trainingMethod: 'Online', 
-    skillMatrixMapping: 'Proficiency ',
-    status: 'Ongoing',
-    dueDate: '12/08/2023',
-    evidence: 'Attached',
-    },
-    { 
-    id: '3',
-    name: 'Lola Oyebola', 
-    department: 'Finance',
-    months: '12/08/2023',
-    trainTopic: 'SEO',
-    learningOutcome: 'SEO Expert',
-    trainingMethod: 'Physical', 
-    skillMatrixMapping: 'Proficiency ',
-    status: 'Not Started',
-    dueDate: '12/08/2023',
-    evidence: 'Attached',
-    },
-    { 
-    id: '4',
-    name: 'Uzo Okorp', 
-    department: 'IT',
-    months: '12/08/2023',
-    trainTopic: 'Web Design',
-    learningOutcome: 'Web Designer',
-    trainingMethod: 'Physical', 
-    skillMatrixMapping: 'Proficiency ',
-    status: 'On going',
-    dueDate: '12/08/2023',
-    evidence: 'Attached',
-    },
-    { 
-    id: '5',
-    name: 'Olanike Salau', 
-    department: 'Legal',
-    months: '12/08/2023',
-    trainTopic: 'Blogging',
-    learningOutcome: 'Blogger',
-    trainingMethod: 'Physical', 
-    skillMatrixMapping: 'Proficiency ',
-    status: 'Completed',
-    dueDate: '12/08/2023',
-    evidence: 'Attached',
-    },
-]);
+const store = useTrainingsStore();
+const trainings = ref([]);
+// const selectedItem = ref(null);
 
-const selectedItem = ref(null);
+// const selectItem = (item) => {
+//   selectedItem.value = item;
+//   console.log(selectedItem)
+// };
 
-const selectItem = (item) => {
-  selectedItem.value = item;
-  console.log(selectedItem)
+const fetchData = async () => {
+  try {
+    await store.fetchTrainings();
+
+    trainings.value = store.trainings;
+
+    console.log('Trainings:', trainings.value);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
 };
 
+onMounted(async () => {
 
-   const store = useGoalsStore();
-    const goals = store.goals;
+  try {
+    await store.fetchTrainings();
 
-    console.log(goals);
+    if (Array.isArray(store.trainings)) {
+      trainings.value = store.trainings;
+    } else {
+      console.error('Error: store.trainings is not an array');
+    }
+
+    watch(
+      () => store.trainings,
+      (newTrainings) => {
+        if (Array.isArray(newTrainings)) {
+          trainings.value = newTrainings;
+        } else {
+          console.error('Error: store.trainings is not an array');
+        }
+      }
+    );
+
+    console.log('Trainings:', trainings.value);
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+
+  watch([() => props.level, () => props.department, () => props.quarter, () => props.year], fetchData);
+});
 
 const filterValue = ref('');
 const filterBy = ref('all');
 
 const filteredItems = computed(() => {
-  return items.value.filter(item => {
+  return trainings.value.filter(item => {
     if (filterBy.value === 'all') {
-      return item.name.toLowerCase().includes(filterValue.value.toLowerCase());
+      return item.recordOwner.userFullName.toLowerCase().includes(filterValue.value.toLowerCase());
     } else {
       return item[filterBy.value].toLowerCase().includes(filterValue.value.toLowerCase());
     }
   });
 });
 
+const currentPage = ref(1); 
+const itemsPerPage = 15; 
 
+const filteredTrainings = computed(() => {
+  console.log('KMTableThree Trainings:', trainings.value);
+
+  return trainings.value.filter(item => {
+   
+    const trainingStartDate = new Date(item.trainingStartDate);
+    const itemYear = trainingStartDate.getFullYear();
+    const itemMonth = trainingStartDate.getMonth(); 
+    const itemQuarter = Math.floor(itemMonth / 3) + 1; 
+
+    console.log(`Extracted Year: ${itemYear}, Month: ${itemMonth}, Quarter: ${itemQuarter}`);
+
+    const matchesYear = !props.year || itemYear === parseInt(props.year);
+    const matchesQuarter = !props.quarter || itemQuarter === parseInt(props.quarter.slice(-1)); 
+    const matchesDepartment = !props.department || (item.department === props.department);
+    const matchesLevel = !props.level || (item.recordOwner?.role?.option === props.level);
+
+    console.log("Matching Criteria", {
+      item,
+      matchesYear,
+      matchesQuarter,
+      matchesDepartment,
+      matchesLevel,
+    });
+
+    return matchesYear && matchesQuarter && matchesDepartment && matchesLevel;
+  });
+});
+
+const paginatedTrainings = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return filteredTrainings.value.slice(startIndex, endIndex);
+});
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toISOString().split('T')[0]; 
+}
+
+const changePage = (page) => {
+  currentPage.value = page;
+};
 </script>
 <template>
   <div class="table-responsive d-flex flex-column">
@@ -179,6 +212,17 @@ const filteredItems = computed(() => {
           </th>
           <th scope="col">
             <div class="d-flex align-center gap-1">
+              <span class="noshrink"> Approval Status</span>
+
+              <span class="d-flex flex-column align-center">
+                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+              </span>
+
+            </div>
+          </th>
+          <th scope="col">
+            <div class="d-flex align-center gap-1">
               <span class="noshrink"> Status </span>
 
               <span class="d-flex flex-column align-center">
@@ -204,13 +248,13 @@ const filteredItems = computed(() => {
       </thead>
       <tbody>
 
-        <tr v-for="item in filteredItems" :key="item.id" @click="selectItem(item)" @dblclick="$router.push({name: 'Detail', params: {id: item.id}})">
-          <td>{{item.name}}</td>
+        <tr v-for="(item, index) in paginatedTrainings" :key="index" @click="handleClick(item)" @dblclick="handleDoubleClick(item)">
+          <td>{{item.recordOwner.userFullName}}</td>
           <td>{{item.department}}</td>
-          <td>{{item.months}}</td>
-          <td>{{item.trainTopic}}</td>
+          <td>{{formatDate(item.trainingStartDate)}}</td>
+          <td>{{item.trainingTopic}}</td>
           <td>{{item.learningOutcome}}</td>
-
+          <td>{{item.isApproved}}</td>
           <td>{{item.status}}</td>
           <td>{{item.dueDate}}</td>
 
@@ -218,7 +262,12 @@ const filteredItems = computed(() => {
 
       </tbody>
     </table>
+    <div class="pagination">
+      <button @click="changePage(page)" v-for="page in Math.ceil(filteredItems.length / itemsPerPage)" :key="page" :class="{ active: page === currentPage }">
+        {{ page }}
+      </button>
 
+    </div>
   </div>
 </template>
 
@@ -266,7 +315,32 @@ tr {
 
   background: var(--White, #fff);
 }
+
+.pagination {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.pagination button {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: #f4f4f4;
+  cursor: pointer;
+}
+
+.pagination button.active {
+  font-weight: bold;
+  background-color: #007bff;
+  color: white;
+}
+
 @media screen and (max-width: 768px) {
+  .filter {
+    display: none;
+  }
+
   thead tr th {
     font-size: 10px;
   }

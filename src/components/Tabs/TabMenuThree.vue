@@ -20,7 +20,7 @@ const setActiveButton = (button) => {
 };
 
 const closeModal = () => {
-  const modalElement = document.getElementById('myModal');
+  const modalElement = document.getElementById('myModal5');
   const modal = bootstrap.Modal.getInstance(modalElement);
 
 
@@ -35,7 +35,7 @@ const closeModal = () => {
 </script>
 <template>
   <div class="menu">
-    <div class="modal" id="myModal" tabindex="-1">
+    <div class="modal" id="myModal5" tabindex="-1">
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
@@ -178,7 +178,7 @@ const closeModal = () => {
 
     <div class="profile">
       <button class="btn pl-2" :class="{ 'active': activeButton === 'My Profile' }" @click="setActiveButton('My Profile')">My Profile</button>
-      <button class="btn" data-bs-toggle="modal" data-bs-target="#myModal" type="button" :class="{ 'active': activeButton === 'Team Profile' }" @click="setActiveButton('Team Profile')">
+      <button class="btn" data-bs-toggle="modal" data-bs-target="#myModal5" type="button" :class="{ 'active': activeButton === 'Team Profile' }" @click="setActiveButton('Team Profile')">
         <span>Team Profile</span>
       </button>
     </div>
@@ -186,11 +186,6 @@ const closeModal = () => {
     <nav class="navbar navbar-expand-md ">
 
       <ul class="navbar-nav">
-        <li :class="{ 'nav-item': true, 'active': $route.path === '/m/dashboard', 'active-indicator': $route.path === '/m/dashboard' }">
-          <router-link to="/m/dashboard" class="nav-link">
-            Dashboard
-          </router-link>
-        </li>
         <li :class="{ 'nav-item': true, 'active': $route.path === '/m/', 'active-indicator': $route.path === '/m/' }">
           <router-link to="/m/" class="nav-link">
             Development Plans
@@ -446,6 +441,26 @@ tr {
 .input-group {
   width: 297px;
 }
+
+@media (max-width: 850px) {
+  .navbar {
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+
+  .navbar-nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .nav-item {
+    margin-right: 10px;
+    margin-top: 0;
+  }
+}
+
 @media screen and (max-width: 768px) {
   .menu {
     flex-direction: column;
@@ -471,6 +486,24 @@ tr {
 
   .active::after {
     bottom: -8px;
+  }
+}
+
+@media (max-width: 576px) {
+  .profile {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-nav {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .navbar-nav .nav-item {
+    margin-top: 10px;
+    margin-right: 0;
   }
 }
 </style>

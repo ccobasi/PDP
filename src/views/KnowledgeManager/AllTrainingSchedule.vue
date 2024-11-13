@@ -1,26 +1,52 @@
-<script>
+<script setup>
 import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
 import DoughnutChart from '../../components/Charts/DoughnutChart.vue'
 import AllTrainingTable from '../../components/Tables/AllTrainingTable.vue'
 
-export default {
-    data: () => ({
-        tab: null,
-        
-    }),
-    components: {
-        
-        TabMenu: TabMenu,DoughnutChart,AllTrainingTable,
-    }
-    
-}
+
 </script>
 
 
 <template>
   <main class="wrapper">
     <TabMenu />
+    <div class="filters d-flex gap-2 mt-2">
+      <select class="form-select" @change="handleDateChange">
+        <option value="Level">Level</option>
+        <option value="1">Manager</option>
+        <option value="2">HOD</option>
+        <option value="3">IT</option>
+        <option value="4">User</option>
+        <option value="5">Knowledge Manager</option>
+      </select>
 
+      <select class="form-select" @change="handleDateChange">
+        <option value="Department">Department</option>
+        <option value="1">IT</option>
+        <option value="2">Finance</option>
+        <option value="3">Accounting</option>
+        <option value="4">Operation</option>
+        <option value="5">Customer Service</option>
+      </select>
+
+      <select class="form-select" @change="handleDateChange">
+        <option value="Quarterly">Quarterly</option>
+        <option value="1">Q1</option>
+        <option value="2">Q2</option>
+        <option value="3">Q3</option>
+        <option value="4">Q4</option>
+
+      </select>
+
+      <select class="form-select" @change="handleDateChange">
+        <option value="Year">Year</option>
+        <option value="1">2024</option>
+        <option value="2">2025</option>
+        <option value="3">2026</option>
+        <option value="4">2027</option>
+
+      </select>
+    </div>
     <div class="skill mt-4">
       <div class="header">
         <div class="title mb-4">
@@ -38,27 +64,7 @@ export default {
       </div>
 
       <div class="table">
-        <!-- <div class="filter">
-          <div class="left d-flex">
-            <label for="filter">Filter by:</label>
-            <select class="form-select" aria-label="Default select example">
-              <option class="opt" selected>All</option>
-              <option class="opt" value="Department">Department</option>
-              <option class="opt" value="All">All</option>
-              <option class="opt" value="Months">Months</option>
-            </select>
-          </div>
-          <div class="right">
-            <div class="input-group rounded">
-              <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
 
-              <span class="input-group-text border-0" id="search-addon">
-                <i class="fa fa-search"></i>
-
-              </span>
-            </div>
-          </div>
-        </div> -->
         <AllTrainingTable />
       </div>
 
@@ -70,6 +76,14 @@ export default {
 main {
   height: 1750px;
 }
+
+.filters .form-select {
+  width: 100px;
+  border-radius: 10px;
+  height: 40px;
+  color: #000;
+}
+
 .skill {
   display: flex;
   padding: 30px;
@@ -163,5 +177,79 @@ main {
   border-radius: 5px;
 
   background: var(--White, #fff);
+}
+
+@media screen and (max-width: 768px) {
+  main {
+    overflow-y: hidden;
+  }
+  .skill {
+    height: 1300px;
+  }
+  .modal {
+    margin-left: 5%;
+  }
+  .modal-dialog {
+    --bs-modal-width: 700px;
+  }
+
+  .modal-body {
+    height: 650px;
+  }
+
+  .form-select,
+  .frame textarea,
+  .frame input,
+  .rating {
+    width: 200px;
+  }
+
+  .six .frame {
+    height: 110px;
+  }
+}
+@media (max-width: 576px) {
+  .filters .form-select {
+    display: none;
+  }
+  .title h3 {
+    font-size: 13px;
+    width: 120px;
+  }
+
+  .title button {
+    width: 120px;
+    padding: 5px;
+    font-size: 10px;
+  }
+  .modal-dialog {
+    max-width: 80%;
+    margin-left: 7%;
+    height: 1700px;
+  }
+
+  .modal-content {
+    padding: 10px;
+    height: 1830px;
+  }
+
+  .first,
+  .second,
+  .third,
+  .fourth,
+  .fifth,
+  .sixth {
+    flex-direction: column;
+  }
+
+  .form-control,
+  .form-select,
+  .btn {
+    font-size: 14px;
+  }
+
+  .modal-header h4 {
+    font-size: 18px;
+  }
 }
 </style>

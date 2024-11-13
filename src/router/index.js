@@ -20,7 +20,8 @@ import KMAllTrainingSchedule from '../views/KnowledgeManager/AllTrainingSchedule
 import KMTaskDeliverables from '../views/KnowledgeManager/TaskDeliverables.vue'
 import KMMentorship from '../views/KnowledgeManager/MentorshipPlan.vue'
 import SpeakingEngagement from '../views/KnowledgeManager/SpeakingEngagement.vue'
-import MyProfile from '../views/KnowledgeManager/MyProfile.vue'
+// import MyProfile from '../views/KnowledgeManager/MyProfile.vue'
+import TeamDashboard from '../views/KnowledgeManager/TeamDashboard.vue'
 import  ProfileSkillAssessment from '../views/KnowledgeManager/ProfileSkillAssessment.vue'
 import ProfileTrainingSchedule from '../views/KnowledgeManager/ProfileTrainingSchedule.vue'
 import MDashboard from '../views/Manager/DashBoard.vue'
@@ -117,12 +118,6 @@ const router = createRouter({
      
     },
     {
-      path: '/settings',
-      name: 'Settings',
-      component: Settings,
-     
-    },
-    {
       path: '/roledetails/:id',
       name: 'Role Detail',
       component: RoleDetails,
@@ -206,10 +201,19 @@ const router = createRouter({
     name: "Speaking Engagement",
     component: SpeakingEngagement,
     },
+    // {
+    // path: "/km/myprofile",
+    // name: "Knowledge Manager Profile",
+    // component: MyProfile,
+    // props: route => ({ selectedName: route.query.name,
+    // recordOwner: route.params.recordOwner  }),
+    // },
     {
     path: "/km/myprofile",
-    name: "Knowledge Manager Profile",
-    component: MyProfile,
+    name: "Team Dashboard",
+    component:TeamDashboard,
+    props: route => ({ selectedName: route.query.name,
+    recordOwner: route.params.recordOwner  }),
     },
     {
     path: "/km/profileskillassessment",
@@ -388,6 +392,12 @@ const router = createRouter({
     path: "/it/speakingengagement",
     name: "IT Speaking Engagement",
     component: ITSpeakingEngagement,
+    },
+    {
+      path: '/it/settings',
+      name: 'Settings',
+      component: Settings,
+     
     },
   ]
 })

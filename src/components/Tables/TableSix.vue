@@ -1,26 +1,31 @@
 <script setup>
+import authService from '../../services/authService';
 import { useMentorshipStore } from "@/store/mentorship";
 // import html2pdf from 'html2pdf.js';
-import { ref, computed, onMounted } from 'vue';
-
+import { ref, computed, onMounted, watch } from 'vue';
+import { Modal } from 'bootstrap';
+import { useUsersStore } from '@/store/users';
 
 const store = useMentorshipStore();
 const mentorships = ref([]);
+const usersStore = useUsersStore();
 const editingMentorship = ref(null);
 // const selectedItem = ref(null);
   const month = ref('')
-  const financialYearId = ref('')
+  const financialYear = ref('')
   const mentor = ref('')
   const goals = ref('')
   const actionPlans  = ref('')
   const targetCompletionDate = ref('')
+  const actualCompletionDate = ref('')
   const progressMetrics = ref('')
   const feedback = ref('')
-  const evidenceURL = ref('')
-  const createdBy = ref('')
-  const lastModifiedBy = ref('')
+  const evidence = ref(null)
+  const createdBy = ref(null)
   const status = ref('')
-  const mentorshipPlanId = ref('')
+  const lastModifiedBy = ref(null)
+  const selectedItem = ref(null);
+  const recordOwner = ref(null)
 
 const fetchData = async () => {
   try {
@@ -33,41 +38,64 @@ const fetchData = async () => {
 };
 
 onMounted(async () => {
+  await usersStore.fetchUsers();
+  initializeModal();
   await fetchData();
+  try {
+    await authService.initialize();
+    const msalInstance = authService.getMsalInstance();
+    const accounts = msalInstance.getAllAccounts();
+    if (accounts.length) {
+      createdBy.value = accounts[0].username; 
+      lastModifiedBy.value = accounts[0].username; 
+    } else {
+      createdBy.value = defaultUser;
+      lastModifiedBy.value = defaultUser;
+    }
+  } catch (error) {
+    console.error('Error during MSAL initialization:', error);
+    createdBy.value = defaultUser;
+    lastModifiedBy.value = defaultUser;
+  }
 });
 
-const addMentorship = async () => {
-  if (financialYearId.value.trim() !== '' || month.value.trim() !== '' || mentor.value.trim() !== ''
-    || goals.value.trim() !== ''
-    || actionPlans.value.trim() !== '' || targetCompletionDate.value.trim() !== '' || progressMetrics.value.trim() !== '' || feedback.value.trim() !== '' || evidenceURL.value.trim() !== '' || status.value.trim() !== '' || createdBy.value.trim() !== '' || lastModifiedBy.value.trim() !== '') {
-    await store.addMentorship(financialYearId.value.trim(), month.value.trim(), mentor.value.trim(),
-       goals.value.trim(), actionPlans.value.trim(), targetCompletionDate.value.trim(), status.value.trim(), progressMetrics.value.trim(), feedback.value.trim(), evidenceURL.value.trim(), createdBy.value.trim(), lastModifiedBy.value.trim());
-  
-  }
-};
 
 const handleSubmit = () => {
-  addMentorship();
+  
   console.log("Mentorship added")
 };
 
+const usersOptions = computed(() =>
+  usersStore.users.map(user => ({
+    label: user.userFullName,
+    value: user.userId
+  }))
+);
+
+const userNamesMap = computed(() =>
+  usersStore.users.reduce((map, user) => {
+    map[user.id] = user.name;
+    return map;
+  }, {})
+);
 
 const editMentorship = (mentorship) => {
+  const createdById = createdBy.value?.id || defaultUser.id
   editingMentorship.value = { ...mentorship };
   
-  mentorshipPlanId.value = mentorship.mentorshipPlanId;
-  financialYearId.value = mentorship.financialYearId;
+  financialYear.value = mentorship.financialYear;
   month.value = mentorship.month;
   mentor.value = mentorship.mentor;
   goals.value = mentorship.goals;
   actionPlans.value = mentorship.actionPlans;
   targetCompletionDate.value = mentorship.targetCompletionDate;
+  actualCompletionDate.value = mentorship.actualCompletionDate
   progressMetrics.value = mentorship.progressMetrics;
   feedback.value = mentorship.feedback;
-  evidenceURL.value = mentorship.evidenceURL;
-  createdBy.value = mentorship.createdBy;
-  lastModifiedBy.value = mentorship.lastModifiedBy;
+  evidence.value = mentorship.evidence;
+  createdBy.value = createdById;
   status.value = mentorship.status;
+  recordOwner.value = mentorship.recordOwner.userId || createdById;
   
   console.log('Opening modal for editing:', mentorship);
   document.getElementById('myModal3').style.display = 'block';
@@ -76,32 +104,29 @@ const editMentorship = (mentorship) => {
 };
 
 const updateMentorship = async () => {
+  const createdById = createdBy.value?.id || defaultUser.id
   if (editingMentorship.value) {
-    editingMentorship.value.mentorshipPlanId = mentorshipPlanId.value;
-    editingMentorship.value.financialYearId = financialYearId.value;
+    editingMentorship.value.financialYear = financialYear.value;
     editingMentorship.value.month = month.value;
     editingMentorship.value.mentor = mentor.value;
     editingMentorship.value.goals = goals.value;
     editingMentorship.value.actionPlans = actionPlans.value;
     editingMentorship.value.targetCompletionDate = targetCompletionDate.value ? new Date(targetCompletionDate.value).toISOString() : null;
+    editingMentorship.value.actualCompletionDate = actualCompletionDate.value ? new Date(actualCompletionDate.value).toISOString() : null;
     editingMentorship.value.progressMetrics = progressMetrics.value;
     editingMentorship.value.feedback = feedback.value;
-    editingMentorship.value.evidenceURL = evidenceURL.value || '';
-    editingMentorship.value.createdBy = createdBy.value;
-    editingMentorship.value.lastModifiedBy = lastModifiedBy.value;
+    editingMentorship.value.evidence = evidence.value || '';
+    editingMentorship.value.createdBy = createdById;
     editingMentorship.value.status = status.value;
+    editingMentorship.value.recordOwner = recordOwner.value;
 
     // Log the payload
     console.log('Payload:', editingMentorship.value);
 
-    try {
-      await store.updateMentorship(editingMentorship.value);
-      editingMentorship.value = null;
-      document.getElementById('myModal3').style.display = 'none';
-    } catch (error) {
-      console.error('Error updating mentorship:', error);
-      console.error('Error response data:', error.response?.data);
-    }
+    await store.updateMentorship(editingMentorship.value);
+    editingMentorship.value = null;
+
+    document.getElementById('myModal3').style.display = 'none';
 
   }
 };
@@ -117,32 +142,13 @@ const loading = ref(false);
 const handleFileChange = async (event) => {
   loading.value = true;
   const file = event.target.files[0];
-  evidenceURL.value = file.name;
+  evidence.value = file.name;
 
   loading.value = false;
 };
 
 const itemsPerPage = 20; 
 const currentPage = ref(1);
-// const totalPages = computed(() => Math.ceil(mentorships.value.length / itemsPerPage));
-// const paginatedMentorship = computed(() => {
-//   const startIndex = (currentPage.value - 1) * itemsPerPage;
-//   const endIndex = startIndex + itemsPerPage;
-//   return mentorships.value.slice(startIndex, endIndex);
-// });
-
-// const downloadPDF = () => {
-//   const table = document.querySelector('.table-responsive');
-//   html2pdf(table, {
-//     margin: 10,
-//     filename: 'table-data.pdf',
-//     image: { type: 'jpeg', quality: 0.98 },
-//     html2canvas: { scale: 2 },
-//     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-//   });
-// };
-
-
 
 const onSelectChange = (event) => {
   console.log('Selected value:', event.target.value);
@@ -172,6 +178,92 @@ const goToPage = (page) => {
     currentPage.value = page;
   }
 };
+
+const currentIndex = ref(0);
+
+const loadMentorship = (index) => {
+  if (index >= 0 && index < mentorships.value.length) {
+    selectedItem.value = mentorships.value[index];
+  }
+};
+
+const initializeModal = () => {
+  const singleClickModalElement = document.getElementById('myModal4');
+  const doubleClickModalElement = document.getElementById('myModal3');
+
+  if (singleClickModalElement) {
+    singleClickModal.value = Modal.getOrCreateInstance(singleClickModalElement);
+  } else {
+    console.error('Modal element "myModal4" not found.');
+  }
+
+  if (doubleClickModalElement) {
+    doubleClickModal.value = Modal.getOrCreateInstance(doubleClickModalElement);
+  } else {
+    console.error('Modal element "myModal3" not found.');
+  }
+};
+
+const nextMentorship = () => {
+  if (currentIndex.value < mentorships.value.length - 1) {
+    currentIndex.value++;
+    loadMentorship(currentIndex.value);
+  }
+};
+
+const prevMentorship = () => {
+  if (currentIndex.value > 0) {
+    currentIndex.value--;
+    loadMentorship(currentIndex.value);
+  }
+};
+
+
+watch(currentIndex, (newIndex) => {
+  loadMentorship(newIndex);
+});
+
+const clickTimeout = ref(null);
+const singleClickModal = ref(null);
+const doubleClickModal = ref(null);
+
+const closeModal = (modalRef) => {
+  const modalInstance = modalRef === 'singleClickModal' ? singleClickModal.value : doubleClickModal.value;
+  modalInstance.hide(); 
+};
+
+const showModal = (modalInstance) => {
+  if (modalInstance) {
+    modalInstance.show(); 
+  } else {
+    console.error('Modal instance not found.');
+  }
+};
+
+const handleClick = (item) => {
+  if (clickTimeout.value) {
+    clearTimeout(clickTimeout.value);
+  }
+  clickTimeout.value = setTimeout(() => {
+    selectedItem.value = item;
+    showModal(singleClickModal.value);
+  }, 250); 
+};
+
+const handleDoubleClick = (item) => {
+  if (clickTimeout.value) {
+    clearTimeout(clickTimeout.value);
+    clickTimeout.value = null;
+  }
+  selectedItem.value = item;
+  showModal(doubleClickModal.value);
+  editMentorship(item);
+};
+
+  const defaultUser = {
+    id: 4, 
+    username: 'James Bond',
+  };
 </script>
 
 <template>
@@ -182,7 +274,7 @@ const goToPage = (page) => {
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title">Mentorship Request Form</h4>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><b></b></button>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal('doubleClickModal')"><b></b></button>
             </div>
 
             <div class="modal-body">
@@ -190,7 +282,7 @@ const goToPage = (page) => {
               <div class="first">
                 <div class="frame">
                   <h6>Financial Year</h6>
-                  <select v-model="financialYearId" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                  <select v-model="financialYear" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
                     <option selected>Select Financial Year</option>
                     <option value="2023">FY23</option>
                     <option value="2024">FY24</option>
@@ -263,7 +355,7 @@ const goToPage = (page) => {
                 </div>
                 <div class="frame">
                   <h6>Evidence</h6>
-                  <input type="file" class="form-control" @change="handleFileChange">
+                  <input type="file" class="form-control" @change="handleFileChange" accept="image">
                 </div>
 
               </div>
@@ -280,17 +372,159 @@ const goToPage = (page) => {
               </div>
               <div class="fifth">
                 <div class="frame">
-                  <h6>CreatedBy</h6>
-                  <input type="text" v-model="createdBy" placeholder="Created By" disabled>
+                  <h6>Record Owner</h6>
+                  <select v-model="recordOwner" class="form-select">
+                    <option value="" disabled>Select Record Owner</option>
+                    <option v-for="user in usersOptions" :key="user.value" :value="user.value">
+                      {{ user.label }}
+                    </option>
+                  </select>
                 </div>
                 <div class="frame">
-                  <h6>Modified By</h6>
-                  <input type="text" v-model="lastModifiedBy" placeholder="Last Modified By" disabled>
+                  <h6>Created By</h6>
+                  <input type="text" id="createdBy" class="form-control" :value="createdBy?.value?.id ? userNamesMap[createdBy.value.id] : userNamesMap[defaultUser.id]" disabled />
                 </div>
               </div>
             </div>
             <div class="modal-footer">
-              <button type="submit" class="btn btn-success">{{ editingMentorship ? 'Update' : 'Submit' }}</button>
+              <button type="submit" @click="closeModal('doubleClickModal')" class="btn btn-success">{{ editingMentorship ? 'Update' : 'Submit' }}</button>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="showExpandModal" class="modal-overlay">
+          <div class="expanded-modal-content">
+            <h5>{{ expandTitle }}</h5>
+            <textarea v-model="expandValue" class="form-control" rows="10"></textarea>
+            <button @click="saveExpandedText" class="btn btn-success mt-2">Save</button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+  </teleport>
+
+  <teleport to="body">
+    <form>
+      <div class="modal" id="myModal4" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Mentorship Request</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeModal('singleClickModal')"><b></b></button>
+            </div>
+
+            <div class="modal-body">
+
+              <div class="first">
+                <div class="frame">
+                  <h6>Financial Year</h6>
+                  <select v-if="selectedItem" v-model="selectedItem.financialYear" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example" disabled>
+                    <option selected>Select Financial Year</option>
+                    <option value="2023">FY23</option>
+                    <option value="2024">FY24</option>
+                    <option value="2025">FY25</option>
+                    <option value="2026">FY26</option>
+                  </select>
+                </div>
+                <div class="frame">
+                  <h6>Month</h6>
+                  <div class="fallbackDatePicker">
+                    <div>
+                      <span>
+                        <select v-if="selectedItem" class="form-select" v-model="selectedItem.month" id="month" name="month" disabled>
+                          <option selected>January</option>
+                          <option>February</option>
+                          <option>March</option>
+                          <option>April</option>
+                          <option>May</option>
+                          <option>June</option>
+                          <option>July</option>
+                          <option>August</option>
+                          <option>September</option>
+                          <option>October</option>
+                          <option>November</option>
+                          <option>December</option>
+                        </select>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="second">
+                <div class="frame">
+                  <h6>Mentors</h6>
+                  <select v-if="selectedItem" v-model="selectedItem.mentor" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example" disabled>
+                    <option selected>Select Mentor</option>
+                    <option value="Isaac">Isaac</option>
+                    <option value="Chido">Chido</option>
+                    <option value="Lola">Lola</option>
+                  </select>
+                </div>
+                <div class="frame">
+                  <h6>Goals</h6>
+                  <textarea v-if="selectedItem" v-model="selectedItem.goals" name="Goals" id="" cols="30" rows="10" placeholder="Goals" readonly></textarea>
+                </div>
+              </div>
+
+              <div class="third">
+                <div class="frame">
+                  <h6>Action Plan</h6>
+                  <textarea v-if="selectedItem" v-model="selectedItem.actionPlans" name="Action Plan" id="" cols="30" rows="10" placeholder="Action Plan" readonly></textarea>
+
+                </div>
+                <div class="frame">
+                  <h6>Timeline</h6>
+                  <input v-if="selectedItem" v-model="selectedItem.targetCompletionDate" type="date" disabled>
+                </div>
+              </div>
+
+              <div class="fourth">
+                <div class="frame">
+                  <h6>Status</h6>
+                  <select v-if="selectedItem" v-model="selectedItem.status" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example" disabled>
+                    <option selected>Select Status</option>
+                    <option value="Not started">Not started</option>
+                    <option value="On-going">On-going</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                </div>
+                <div class="frame">
+                  <h6>Evidence</h6>
+                  <input type="file" class="form-control" @change="handleFileChange" disabled>
+                </div>
+
+              </div>
+
+              <div class="fifth">
+                <div class="frame">
+                  <h6>Progress Metrics</h6>
+                  <textarea v-if="selectedItem" v-model="selectedItem.progressMetrics" name="Progress Metrics" id="" cols="30" rows="10" placeholder="Progress Metrics" readonly></textarea>
+                </div>
+                <div class="frame">
+                  <h6>Feedback</h6>
+                  <textarea v-if="selectedItem" v-model="selectedItem.feedback" name="Feedback" id="" cols="30" rows="10" placeholder="Feedback" readonly></textarea>
+                </div>
+              </div>
+              <div class="fifth">
+                <div class="frame">
+                  <h6>CreatedBy</h6>
+                  <input type="text" v-if="selectedItem" v-model="selectedItem.createdBy" placeholder="Created By" disabled>
+                </div>
+                <div class="frame">
+                  <h6>Modified By</h6>
+                  <input type="text" v-if="selectedItem" v-model="selectedItem.lastModifiedBy" placeholder="Last Modified By" disabled>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <div class="prev">
+                <button type="button" class="btn btn-secondary" @click="prevMentorship">Previous</button>
+              </div>
+              <div class="next">
+                <button type="button" class="btn btn-secondary" @click="nextMentorship">Next</button>
+              </div>
             </div>
           </div>
         </div>
@@ -332,10 +566,10 @@ const goToPage = (page) => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in paginatedFilteredMentorship" :key="index" @dblclick="editMentorship(item)">
+          <tr v-for="(item, index) in paginatedFilteredMentorship" :key="index" @click="handleClick(item)" @dblclick="handleDoubleClick(item)">
 
             <td>{{item.id}}</td>
-            <td>{{item.financialYearId}}</td>
+            <td>{{item.financialYear}}</td>
             <td>{{item.month}}</td>
             <td>{{item.mentor}}</td>
             <td>{{item.goals}}</td>
@@ -454,6 +688,51 @@ tbody tr {
   background: var(--Secondary, #47b65c);
   color: #fff;
 }
+
+#myModal4 .modal-dialog {
+  height: 920px;
+}
+
+#myModal4 .area,
+#myModal4 textarea {
+  width: 390px;
+  height: 110px;
+  border-radius: 5px;
+  background: #eeeeee;
+  padding: 10px;
+}
+
+#myModal4 p {
+  width: 390px;
+  height: 40px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+#myModal4 .modal-footer {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  gap: 20px;
+}
+
+.prev {
+  float: left;
+  width: 370px;
+  height: 110px;
+  display: flex;
+  justify-content: start;
+}
+
+.next {
+  float: right;
+  width: 370px;
+  height: 110px;
+  display: flex;
+  justify-content: end;
+}
+
 .modal-dialog {
   --bs-modal-width: 900px;
   width: 900px;
@@ -641,10 +920,56 @@ tbody tr {
   .modal-body {
     width: 100%;
   }
-  .form-select,
+  #myModal4 .form-select {
+    width: 305px !important;
+  }
+
   .frame textarea,
   .frame input {
-    width: 280px;
+    width: 305px !important;
+  }
+
+  .prev {
+    width: 300px;
+    height: 110px;
+  }
+
+  .next {
+    width: 300px;
+    height: 110px;
+  }
+}
+
+@media (max-width: 860px) {
+  #myModal4 .modal-dialog {
+    height: 1000px;
+  }
+
+  .frame input {
+    width: 100% !important;
+  }
+
+  #myModal4 .form-select {
+    width: 100% !important;
+  }
+
+  .frame .rating {
+    width: 100% !important;
+  }
+
+  #myModal4 textarea {
+    width: 100% !important;
+    height: 110px;
+  }
+
+  .prev {
+    width: 220px !important;
+    height: 110px;
+  }
+
+  .next {
+    width: 220px !important;
+    height: 110px;
   }
 }
 
@@ -707,12 +1032,19 @@ tbody tr {
 
 @media (max-width: 576px) {
   .modal-dialog {
+    height: 1000px !important;
     max-width: 80%;
     margin: 5px;
   }
 
   .modal-body {
     padding: 10px;
+  }
+
+  #myModal4 input,
+  #myModal4 .form-select,
+  #myModal4 textarea {
+    width: 100% !important;
   }
 
   .form-control,
@@ -723,6 +1055,81 @@ tbody tr {
 
   .modal-header h4 {
     font-size: 18px;
+  }
+
+  #myModal4 .modal-footer {
+    width: 100%;
+    margin: 0;
+    gap: 5px;
+  }
+
+  .prev {
+    width: 120px !important;
+    height: 110px;
+    font-size: 8px;
+    margin: 0;
+  }
+
+  .next {
+    width: 120px !important;
+    height: 110px;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 400px) {
+  .frame input,
+  .frame .form-select,
+  .frame textarea {
+    width: 210px !important;
+  }
+
+  #myModal4 .modal-dialog {
+    width: 95%;
+    height: 1450px;
+    margin-left: 5%;
+  }
+
+  .modal-content {
+    height: 1400px;
+  }
+
+  .modal-body {
+    width: 100%;
+  }
+
+  #myModal4 .area,
+  #myModal4 textarea {
+    width: 100%;
+    height: 110px;
+  }
+
+  .first,
+  .second,
+  .third,
+  .fourth,
+  .fifth,
+  .sixth {
+    flex-direction: column;
+  }
+
+  #myModal4 .modal-footer {
+    width: 230px;
+    margin: 0;
+    gap: 5px;
+  }
+
+  .prev {
+    width: 90px !important;
+    height: 110px;
+    font-size: 8px;
+    margin: 0;
+  }
+
+  .next {
+    width: 90px !important;
+    height: 110px;
+    padding-left: 0;
   }
 }
 </style>

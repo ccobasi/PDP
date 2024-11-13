@@ -280,7 +280,24 @@ watch(currentIndex, (newIndex) => {
 
     // import { useRoute } from 'vue-router';
     // import html2pdf from 'html2pdf.js';
-
+const props = defineProps({
+  level: {
+    type: String,
+    required: true
+  },
+  department: {
+    type: String,
+    required: true
+  },
+  quarter: {
+    type: String,
+    required: true
+  },
+  year: {
+    type: String,
+    required: true
+  }
+});
 
 const store = useGoalsStore();
 const goals = ref([]);
@@ -301,7 +318,7 @@ const status = ref('')
 const feedback = ref('')
 const selectedItem = ref(null);
 const editingGoal = ref(null);
-
+const selectedOwner = ref('');
 
 const fetchData = async () => {
   try {
@@ -314,8 +331,6 @@ const fetchData = async () => {
     console.error('Error fetching data:', error);
   }
 };
-
-const selectedOwner = ref('');
 
 onMounted(async () => {
   initializeModal();
@@ -355,6 +370,8 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error fetching data:', error);
   }
+
+  watch([() => props.level, () => props.department, () => props.quarter, () => props.year], fetchData);
 });
 
 const itemsPerPage = 20; 
@@ -370,15 +387,50 @@ const options = ref([
 const selectedOption = ref('1');
 const selectedTerm = ref('2');
 
-const filteredGoals = computed(() => {
-  console.log('Selected Option:', selectedOption.value);
-  console.log('Selected Term:', selectedTerm.value);
-  console.log('Goals:', goals.value);
+// const filteredGoals = computed(() => {
+//   console.log('Selected Option:', selectedOption.value);
+//   console.log('Selected Term:', selectedTerm.value);
+//   console.log('Goals:', goals.value);
 
-  return goals.value.length > 0 ? goals.value.filter(item => {
-    console.log('Item PlanTypeId:', item.planTypeId, 'Item PlanTermId:', item.planTermId);
-    return item.planTypeId === parseInt(selectedOption.value) && item.planTermId === parseInt(selectedTerm.value);
-  }) : [];
+//   return goals.value.length > 0 ? goals.value.filter(item => {
+//     console.log('Item PlanTypeId:', item.planTypeId, 'Item PlanTermId:', item.planTermId);
+//     return item.planTypeId === parseInt(selectedOption.value) && item.planTermId === parseInt(selectedTerm.value);
+//   }) : [];
+// });
+
+const filteredGoals = computed(() => {
+  const goalData = goals.value && Array.isArray(goals.value) ? goals.value : [];
+
+  return goalData.filter(item => {
+    const createdDate = item.createdDate ? new Date(item.createdDate) : null;
+    const itemYear = createdDate ? createdDate.getFullYear() : null;
+    const itemMonth = createdDate ? createdDate.getMonth() : null;
+    const itemQuarter = itemMonth !== null ? Math.floor(itemMonth / 3) + 1 : null;
+
+    const matchesYear = !props.year || (itemYear !== null && itemYear === parseInt(props.year));
+    const matchesQuarter = !props.quarter || (itemQuarter !== null && itemQuarter === parseInt(props.quarter.slice(-1))); 
+
+    // Adjusted to access nested `id` fields in planType and planTerm
+    const matchesOption = selectedOption.value === null || (item.planType?.id === parseInt(selectedOption.value));
+    const matchesTerm = selectedTerm.value === null || (item.planTerm?.id === parseInt(selectedTerm.value));
+
+    const matchesDepartment = !props.department || (item.createdBy?.department === props.department);
+    const matchesLevel = !props.level || (item.createdBy?.role?.option === props.level);
+
+    const criteria = {
+      item,
+      matchesYear,
+      matchesQuarter,
+      matchesOption,
+      matchesTerm,
+      matchesDepartment,
+      matchesLevel,
+    };
+
+    console.log("Matching Criteria:", criteria);
+
+    return matchesYear && matchesQuarter && matchesOption && matchesTerm && matchesDepartment && matchesLevel;
+  });
 });
 
 const paginatedGoals = computed(() => {
@@ -905,8 +957,8 @@ const closeModal = (modalRef) => {
               <!-- <tr v-for="(item, index) in paginatedGoals" :key="index" @click="selectItem(item, index)" @dblclick="editGoal(item)"> -->
               <tr v-for="(item, index) in paginatedGoals" :key="index" @click="handleClick(item)" @dblclick="handleDoubleClick(item)">
                 <td>{{item.id}}</td>
-                <td>{{ planTypeMap[item.planTypeId] }}</td>
-                <td>{{ planTermMap[item.planTermId] }}</td>
+                <td>{{ planTypeMap[item.planType?.id] || 'N/A' }}</td>
+                <td>{{ planTermMap[item.planTerm?.id] || 'N/A' }}</td>
                 <!-- <td>{{item.goalSummary}}</td> -->
                 <td>
                   <div class="goal-summary" :title="item.goalSummary">
