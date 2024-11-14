@@ -539,21 +539,11 @@ const usersOptions = computed(() =>
             <div class="d-flex align-center gap-1">
               <span class="noshrink"> S/N</span>
 
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
-
             </div>
           </th>
           <th scope="col">
             <div class="d-flex align-center gap-1">
               <span> Task/Deliverables </span>
-
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
 
             </div>
           </th>
@@ -561,21 +551,11 @@ const usersOptions = computed(() =>
             <div class="d-flex align-center gap-1">
               <span> Status </span>
 
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
-
             </div>
           </th>
           <th scope="col">
             <div class="d-flex align-center gap-1">
               <span> Start Time</span>
-
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
 
             </div>
           </th>
@@ -583,22 +563,12 @@ const usersOptions = computed(() =>
             <div class="d-flex align-center gap-1">
               <span> End Time</span>
 
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
-
             </div>
           </th>
           <th scope="col">
 
             <div class="d-flex align-center gap-1">
               <span> Action </span>
-
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
 
             </div>
           </th>

@@ -159,21 +159,11 @@ const changePage = (page) => {
             <div class="d-flex align-center gap-1">
               <span class="noshrink">Name</span>
 
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
-
             </div>
           </th>
           <th scope="col">
             <div class="d-flex align-center gap-1">
               <span class="noshrink"> Department</span>
-
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
 
             </div>
           </th>
@@ -181,21 +171,11 @@ const changePage = (page) => {
             <div class="d-flex align-center gap-1">
               <span class="noshrink"> Months</span>
 
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
-
             </div>
           </th>
           <th scope="col">
             <div class="d-flex align-center gap-1">
               <span class="noshrink"> Training Topic</span>
-
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
 
             </div>
           </th>
@@ -203,21 +183,11 @@ const changePage = (page) => {
             <div class="d-flex align-center gap-1">
               <span class="noshrink"> Learning Outcome </span>
 
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
-
             </div>
           </th>
           <th scope="col">
             <div class="d-flex align-center gap-1">
               <span class="noshrink"> Approval Status</span>
-
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
 
             </div>
           </th>
@@ -225,21 +195,11 @@ const changePage = (page) => {
             <div class="d-flex align-center gap-1">
               <span class="noshrink"> Status </span>
 
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
-
             </div>
           </th>
           <th scope="col">
             <div class="d-flex align-center gap-1">
               <span class="noshrink"> Due Date </span>
-
-              <span class="d-flex flex-column align-center">
-                <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-              </span>
 
             </div>
           </th>
