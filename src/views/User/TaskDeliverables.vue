@@ -136,18 +136,90 @@ const submitFile = () => {
 <template>
   <main class="wrapper">
     <TabMenu />
-    <div class="titles mt-3">
-      <div class="modal" id="myModal1">
+
+    <form method="post" action="" @submit.prevent="handleSubmit">
+      <div class="modal" id="myModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Tasks/Deliverables Form</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body">
+
+              <div class="first">
+                <div class="frame">
+                  <h6>Tasks/Deliverables</h6>
+                  <textarea v-model="task" name="training topic" id="" cols="30" rows="10" placeholder="Tasks/Deliverables"></textarea>
+                </div>
+                <div class="frame">
+                  <h6>Status</h6>
+                  <select v-model="status" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
+                    <option class="opt" selected>Status</option>
+                    <option class="opt" value="Completed">Completed</option>
+                    <option class="opt" value="On-going">On-going</option>
+                    <option class="opt" value="Not started">Not started</option>
+                  </select>
+                </div>
+              </div>
+              <div class="second">
+                <div class="frame">
+                  <h6>Start Time</h6>
+                  <input type="date" v-model="startDate">
+                </div>
+                <div class="frame">
+                  <h6>End Time</h6>
+                  <input type="date" v-model="endDate">
+                </div>
+              </div>
+              <div class="third">
+                <div class="frame">
+                  <h6>Comment</h6>
+                  <textarea v-model="comment" name="Comment" id="" cols="30" rows="10" placeholder="Comment"></textarea>
+                </div>
+                <div class="frame">
+                  <h6>Evidence of Completion</h6>
+                  <div class="upload">
+                    <v-btn :loading="loadingUpload" height="48" rounded="xl" size="small" onclick="document.getElementById('getFile').click()" @click="openFileInput" variant="flat">Upload Evidence</v-btn>
+                    <input type='file' id="getFile" style="display:none" @change="submitFile()" accept="application/pdf" ref="evidence">
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer mb-3">
+
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal" @click="$router.push('/taskdeliverables')">Submit Request</button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="task mt-5">
+      <div class="header">
+        <div class="title mb-4">
+          <h3>Task Deliverables</h3>
+          <button data-bs-toggle="modal" data-bs-target="#myModal" type="button" v-if="isUserRoute">Add Task/Deliverables</button>
+
+        </div>
+
+        <div class="lines"></div>
+      </div>
+      <div class="titles mt-3 mb-3">
+        <!-- <div class="modal" id="myModal1">
         <div class="modal-dialog">
           <div class="modal-content">
 
-            <!-- Modal Header -->
             <div class="modal-header">
               <h4 class="modal-title">Tasks/Deliverables</h4>
               <button type="button" class="btn-close" data-bs-dismiss="modal">X</button>
             </div>
 
-            <!-- Modal body -->
+          
             <div class="modal-body">
               <div class="table-responsive d-flex flex-column">
                 <v-pagination v-model="currentPage" :length="totalPages"></v-pagination>
@@ -238,7 +310,7 @@ const submitFile = () => {
                   <tbody>
                     <tr v-for="(item, index) in paginatedTasks" :key="index" @click="selectItem(item)">
 
-                      <!-- <tr v-for="item in skills" @click="selectItem(item)" @dblclick="$router.push({name: 'Skill Assessment Details', params: {id: item.id}})"> -->
+                    
                       <td>{{item.id}}</td>
                       <td>{{item.taskDescription}}</td>
                       <td>{{item.status}}</td>
@@ -256,82 +328,11 @@ const submitFile = () => {
 
           </div>
         </div>
+      </div> -->
+
+        <button class="view" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
       </div>
 
-      <button class="view" data-bs-toggle="modal" data-bs-target="#myModal1" type="button">View All</button>
-    </div>
-    <form method="post" action="" @submit.prevent="handleSubmit">
-      <div class="modal" id="myModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Tasks/Deliverables Form</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <!-- Modal body -->
-            <div class="modal-body">
-
-              <div class="first">
-                <div class="frame">
-                  <h6>Tasks/Deliverables</h6>
-                  <textarea v-model="task" name="training topic" id="" cols="30" rows="10" placeholder="Tasks/Deliverables"></textarea>
-                </div>
-                <div class="frame">
-                  <h6>Status</h6>
-                  <select v-model="status" v-on:change="onSelectChange(e)" class="form-select" aria-label="Default select example">
-                    <option class="opt" selected>Status</option>
-                    <option class="opt" value="Completed">Completed</option>
-                    <option class="opt" value="On-going">On-going</option>
-                    <option class="opt" value="Not started">Not started</option>
-                  </select>
-                </div>
-              </div>
-              <div class="second">
-                <div class="frame">
-                  <h6>Start Time</h6>
-                  <input type="date" v-model="startDate">
-                </div>
-                <div class="frame">
-                  <h6>End Time</h6>
-                  <input type="date" v-model="endDate">
-                </div>
-              </div>
-              <div class="third">
-                <div class="frame">
-                  <h6>Comment</h6>
-                  <textarea v-model="comment" name="Comment" id="" cols="30" rows="10" placeholder="Comment"></textarea>
-                </div>
-                <div class="frame">
-                  <h6>Evidence of Completion</h6>
-                  <div class="upload">
-                    <v-btn :loading="loadingUpload" height="48" rounded="xl" size="small" onclick="document.getElementById('getFile').click()" @click="openFileInput" variant="flat">Upload Evidence</v-btn>
-                    <input type='file' id="getFile" style="display:none" @change="submitFile()" accept="application/pdf" ref="evidence">
-                  </div>
-
-                </div>
-              </div>
-            </div>
-
-            <div class="modal-footer mb-3">
-
-              <button type="submit" class="btn btn-success" data-bs-dismiss="modal" @click="$router.push('/taskdeliverables')">Submit Request</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </form>
-    <div class="task mt-5">
-      <div class="header">
-        <div class="title mb-4">
-          <h3>Task Deliverables</h3>
-          <button data-bs-toggle="modal" data-bs-target="#myModal" type="button" v-if="isUserRoute">Add Task/Deliverables</button>
-
-        </div>
-
-        <div class="lines"></div>
-      </div>
       <TableFour :task="tasks" />
     </div>
   </main>
@@ -341,6 +342,14 @@ const submitFile = () => {
 main {
   height: 950px;
 }
+
+.task {
+  padding: 30px;
+
+  border-radius: 10px;
+  background: #fff;
+}
+
 .title h3 {
   font-family: "Inter", sans-serif;
 }

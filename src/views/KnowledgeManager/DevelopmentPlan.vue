@@ -523,6 +523,10 @@ const saveExpandedText = () => {
   border-radius: 10px;
 }
 
+.text-deep-purple-accent-4 {
+  color: #227cbf !important;
+}
+
 .view {
   display: flex;
   padding: 10px 30px;
@@ -1064,7 +1068,7 @@ tr {
     width: 100%;
   }
   .form-select {
-    width: 100%;
+    width: 97% !important;
   }
 }
 

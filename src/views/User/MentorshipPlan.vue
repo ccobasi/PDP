@@ -719,13 +719,21 @@ main {
   font-style: 10px;
 }
 
+@media (max-width: 2000px) {
+  .form-select,
+  .frame textarea,
+  .frame input {
+    width: 370px !important;
+  }
+}
+
 @media (max-width: 1200px) {
   .modal {
     margin: auto;
   }
   .modal-dialog {
     --bs-modal-width: 700px;
-    max-width: 80%;
+    max-width: 85%;
     display: flex;
     flex-direction: column;
   }
@@ -735,7 +743,7 @@ main {
   .form-select,
   .frame textarea,
   .frame input {
-    width: 370px;
+    width: 300px;
   }
 }
 

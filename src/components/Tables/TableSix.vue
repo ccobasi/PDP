@@ -157,13 +157,24 @@ const onSelectChange = (event) => {
 
 const selectedStatus = ref('');
 
+// const filteredMentorship = computed(() => {
+//   if (selectedStatus.value === '') {
+//     return mentorships.value;
+//   } else {
+//     return mentorships.value.filter(mentorship => mentorship.status === selectedStatus.value);
+//   }
+// });
+
 const filteredMentorship = computed(() => {
-  if (selectedStatus.value === '') {
-    return mentorships.value;
-  } else {
-    return mentorships.value.filter(mentorship => mentorship.status === selectedStatus.value);
-  }
+  return mentorships.value.filter(mentorship => {
+    const matchesStatus = selectedStatus.value === '' || mentorship.status === selectedStatus.value;
+    const matchesCreatedBy = createdBy.value && mentorship.createdBy.userId === createdBy.value.userId;
+    const matchesRecordOwner = recordOwner.value && mentorship.recordOwner.userId === recordOwner.value.userId;
+    
+    return matchesStatus && (matchesCreatedBy || matchesRecordOwner);
+  });
 });
+
 
 const paginatedFilteredMentorship = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage;
@@ -906,6 +917,14 @@ tbody tr {
   border-color: #007bff;
 }
 
+@media (max-width: 2000px) {
+  .form-select,
+  .frame textarea,
+  .frame input {
+    width: 390px !important;
+  }
+}
+
 @media (max-width: 1200px) {
   .modal {
     margin: auto;
@@ -924,9 +943,16 @@ tbody tr {
     width: 305px !important;
   }
 
+  #myModal4 .form-select,
+  #myModal4 textarea,
+  #myModal4 input {
+    width: 300px !important;
+  }
+
+  .form-select,
   .frame textarea,
   .frame input {
-    width: 305px !important;
+    width: 300px !important;
   }
 
   .prev {

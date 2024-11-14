@@ -59,7 +59,7 @@ import ITMentorship from '../views/IT/MentorshipPlan.vue'
 import ITSpeakingEngagement from '../views/IT/SpeakingEngagement.vue'
 import LoginView from '../services/LoginView.vue'
 import RoleDetails from '../components/RoleDetails.vue'
-// import authService from '@/services/authService';
+import getUserRoleFromAuth from '../services/auth'
 
 // Vue.use(Router);
 
@@ -71,6 +71,14 @@ import RoleDetails from '../components/RoleDetails.vue'
 //   '5': '/it/', // Information Technology
 //   '6': '/hod/' // Head of Department
 // }
+
+const roleRedirectMap = {
+    "IT Admin": "/it/",
+    "Manager": "/m/",
+    "Knowledge Manager": "/km/",
+    "HOD": "/hod/",
+    "User": "/", 
+};
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -401,6 +409,27 @@ const router = createRouter({
     },
   ]
 })
+
+router.beforeEach((to, from, next) => {
+    const userRole = getUserRoleFromAuth(); 
+
+    if (userRole) {
+        const redirectUrl = roleRedirectMap[userRole];
+        if (redirectUrl) {
+            
+            if (to.path === '/login') {
+                
+                next(redirectUrl);
+            } else {
+                next(); 
+            }
+        } else {
+            next(); 
+        }
+    } else {
+        next(); 
+    }
+});
 
 
 export default router;

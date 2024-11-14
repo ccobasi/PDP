@@ -116,7 +116,7 @@ onMounted(async () => {
 const getStatusColor = (status) => {
   switch (status) {
     case 'Not started':
-      return 'background-color: rgb(246, 180, 180); border-radius: 40px; width: 60%; padding: 5px;';
+      return 'background-color: rgb(246, 180, 180); border-radius: 40px; width: 80%; padding: 5px;';
     case 'On-going':
       return 'background-color: rgb(254, 249, 195); border-radius: 40px; width: 80%; padding: 10px;';
 
@@ -191,6 +191,11 @@ const filteredTasks = computed(() => {
 
     console.log(`Extracted Year: ${itemYear}, Month: ${itemMonth}, Quarter: ${itemQuarter}`);
 
+    // const matchesCreatedBy = createdBy.value ? item.createdBy === createdBy.value : false;
+    // const matchesRecordOwner = recordOwner.value ? item.recordOwner === recordOwner.value : false;
+     const matchesCreatedBy = createdBy.value && item.createdBy && item.createdBy.email === createdBy.value;
+    const matchesRecordOwner = recordOwner.value && item.recordOwner && item.recordOwner.email === recordOwner.value;
+
      const matchesYear = !props.year || (itemYear !== null && itemYear === parseInt(props.year));
     const matchesQuarter = !props.quarter || (itemQuarter !== null && itemQuarter === parseInt(props.quarter.slice(-1))); 
 
@@ -202,13 +207,15 @@ const filteredTasks = computed(() => {
 
     console.log("Matching Criteria", {
       item,
+      matchesCreatedBy,
+      matchesRecordOwner,
       matchesYear,
       matchesQuarter,
       matchesDepartment,
       matchesLevel,
     });
 
-    return matchesYear && matchesQuarter  && matchesDepartment && matchesLevel;
+    return (matchesCreatedBy || matchesRecordOwner) && matchesYear && matchesQuarter  && matchesDepartment && matchesLevel;
   });
 });
 

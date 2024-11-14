@@ -562,6 +562,10 @@ const saveExpandedText = () => {
   padding-right: 15px;
 }
 
+.text-deep-purple-accent-4 {
+  color: #227cbf !important;
+}
+
 .view {
   display: flex;
   padding: 10px 30px;

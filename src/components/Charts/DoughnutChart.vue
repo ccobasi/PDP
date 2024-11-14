@@ -24,76 +24,86 @@ const pieChartId = `pie-${props.chartId}`
 
 
 onMounted(async () => {
-  const response = await fetch('https://infracredit2.pythonanywhere.com/api/v1/training-schedules/'); 
-  const trainings = await response.JSON();
+  try {
+    const response = await fetch('https://infracredit2.pythonanywhere.com/api/v1/training-schedules/'); 
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-  const statusCounts = trainings.reduce((acc, training) => {
-    acc[training.status] = (acc[training.status] || 0) + 1;
-    return acc;
-  }, {});
+    const responseData = await response.json(); // Parse the JSON response
+    const trainings = responseData.data; // Access data inside the parsed JSON
 
-  const totalTrainings = trainings.length;
-  const data = {
-    labels: Object.keys(statusCounts),
-    datasets: [
-      {
-        label: 'Status',
-        data: Object.keys(statusCounts).map((status) => {
-          return ((statusCounts[status] / totalTrainings) * 100).toFixed(0);
-        }),
-        backgroundColor: ['#26abe2', '#227CBF', '#47B65C'],
+    const statusCounts = trainings.reduce((acc, training) => {
+      acc[training.status] = (acc[training.status] || 0) + 1;
+      return acc;
+    }, {});
+
+    const totalTrainings = trainings.length;
+    const data = {
+      labels: Object.keys(statusCounts),
+      datasets: [
+        {
+          label: 'Status',
+          data: Object.keys(statusCounts).map((status) => {
+            return ((statusCounts[status] / totalTrainings) * 100).toFixed(0);
+          }),
+          backgroundColor: ['#26abe2', '#227CBF', '#47B65C'],
+          datalabels: {
+            anchor: 'center',
+            formatter: (value) => `${value}%`
+          },
+          hoverOffset: 4
+        }
+      ]
+    };
+
+    const options = {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          display: true,
+        },
+        title: {
+          display: false,
+          text: 'Chart.js Pie Chart',
+        },
         datalabels: {
+          color: 'white',
+          display: 'auto',
+          formatter: (value, context) => {
+            const label = context.chart.data.labels[context.dataIndex];
+            return `${label}\n${Math.round(value)}%`;
+          },
           anchor: 'center',
-          formatter: (value) => `${value}%`
+          align: 'center',
         },
-        hoverOffset: 4
-      }
-    ]
-  };
-
-  const options = {
-  responsive: true,
-  maintainAspectRatio: true,
-  plugins: {
-    legend: {
-      display: true,
-    },
-    title: {
-      display: false,
-      text: 'Chart.js Pie Chart',
-    },
-    datalabels: {
-      color: 'white', // Text color
-      display: 'auto',
-      formatter: (value, context) => {
-        // Combine the label and percentage
-        const label = context.chart.data.labels[context.dataIndex];
-        return `${label}\n${Math.round(value)}%`; // Show label and percentage
-      },
-      anchor: 'center', // Position label in the center of each segment
-      align: 'center',  // Align text to the center
-    },
-    tooltip: {
-      callbacks: {
-        label: (tooltipItem) => {
-          return `${tooltipItem.label}: ${Math.round(tooltipItem.raw)}%`;
+        tooltip: {
+          callbacks: {
+            label: (tooltipItem) => {
+              return `${tooltipItem.label}: ${Math.round(tooltipItem.raw)}%`;
+            },
+          },
         },
       },
-    },
-  },
-};
+    };
 
-  const config = {
-    type: props.doughnut ? 'doughnut' : 'pie',
-    data: data,
-    options: options,
-    plugins: [ChartDataLabels]
-  };
+    const config = {
+      type: props.doughnut ? 'doughnut' : 'pie',
+      data: data,
+      options: options,
+      plugins: [ChartDataLabels]
+    };
 
-  const ctx = document.getElementById(pieChartId);
-  const createdChart = new Chart(ctx, config);
-  chartRef.value = markRaw(createdChart);
-})
+    const ctx = document.getElementById(pieChartId);
+    const createdChart = new Chart(ctx, config);
+    chartRef.value = markRaw(createdChart);
+  } catch (error) {
+    console.error('Error fetching trainings:', error);
+  }
+});
+
 
 </script>
 

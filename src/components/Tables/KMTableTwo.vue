@@ -1270,7 +1270,7 @@ tbody tr td {
   font-size: 12px;
   font-weight: 400;
   line-height: 14.4px;
-  padding: 10px;
+  padding: 20px;
   height: auto;
 }
 
@@ -1549,7 +1549,19 @@ tr {
   }
 
   .form-select,
+  .frame input,
   .frame textarea {
+    width: 320px;
+  }
+
+  #myModal4 .area,
+  #myModal4 input,
+  #myModal4 textarea {
+    width: 320px;
+  }
+
+  .next,
+  .prev {
     width: 320px;
   }
 }

@@ -1,70 +1,3 @@
-// import { PublicClientApplication } from '@azure/msal-browser';
-// import store from '../store/store'
-// import Emitter from 'tiny-emitter';
-// import router from '../router';
-// import administrationsService from '../services/administrationsService'
-
-
-// export default {
-    
-//     async mounted() {
-//     if (store.state.msalConfig) {
-//       this.msalInstance = new PublicClientApplication(store.state.msalConfig);
-//     } else {
-//       console.warn('msalConfig not available in store yet.');
-//     }
-//   },
-//     emitter: new Emitter(),
-//     account: [],
-
-//     async SignIn() {
-//         try {
-//             await this.msalInstance.loginPopup({});
-//             const accounts = this.msalInstance.getAllAccounts();
-//             if (accounts.length) {
-//             this.account = accounts[0];
-
-//             const userRole = await administrationsService.getLoggedInUser(this.account.username).roleName;
-//             const userLevel = await administrationsService.getLoggedInUser(this.account.username).levelDescription;
-//             const userEmail = this.account.username;
-
-//             store.signedInUserRole = userRole;
-//             store.signedInUserLevel = userLevel;
-//             store.signedInUserEmail = userEmail;
-
-//             let userFullName;
-//             if (this.account.name.split(" ")[2]) {
-//                 userFullName = this.account.name.split(" ")[0] + " " + this.account.name.split(" ")[2];
-//             } else {
-//                 userFullName = this.account.name.split(" ")[0] + " " + this.account.name.split(" ")[1];
-//             }
-//             store.signedInUserName = userFullName;
-
-//             this.emitter.emit('login', this.account);
-//             router.replace('/'); 
-//             }
-//         } catch (error) {
-//             console.error(`error during authentication: ${error}`);
-//         }
-// },
-
-//     async SignOut() {
-//         await this.msalInstance
-//             .logoutPopup({})
-//             .then(() => {
-//                 this.emitter.emit('logout', 'logging out');
-//                 store.signedInUserEmail = ''
-//                 store.signedInUserRole = ''
-//                 store.signedInUserLevel = ''
-//                 this.account = undefined
-//                 router.push('/login')
-//             })
-//             .catch(error => {
-//                 console.error(error);
-//             });
-//     },
-// }
-
 // import * as msal from "@azure/msal-browser";
 
 // const msalConfig = {
@@ -79,6 +12,13 @@
 // };
 
 // const msalInstance = new msal.PublicClientApplication(msalConfig);
+
+// const account = msalInstance.getAllAccounts()[0];
+// console.log(account.idTokenClaims);  // Log the claims
+
+// const initialize = async () => {
+//   await msalInstance.initialize();
+// };
 
 // const getMsalInstance = () => {
 //   return msalInstance;
@@ -109,10 +49,46 @@
 //   }
 // };
 
+// // const getUserRole = async (account) => {
+// //   try {
+// //     const role = account?.idTokenClaims?.role;
+    
+// //     if (!role) {
+// //       throw new Error("User role not found in ID token claims");
+// //     }
+// //     return role;
+// //   } catch (error) {
+// //     console.error("Error retrieving user role:", error);
+// //     throw error;
+// //   }
+// // };
+// const getUserRole = async (account) => {
+//   try {
+//     // Ensure the account exists
+//     if (!account) {
+//       throw new Error("No account found. Please log in.");
+//     }
+
+//     const role = account?.idTokenClaims?.role || account?.idTokenClaims?.roles?.[0]; // Check if role is available
+//     if (!role) {
+//       throw new Error("User role not found in ID token claims");
+//     }
+
+//     return role;
+//   } catch (error) {
+//     console.error("Error retrieving user role:", error);
+//     throw error;
+//   }
+// };
+
+
+
 // export default {
+//   initialize,
 //   getMsalInstance,
 //   signIn,
 //   signOut,
+//   getUserRole,
 // };
 import * as msal from "@azure/msal-browser";
 
@@ -162,9 +138,53 @@ const signOut = async () => {
   }
 };
 
+const getUserRole = async (account) => {
+  try {
+    
+    if (!account) {
+      throw new Error("No account found. Please log in.");
+    }
+
+    
+    console.log("ID Token Claims: ", account.idTokenClaims);
+
+    const role = account.idTokenClaims?.role || account.idTokenClaims?.roles?.[0];
+    
+    if (!role) {
+      throw new Error("User role not found in ID token claims");
+    }
+
+    return role;
+  } catch (error) {
+    console.error("Error retrieving user role:", error);
+    throw error;
+  }
+};
+
+const getCurrentAccount = () => {
+  const accounts = msalInstance.getAllAccounts();
+  if (accounts.length > 0) {
+    return accounts[0];
+  }
+  return null; // Return null if no account is found
+};
+
+// Use this function to log the account and its claims
+const logAccountClaims = () => {
+  const account = getCurrentAccount();
+  if (account) {
+    console.log(account.idTokenClaims);  // Log the claims
+  } else {
+    console.error("No account found.");
+  }
+};
+
 export default {
   initialize,
   getMsalInstance,
   signIn,
   signOut,
+  getUserRole,
+  getCurrentAccount,
+  logAccountClaims,
 };

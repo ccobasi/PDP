@@ -1,231 +1,5 @@
-<!-- <script setup>
-import { ref } from  'vue'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import * as bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { useSelectedNameStore } from '@/store/goals.js';
-
-const selectedNameStore = useSelectedNameStore();
-
-const setSelectedName = (name) => {
-  selectedNameStore.setSelectedName(name);
-  closeModal();
-  console.log(name);
-};
-
-const activeButton = ref('My Profile');
-
-
-const setActiveButton = (button) => {
-  activeButton.value = button;
-};
-
-const closeModal = () => {
-  const modalElement = document.getElementById('myModal');
-  const modal = bootstrap.Modal.getInstance(modalElement);
-
-
-  if (modal) {
-    modal.hide();
-    console.log('Modal closed');
-  } else {
-    console.error('Modal not found or not initialized properly');
-  }
-};
-
-
-</script>
-<template>
-  <div class="menu">
-    <div class="modal" id="myModal5" tabindex="-1">
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <div class="input-group rounded">
-              <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
-
-              <span class="input-group-text border-0" id="search-addon">
-                <i class="fa fa-search"></i>
-
-              </span>
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-
-          <div class="modal-body">
-            <div class="table-responsive">
-
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink">Full Name</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Date of Employment</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Department</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Level</span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Manager </span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-                    <th scope="col">
-                      <div class="d-flex align-center gap-1">
-                        <span class="noshrink"> Number of Times Promoted </span>
-
-                        <span class="d-flex flex-column align-center">
-                          <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                          <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                        </span>
-
-                      </div>
-                    </th>
-
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td scope="row" @click="setSelectedName('Lola Oyebola')">Lola Oyebola</td>
-                    <td>23/08/2020</td>
-                    <td>User</td>
-                    <td>Associate</td>
-                    <td>Chinua Azibuke</td>
-                    <td>5</td>
-                  </tr>
-                  <tr>
-                    <td scope="row" @click="setSelectedName('Mark Dean')">Mark Dean</td>
-                    <td>23/05/2019</td>
-                    <td>Knowledge Management</td>
-                    <td>Senior Associate</td>
-                    <td>Daniel Clinton</td>
-                    <td>3</td>
-                  </tr>
-                  <tr>
-                    <td scope="row" @click="setSelectedName('Uzo Okoro')">Uzo Okoro</td>
-                    <td>23/11/2015</td>
-                    <td>Manager</td>
-                    <td>AVP</td>
-                    <td>Mosurat Adeniyi</td>
-                    <td>1</td>
-                  </tr>
-                  <tr>
-                    <td scope="row" @click="setSelectedName('Daniel Muller')">Daniel Muller</td>
-                    <td>23/03/2022</td>
-                    <td>HOD</td>
-                    <td>Associate</td>
-                    <td>Ayo Adenike</td>
-                    <td>2</td>
-                  </tr>
-                  <tr>
-                    <td scope="row" @click="setSelectedName('Jane Doe')">Jane Doe</td>
-                    <td>23/05/2020</td>
-                    <td>IT</td>
-                    <td>Senior Associate</td>
-                    <td>Segun Arinze</td>
-                    <td>7</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-          </div>
-
-        </div>
-      </div>
-    </div>
-
-    <div class="profile">
-      <button class="btn pl-2" :class="{ 'active': activeButton === 'My Profile' }" @click="setActiveButton('My Profile')">My Profile</button>
-      <button class="btn" data-bs-toggle="modal" data-bs-target="#myModal5" type="button" :class="{ 'active': activeButton === 'Team Profile' }" @click="setActiveButton('Team Profile')">
-        <span>Team Profile</span>
-      </button>
-    </div>
-
-    <nav class="navbar navbar-expand-md ">
-
-      <ul class="navbar-nav">
-        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/', 'active-indicator': $route.path === '/km/' }">
-          <router-link to="/km/" class="nav-link">
-            Development Plans
-          </router-link>
-        </li>
-        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/skillassessment', 'active-indicator': $route.path === '/km/skillassessment' }">
-          <router-link to="/km/skillassessment" class="nav-link">
-            Skill Assessment
-          </router-link>
-        </li>
-        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/trainingschedule', 'active-indicator': $route.path === '/km/trainingschedule' }">
-          <router-link to="/km/trainingschedule" class="nav-link">
-            Training Schedule
-          </router-link>
-        </li>
-        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/alltrainingschedule', 'active-indicator': $route.path === '/km/alltrainingschedule' }">
-          <router-link to="/km/alltrainingschedule" class="nav-link">
-            All Training Schedule
-          </router-link>
-        </li>
-        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/taskdeliverables', 'active-indicator': $route.path === '/km/taskdeliverables' }">
-          <router-link to="/km/taskdeliverables" class="nav-link">
-            Task/Deliverables
-          </router-link>
-        </li>
-        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/mentorshipplan', 'active-indicator': $route.path === '/km/mentorshipplan' }">
-          <router-link to="/km/mentorshipplan" class="nav-link">Mentorship Plan</router-link>
-        </li>
-        <li :class="{ 'nav-item': true, 'active': $route.path === '/km/speakingengagement', 'active-indicator': $route.path === '/km/speakingengagement' }">
-          <router-link to="/km/speakingengagement" class="nav-link">Speaking Engagement</router-link>
-        </li>
-      </ul>
-
-    </nav>
-
-  </div>
-</template> -->
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import * as bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -237,12 +11,15 @@ const router = useRouter();
 const usersStore = useUsersStore();
 const activeButton = ref('My Profile');
 const showTeamMemberGoals = ref(false);
+const users = computed(() => usersStore.users);
+console.log(users);
+
 
 let modalInstance;
 
 onMounted( async () => {
   await usersStore.fetchUsers();
-  teamMembers.value = usersStore.users;
+  users.value = usersStore.users;
   
   const modalElement = document.getElementById('myModal5');
   if (modalElement) {
@@ -284,14 +61,14 @@ setTimeout(() => {
 const setActiveButton = (buttonName) => {
   activeButton.value = buttonName;
 };
-const teamMembers = ref([]);
-// const teamMembers = ref([
-//   { name: 'Lola Oyebola', dateOfEmployment: '23/08/2020', department: 'User', level: 'Associate', manager: 'Chinua Azibuke', promotions: 5 },
-//   { name: 'Mark Dean', dateOfEmployment: '23/05/2019', department: 'Knowledge Management', level: 'Senior Associate', manager: 'Daniel Clinton', promotions: 3 },
-//   { name: 'Uzo Okoro', dateOfEmployment: '23/11/2015', department: 'Manager', level: 'AVP', manager: 'Mosurat Adeniyi', promotions: 1 },
-//   { name: 'Daniel Muller', dateOfEmployment: '23/03/2022', department: 'HOD', level: 'Associate', manager: 'Ayo Adenike', promotions: 2 },
-//   { name: 'Jane Doe', dateOfEmployment: '23/05/2020', department: 'IT', level: 'Senior Associate', manager: 'Segun Arinze', promotions: 7 },
-// ]);
+
+const teamMembers = ref([
+  { name: 'Lola Oyebola', dateOfEmployment: '23/08/2020', department: 'User', level: 'Associate', manager: 'Chinua Azibuke', promotions: 5 },
+  { name: 'Mark Dean', dateOfEmployment: '23/05/2019', department: 'Knowledge Management', level: 'Senior Associate', manager: 'Daniel Clinton', promotions: 3 },
+  { name: 'Uzo Okoro', dateOfEmployment: '23/11/2015', department: 'Manager', level: 'AVP', manager: 'Mosurat Adeniyi', promotions: 1 },
+  { name: 'Daniel Muller', dateOfEmployment: '23/03/2022', department: 'HOD', level: 'Associate', manager: 'Ayo Adenike', promotions: 2 },
+  { name: 'Jane Doe', dateOfEmployment: '23/05/2020', department: 'IT', level: 'Senior Associate', manager: 'Segun Arinze', promotions: 7 },
+]);
 </script>
 <template>
   <div>
@@ -325,7 +102,16 @@ const teamMembers = ref([]);
                       </th>
                       <th scope="col">
                         <div class="d-flex align-center gap-1">
-                          <span class="noshrink">Date of Employment</span>
+                          <span class="noshrink">Email</span>
+                          <span class="d-flex flex-column align-center">
+                            <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
+                            <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
+                          </span>
+                        </div>
+                      </th>
+                      <th scope="col">
+                        <div class="d-flex align-center gap-1">
+                          <span class="noshrink">Job Title</span>
                           <span class="d-flex flex-column align-center">
                             <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
                             <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
@@ -343,7 +129,7 @@ const teamMembers = ref([]);
                       </th>
                       <th scope="col">
                         <div class="d-flex align-center gap-1">
-                          <span class="noshrink">Level</span>
+                          <span class="noshrink">Business Unit</span>
                           <span class="d-flex flex-column align-center">
                             <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
                             <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
@@ -352,7 +138,7 @@ const teamMembers = ref([]);
                       </th>
                       <th scope="col">
                         <div class="d-flex align-center gap-1">
-                          <span class="noshrink">Manager</span>
+                          <span class="noshrink">Phone Number</span>
                           <span class="d-flex flex-column align-center">
                             <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
                             <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
@@ -361,7 +147,7 @@ const teamMembers = ref([]);
                       </th>
                       <th scope="col">
                         <div class="d-flex align-center gap-1">
-                          <span class="noshrink">Number of Times Promoted</span>
+                          <span class="noshrink">Created By</span>
                           <span class="d-flex flex-column align-center">
                             <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
                             <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
@@ -379,13 +165,14 @@ const teamMembers = ref([]);
                       <td>{{ member.manager }}</td>
                       <td>{{ member.promotions }}</td>
                     </tr> -->
-                    <tr v-for="member in teamMembers" :key="member.name" @click="setSelectedName(member.name)" data-bs-dismiss="modal">
-                      <td>{{ member.name }}</td>
-                      <td>{{ member.dateOfEmployment }}</td>
-                      <td>{{ member.department }}</td>
-                      <td>{{ member.level }}</td>
-                      <td>{{ member.manager }}</td>
-                      <td>{{ member.promotions }}</td>
+                    <tr v-for="user in users" :key="user.userId">
+                      <td>{{ user.userFullName || 'N/A' }}</td>
+                      <td>{{ user.email }}</td>
+                      <td>{{ user.jobTitle || 'N/A' }}</td>
+                      <td>{{ user.department ? user.department.option : 'N/A' }}</td>
+                      <td>{{ user.businessUnit ? user.businessUnit.option : 'N/A' }}</td>
+                      <td>{{ user.phoneNumber || 'N/A' }}</td>
+                      <td>{{ user.createdBy ? user.createdBy.userFullName : 'N/A' }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -395,13 +182,13 @@ const teamMembers = ref([]);
         </div>
       </div>
 
-      <!-- <div class="profile">
+      <div class="profile">
         <button class="btn pl-2" :class="{ 'active': activeButton === 'My Profile' }" @click="setActiveButton('My Profile')">My Profile</button>
 
         <button class="btn" data-bs-toggle="modal" data-bs-target="#myModal5" type="button" :class="{ 'active': activeButton === 'Team Profile' }" @click="() => { setActiveButton('Team Profile'); toggleTeamMemberGoals(); }">
           <span>Team Profile</span>
         </button>
-      </div> -->
+      </div>
 
       <nav class="navbar navbar-expand-md">
         <ul class="navbar-nav">
@@ -605,7 +392,7 @@ label select {
 .modal-dialog {
   width: 1700px;
   height: 400px;
-  margin-left: 12%;
+  margin-left: 6%;
   display: inline-flex;
   padding: 30px;
   flex-direction: column;

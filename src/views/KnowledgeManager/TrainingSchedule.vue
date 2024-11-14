@@ -754,12 +754,12 @@ label[for]:hover {
 
   .form-select,
   .frame textarea {
-    width: 230px;
+    width: 270px;
   }
 
   .frame input,
   .frame .rating {
-    width: 230px;
+    width: 270px;
   }
 }
 

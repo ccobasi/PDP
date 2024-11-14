@@ -53,6 +53,8 @@ onMounted(async () => {
     if (accounts.length) {
       createdBy.value = accounts[0].username; 
       lastModifiedBy.value = accounts[0].username; 
+
+      
     } else {
       createdBy.value = defaultUser;
       lastModifiedBy.value = defaultUser;
@@ -726,6 +728,14 @@ main {
 }
 #myModal2 .table-header {
   font-style: 10px;
+}
+
+@media (max-width: 2000px) {
+  .form-select,
+  .frame textarea,
+  .frame input {
+    width: 370px !important;
+  }
 }
 
 @media (max-width: 1200px) {

@@ -601,7 +601,7 @@ tbody tr td {
   font-size: 12px;
   font-weight: 400;
   line-height: 14.4px;
-  padding: 10px;
+  padding: 20px;
   height: auto;
 }
 

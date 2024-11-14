@@ -1,116 +1,21 @@
-<!-- <script>
-import authService from './authService';
-
-const roleRedirectMap = {
-  '5': '/', // User
-  '3': '/km/', // Knowledge Management
-  '2': '/m/', // Manager
-  '1': '/it/', // Information Technology
-  '4': '/hod/' // Head of Department
-};
-
-
-export default {
-  name: 'LoginView',
-  data() {
-    return {
-      account: undefined,
-      // userRole: undefined,
-    };
-  },
-  async mounted() {
-    try {
-      await authService.initialize();
-      const msalInstance = authService.getMsalInstance();
-      const accounts = msalInstance.getAllAccounts();
-      if (accounts.length) {
-        this.account = accounts[0];
-        this.$emit('login', this.account);
-        // this.$router.replace(this.$route.query.redirect || '/');
-        // this.$emit('login', this.account);
-        this.handleRedirect(); 
-        
-      }
-      
-    } catch (error) {
-      console.error("Error during MSAL initialization:", error);
-    }
-  },
-  methods: {
-    async SignIn() {
-      try {
-        await authService.initialize();
-        const account = await authService.signIn();
-        this.account = account;
-        this.$emit('login', this.account);
-        // this.$router.replace(this.$route.query.redirect || '/');
-        // await authService.initialize();
-        this.handleRedirect(); 
-      } catch (error) {
-        console.error("Error during sign in:", error);
-      }
-    },
-    async SignOut() {
-      try {
-        await authService.initialize();
-        await authService.signOut();
-        this.account = undefined;
-        this.$emit('logout');
-        this.$router.replace('/login');
-      } catch (error) {
-        console.error("Error during sign out:", error);
-      }
-    },
-    handleRedirect() {
-     
-      const redirectPath = this.$route.query.redirect;
-      this.$router.replace(redirectPath || '/');  
-    }
-  },
-};
-</script>
-<template>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Aladin">
-
-  <div class="split left">
-    <div class="centered">
-
-      <div class="row" style="margin: 20px;">
-
-        <div class="col m-auto">
-          <img src="../assets/InfraCredit.svg" alt="" width="150" height="50">
-        </div>
-      </div>
-
-      <div class="loginElements">
-        <h1>Login</h1>
-        <button class="loginBtn" @click="SignIn">
-          Login
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="split right">
-    <div class="centered">
-      <img src="../assets/banner.png" alt="">
-    </div>
-  </div>
-</template> -->
 <script>
 import authService from './authService';
 
+// const roleRedirectMap = {
+//   '1': '/',       // Admin
+//   '8': '/',       // User
+//   '9': '/km/',    // Knowledge Management
+//   '2': '/m/',     // Manager
+//   '4': '/it/',    // Information Technology
+//   '3': '/hod/'    // Head of Department
+// };
+
 const roleRedirectMap = {
-  '1': '/',       // Admin
-  '8': '/',       // User
-  '9': '/km/',    // Knowledge Management
-  '2': '/m/',     // Manager
-  '4': '/it/',    // Information Technology
-  '3': '/hod/'    // Head of Department
+    "IT Admin": "/it/",
+    "Manager": "/m/", 
+    "Knowledge Manager": "/km/",
+    "HOD": "/hod/", 
+    "User": "/", 
 };
 
 export default {
@@ -121,19 +26,38 @@ export default {
     };
   },
   async mounted() {
-    try {
-      await authService.initialize();
-      const msalInstance = authService.getMsalInstance();
-      const accounts = msalInstance.getAllAccounts();
-      if (accounts.length) {
-        this.account = accounts[0];
-        this.$emit('login', this.account);
-        await this.handleRedirect(); 
-      }
-    } catch (error) {
-      console.error("Error during MSAL initialization:", error);
+  try {
+    await authService.initialize();
+    const account = authService.getCurrentAccount(); // Safely get the current account
+
+    if (account) {
+      this.account = account;
+      console.log(account.idTokenClaims); // Log account claims
+
+      const userRole = await authService.getUserRole(account); // Get user role
+      console.log('User Role:', userRole);
+    } else {
+      console.error("No account found. Please log in.");
+      this.$router.push('/login'); // Redirect to login if no account is found
     }
-  },
+  } catch (error) {
+    console.error("Error during MSAL initialization:", error);
+  }
+},
+  // async mounted() {
+  //   try {
+  //     await authService.initialize();
+  //     const msalInstance = authService.getMsalInstance();
+  //     const accounts = msalInstance.getAllAccounts();
+  //     if (accounts.length) {
+  //       this.account = accounts[0];
+  //       this.$emit('login', this.account);
+  //       await this.handleRedirect(); 
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during MSAL initialization:", error);
+  //   }
+  // },
   methods: {
     async SignIn() {
       try {
@@ -157,17 +81,38 @@ export default {
         console.error("Error during sign out:", error);
       }
     },
-    async handleRedirect() {
-      try {
-        const userRole = await authService.getUserRole(this.account); // Get user role from account
-        const redirectPath = roleRedirectMap[userRole] || '/';  // Use role map or default to '/'
+    // async handleRedirect() {
+    //   try {
+    //     const userRole = await authService.getUserRole(this.account);
+    //     const redirectPath = roleRedirectMap[userRole] || '/';
         
-        this.$router.replace(redirectPath);
-      } catch (error) {
-        console.error("Error during role-based redirection:", error);
-        this.$router.replace('/');  // Default fallback
-      }
+    //     this.$router.replace(redirectPath);
+    //   } catch (error) {
+    //     console.error("Error during role-based redirection:", error);
+    //     this.$router.replace('/login');  
+    //   }
+    // }
+    async handleRedirect() {
+  try {
+    if (!this.account) {
+      throw new Error("Account is not available");
     }
+
+    const userRole = await authService.getUserRole(this.account);
+
+    if (!userRole) {
+      console.error("No role assigned to the user");
+      this.$router.replace('/login');  
+    } else {
+      const redirectPath = roleRedirectMap[userRole] || '/';
+      this.$router.replace(redirectPath);
+    }
+  } catch (error) {
+    console.error("Error during role-based redirection:", error);
+    this.$router.replace('/login');  // Redirect to login if error occurs
+  }
+}
+
   },
 };
 </script>

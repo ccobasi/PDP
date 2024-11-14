@@ -1,7 +1,4 @@
 <script>
-// import authService from '../services/authService';
-// export default {
-
 import authService from '../services/authService';
 
 export default {
@@ -38,6 +35,19 @@ export default {
       }
     },
   },
+  computed: {
+    displayName() {
+      
+      const fullName = this.account.name || this.account.username || this.account.email;
+
+      const nameParts = fullName.split(" ");
+      if (nameParts.length > 2) {
+        return `${nameParts[0]} ${nameParts[1]}`; 
+      }
+
+      return fullName; 
+    }
+  }
 };
 
 
@@ -80,7 +90,8 @@ export default {
       </v-badge>
       <div class="avatar">
         <img src="../assets/images/ellipse.png" alt="" class="profile-image">
-        <span v-if="account">{{ account.name || account.username || account.email }}</span>
+        <!-- <span v-if="account">{{ account.name || account.username || account.email }}</span> -->
+        <span v-if="account">{{ displayName }}</span>
         <span v-else>Guest </span>
       </div>
       <div class="logout">

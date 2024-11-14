@@ -565,6 +565,7 @@ main {
   }
 
   .form-select,
+  .frame input,
   .frame textarea {
     width: 320px;
   }

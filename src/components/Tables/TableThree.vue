@@ -3,12 +3,13 @@
     import {useTrainingsStore} from "@/store/trainings"
     // import html2pdf from 'html2pdf.js';
     import { Modal } from 'bootstrap';
-    
+    import { useUsersStore } from '@/store/users';
+    import authService from '../../services/authService';
   
 const store = useTrainingsStore();
 const trainings = ref([]);
 const editingTraining = ref(null);
-
+const usersStore = useUsersStore();
   const trainingStartDate = ref('')
   const trainingTopic = ref('')
   const learningOutcome = ref('')
@@ -21,40 +22,65 @@ const editingTraining = ref(null);
   const evidenceURL = ref(null)
   // const recordOwner = ref('')
 const department = ref({ id: 3, name: 'Knowledge Management' });
-  // const createdBy = ref('')
-  // const lastModifiedBy = ref('')
+const recordOwner = ref(null)
+  const createdBy = ref(null)
+  const lastModifiedBy = ref(null)
 const selectedItem = ref(null);
 
-onMounted(async () => {
-  initializeModal();
-
+const fetchData = async () => {
   try {
     await store.fetchTrainings();
 
-    if (Array.isArray(store.trainings)) {
-      trainings.value = store.trainings;
-    } else {
-      console.error('Error: store.trainings is not an array');
-    }
-
-    watch(
-      () => store.trainings,
-      (newTrainings) => {
-        if (Array.isArray(newTrainings)) {
-          trainings.value = newTrainings;
-        } else {
-          console.error('Error: store.trainings is not an array');
-        }
-      }
-    );
+    trainings.value = store.trainings;
 
     console.log('Trainings:', trainings.value);
   } catch (error) {
     console.error('Error fetching data:', error);
   }
+};
+
+onMounted(async () => {
+  await usersStore.fetchUsers();
+  initializeModal();
+  await fetchData();
+
+  try {
+    await authService.initialize();
+    const msalInstance = authService.getMsalInstance();
+    const accounts = msalInstance.getAllAccounts();
+    if (accounts.length) {
+      createdBy.value = accounts[0].email; 
+      lastModifiedBy.value = accounts[0].email; 
+      recordOwner.value = accounts[0].email; 
+    }
+  } catch (error) {
+    console.error('Error during MSAL initialization:', error);
+  }
+
+
 });
 
+const usersOptions = computed(() =>
+  usersStore.users.map(user => ({
+    label: user.userFullName,
+    value: user.userId
+  }))
+);
+
+const userNamesMap = computed(() =>
+  usersStore.users.reduce((map, user) => {
+    map[user.id] = user.name;
+    return map;
+  }, {})
+);
+
+ const defaultUser = {
+    id: 4, 
+    username: 'James Bond',
+  };
+
 const editTraining = (training) => {
+  const createdById = createdBy.value?.id || defaultUser.id
   editingTraining.value = { ...training };
   
   trainingStartDate.value = training.trainingStartDate;
@@ -68,6 +94,8 @@ const editTraining = (training) => {
   rating.value = training.rating;
   evidenceURL.value = training.evidenceURL;
   department.value = training.department;
+  createdBy.value = training.createdBy.userId;
+  recordOwner.value = training.recordOwner.userId || createdById;
   
   document.getElementById('myModal2').style.display = 'block';
 };
@@ -85,6 +113,7 @@ const updateTraining = async () => {
     editingTraining.value.rating = rating.value;
     editingTraining.value.evidenceURL = evidenceURL.value;
     editingTraining.value.department = department.value;
+    editingTraining.value.createdBy = createdBy.value;
 
     await store.updateTraining(editingTraining.value);
     editingTraining.value = null;
@@ -94,12 +123,6 @@ const updateTraining = async () => {
   
   }
 };
-
-// const deleteTraining = async (trainingId) => {
-//   if (confirm('Are you sure you want to delete this training?')) {
-//     await store.deleteTraining(trainingId);
-//   }
-// };
 
 const itemsPerPage = 10; 
 const currentPage = ref(1);
@@ -310,6 +333,22 @@ const handleDoubleClick = (item) => {
                       <h6>Feedback</h6>
 
                       <textarea v-model="feedback" name="feedback" id="" cols="30" rows="50" placeholder="Feedback"></textarea>
+                    </div>
+                  </div>
+                  <div class="sixth mt-3">
+                    <div class="frame">
+                      <h6 class="department">Record Owner</h6>
+                      <select v-model="recordOwner" class="form-select">
+                        <option value="" disabled>Select Record Owner</option>
+                        <option v-for="user in usersOptions" :key="user.value" :value="user.value">
+                          {{ user.label }}
+                        </option>
+                      </select>
+                    </div>
+                    <div class="frame">
+                      <h6>Created By</h6>
+
+                      <input type="text" id="createdBy" class="form-control" :value="userNamesMap[createdBy] || defaultUser.id" disabled />
                     </div>
                   </div>
                 </div>

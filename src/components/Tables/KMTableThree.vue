@@ -40,7 +40,7 @@ const usersStore = useUsersStore();
   const rating = ref(null)
   const evidenceURL = ref(null)
   const recordOwner = ref(null)
-const department = ref('')
+  const department = ref('')
   const createdBy = ref(null)
   const lastModifiedBy = ref(null)
 const selectedItem = ref(null);
@@ -68,9 +68,9 @@ onMounted(async () => {
     const msalInstance = authService.getMsalInstance();
     const accounts = msalInstance.getAllAccounts();
     if (accounts.length) {
-      createdBy.value = accounts[0].username; 
-      lastModifiedBy.value = accounts[0].username; 
-      recordOwner.value = accounts[0].username; 
+      createdBy.value = accounts[0].email; 
+      lastModifiedBy.value = accounts[0].email; 
+      recordOwner.value = accounts[0].email; 
     }
   } catch (error) {
     console.error('Error during MSAL initialization:', error);
@@ -1468,7 +1468,7 @@ label[for]:hover {
 
 @media screen and (max-width: 992px) {
   .modal-dialog {
-    width: 800px;
+    width: 750px !important;
     margin-top: 10%;
     margin-left: 60px;
   }
@@ -1482,7 +1482,7 @@ label[for]:hover {
   }
 
   .form-select {
-    width: 270px !important;
+    width: 300px !important;
   }
 
   .frame textarea {
@@ -1491,11 +1491,15 @@ label[for]:hover {
 
   .frame input,
   .frame .rating {
-    width: 270px;
+    width: 300px;
+  }
+
+  #myModal4 .modal-dialog {
+    height: 950px;
   }
 
   #myModal4 textarea {
-    width: 270px;
+    width: 300px;
     height: 110px;
   }
 
