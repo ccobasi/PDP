@@ -63,9 +63,9 @@ const addSkill = async () => {
 
   const fieldsToValidate = {
     skillDescription: skillDescription.value.trim(),
-    currentStageId: currentStageId.value.trim(),
+    currentStageId: +currentStageId.value,
     skillGapDetails: skillGapDetails.value.trim(),
-    desiredStageId: desiredStageId.value.trim(),
+    desiredStageId: +desiredStageId.value,
     actionPlan: actionPlan.value.trim(),
     comment: comment.value.trim(),
     createdBy: createdBy.value || defaultUser.id,

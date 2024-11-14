@@ -190,8 +190,13 @@ div {
 </style> -->
 <template>
   <div>
-    <canvas ref="chartCanvas"></canvas>
+    <canvas ref="chartCanvas" :id="pieChartId" style="width: 400px; height: 350px;"></canvas>
+    <select v-model="selectedStatus" @change="updateChart">
+      <option value="">All</option>
+      <option v-for="(label, value) in statusLabels" :key="value" :value="value">{{ label }}</option>
+    </select>
   </div>
+
 </template>
 
 <script setup>
@@ -249,7 +254,7 @@ const updateChartData = () => {
         statusKey = 1;
         break;
       case 'active':
-      case 'Current status of the plan':
+      case 'Completed':
         statusKey = 3;
         break;
       default:
@@ -304,7 +309,7 @@ const config = {
   options: {
     responsive: true,
     plugins: {
-      legend: { position: 'top' },
+      legend: { position: 'buttom' },
       tooltip: {
         callbacks: {
           label: (tooltipItem) => {
@@ -355,17 +360,50 @@ div {
   width: 90%;
 }
 
+canvas {
+  width: 100%;
+  height: auto;
+}
+
 @media (max-width: 1024px) {
   div {
     margin-left: 10px;
     width: 95%;
+  }
+  canvas {
+    width: 90%;
+    height: auto;
   }
 }
 
 @media (max-width: 768px) {
   div {
     margin-left: 33px;
+    width: 100%;
+  }
+  canvas {
+    width: 80%;
+    height: auto;
+  }
+  select {
+    width: 100%;
+    margin-top: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  div {
+    margin-left: 0;
+    padding: 10px;
+    width: 100%;
+  }
+  canvas {
+    width: 100%;
+    height: auto;
+  }
+  select {
+    width: 100%;
+    font-size: 14px;
   }
 }
 </style>
-

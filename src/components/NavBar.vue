@@ -128,6 +128,7 @@ export default {
   font-size: 28px;
   font-weight: 700;
   color: var(--Primary, #227cbf);
+  cursor: context-menu;
 }
 
 .subheader {

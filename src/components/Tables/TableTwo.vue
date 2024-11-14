@@ -192,20 +192,20 @@ const paginatedSkills = computed(() => {
 //   });
 // };
 
-const currentStageMap = {
-      1: 'Proficient',
-      2: 'Very Proficient',
-      3: 'Expert',
-      4: 'Advance',
-      5: 'Expert',
-    };
+// const currentStageMap = {
+//       1: 'Proficient',
+//       2: 'Very Proficient',
+//       3: 'Expert',
+//       4: 'Advance',
+//       5: 'Expert',
+//     };
 
-    const desiredStageMap = {
-      1: 'Proficient',
-      2: 'Very Proficient',
-      3: 'Expert',
-      5: 'Expert',
-    };
+//     const desiredStageMap = {
+//       1: 'Proficient',
+//       2: 'Very Proficient',
+//       3: 'Expert',
+//       5: 'Expert',
+//     };
 
 const currentIndex = ref(0);
 
@@ -517,9 +517,11 @@ const handleDoubleClick = (item) => {
           <tr v-for="(item, index) in paginatedSkills" :key="index" @click="handleClick(item)" @dblclick="handleDoubleClick(item)">
             <td>{{item.id}}</td>
             <td>{{item.skillDescription}}</td>
-            <td>{{currentStageMap[item.currentStageId]}}</td>
+            <td>{{ item.currentStage ? item.currentStage.option : 'N/A' }}</td>
+            <!-- <td>{{currentStageMap[item.currentStage]}}</td> -->
             <td>{{item.skillGapDetails}}</td>
-            <td>{{desiredStageMap[item.desiredStageId]}}</td>
+            <td>{{ item.desiredStage ? item.desiredStage.option : 'N/A' }}</td>
+            <!-- <td>{{desiredStageMap[item.desiredStage]}}</td> -->
             <td>
 
               <!-- <v-icon icon="mdi-delete" class="icon-danger" @click="deleteSkill(item.id)"></v-icon> -->

@@ -24,8 +24,8 @@ const pieChartId = `pie-${props.chartId}`
 
 
 onMounted(async () => {
-  const response = await fetch('https://infracredit.pythonanywhere.com/api/v1/training-schedules'); 
-  const trainings = await response.json();
+  const response = await fetch('https://infracredit2.pythonanywhere.com/api/v1/training-schedules/'); 
+  const trainings = await response.JSON();
 
   const statusCounts = trainings.reduce((acc, training) => {
     acc[training.status] = (acc[training.status] || 0) + 1;

@@ -1,7 +1,7 @@
 <script setup>
 import PieChart from '../components/Charts/PieChart.vue';
-// import PieChartTwo from '../components/Charts/PieChartTwo.vue';
-// import PieChartThree from '../components/Charts/PieChartThree.vue';
+import PieChartTwo from '../components/Charts/PieChartTwo.vue';
+import PieChartThree from '../components/Charts/PieChartThree.vue';
 </script> 
 <template>
   <div class="container mt-2">
@@ -14,11 +14,11 @@ import PieChart from '../components/Charts/PieChart.vue';
 
       <div class=" chart-box-3 box-padded">
         <h4 class="box-title second"> Areas of Interest </h4>
-        <PieChart chart-id="regions" :doughnut="true" />
+        <PieChartTwo chart-id="regions" :doughnut="true" />
       </div>
       <div class=" chart-box-3 box-padded last">
         <h4 class="box-titles"> Mentorship and Skills Building </h4>
-        <PieChart chart-id="products" :doughnut="true" />
+        <PieChartThree chart-id="products" :doughnut="true" />
 
       </div>
 
