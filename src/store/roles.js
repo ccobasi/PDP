@@ -18,16 +18,16 @@ export const useRolesStore = defineStore('roles', {
     async fetchRoles() {
       try {
         const response = await axios.get(`${this.baseUrl}`);
-        this.roles = response.data.data;
+        this.roles = response.data;
         console.log(this.roles); 
       } catch (error) {
         console.error('Error fetching roles:', error);
       }
     },
 
-    async addRole(name, description, userType) {
+    async addRole(option) {
       try {
-        const response = await axios.post(`${this.baseUrl}${this.endpoints.createRoles}`, { name, description, userType });
+        const response = await axios.post(`${this.baseUrl}`, { option});
         this.roles.push(response.data);
         console.log(response.data);
       } catch (error) {
@@ -51,7 +51,7 @@ export const useRolesStore = defineStore('roles', {
 
     async deleteRole(roleId) {
       try {
-        await axios.delete(`${this.baseUrl}${this.endpoints.deleteRoles}/${roleId}`);
+        await axios.delete(`${this.baseUrl}/${roleId}/`);
         this.roles = this.roles.filter(d => d.id !== roleId);
       } catch (error) {
         console.error('Error deleting role:', error);

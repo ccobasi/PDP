@@ -1,12 +1,20 @@
 <script setup>
 import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
 import DoughNut from '../../components/DoughNut.vue'
-import CareerGoal from '../../components/CareerGoal.vue'
+// import CareerGoal from '../../components/CareerGoal.vue'
 import { defineProps } from 'vue';
 import TableOne from '../../components/Tables/TableOne.vue'
 import { useTeamMemberStore } from '../../store/goals'
 import { ref, computed, onMounted } from 'vue';
-import { useRoute  } from 'vue-router';
+import { useRoute } from 'vue-router';
+import { useGoalsStore } from '@/store/goals';
+
+const route = useRoute();
+const goalsStore = useGoalsStore();
+const userId = route.params.userId; // Retrieve userId from route params
+
+const developmentPlans = ref([]);
+
 
 const props = defineProps({
   selectedName: String,
@@ -15,10 +23,9 @@ const props = defineProps({
 
 const store =  useTeamMemberStore()
 var teams = ref(store.teamMemberData)
-
 console.log(teams.value);
 
-const route = useRoute();
+// const route = useRoute();
 
 const teamMemberDetails = computed(() => {
   return store.getTeamMemberData(props.selectedName)?.[0] || {};
@@ -26,10 +33,21 @@ const teamMemberDetails = computed(() => {
 
 
 
-onMounted(() => {
+onMounted( async () => {
+  await goalsStore.fetchUserGoals(userId); 
+  developmentPlans.value = goalsStore.userGoals; 
+
+  const queryData = route.query.data;
+  if (queryData) {
+    developmentPlans.value = JSON.parse(queryData);
+  }
+
+  console.log(queryData);
+  
   const overlay = document.getElementById("myModal5"); // Replace "overlay" with the actual ID or class
   if (overlay) overlay.style.display = "none"; // Hide or remove overlay
 });
+
 </script>
 
 
@@ -44,7 +62,14 @@ onMounted(() => {
           <p>Level: {{ teamMemberDetails.level }}</p>
           <p>Record Owner: {{ teamMemberDetails.recordOwner }}</p>
         </div>
-
+        <div>
+          <h3>User Development Plans</h3>
+          <ul>
+            <li v-for="(plan, index) in developmentPlans" :key="index">
+              {{ plan }}
+            </li>
+          </ul>
+        </div>
       </div>
       <hr>
       <div class="goal">

@@ -1,8 +1,32 @@
 <script setup>
 import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
 import DoughnutChart from '../../components/Charts/DoughnutChart.vue'
-import AllTrainingTable from '../../components/Tables/AllTrainingTable.vue'
+// import TrainingTable from '../../components/TrainingTable.vue'
+import {useTrainingsStore} from "@/store/trainings"
+import { ref, watch} from 'vue'
+import KMTrainingTable from '../../components/Tables/KMTableThree.vue'
 
+const store = useTrainingsStore();
+console.log(store.trainings);
+console.log(store);
+
+
+const selectedQuarter = ref('');
+const selectedYear = ref('');
+const selectedLevel = ref('');
+const selectedDepartment = ref('');
+
+watch([selectedLevel, selectedDepartment, selectedQuarter, selectedYear], handleFilterChange);
+
+function handleFilterChange() {
+  console.log('Filter parameters changed:', {
+    level: selectedLevel.value,
+    department: selectedDepartment.value,
+    quarter: selectedQuarter.value,
+    year: selectedYear.value,
+  });
+  
+}
 
 </script>
 
@@ -10,52 +34,45 @@ import AllTrainingTable from '../../components/Tables/AllTrainingTable.vue'
 <template>
   <main class="wrapper">
     <TabMenu />
-    <div class="filters d-flex gap-2 mt-2">
-      <select class="form-select" @change="handleDateChange">
+
+    <div class="filters d-flex gap-2">
+      <select class="form-select" v-model="selectedLevel" @change="handleDateChange">
         <option value="Level">Level</option>
-        <option value="1">Manager</option>
-        <option value="2">HOD</option>
-        <option value="3">IT</option>
-        <option value="4">User</option>
-        <option value="5">Knowledge Manager</option>
+        <option value="Manager">Manager</option>
+        <option value="HOD">HOD</option>
+        <option value="IT">IT</option>
+        <option value="User">User</option>
+        <option value="Knowledge Manager">Knowledge Manager</option>
       </select>
 
-      <select class="form-select" @change="handleDateChange">
+      <select class="form-select" v-model="selectedDepartment" @change="handleDateChange">
         <option value="Department">Department</option>
-        <option value="1">IT</option>
-        <option value="2">Finance</option>
-        <option value="3">Accounting</option>
-        <option value="4">Operation</option>
-        <option value="5">Customer Service</option>
+        <option value="IT">IT</option>
+        <option value="Finance">Finance</option>
+        <option value="Accounting">Accounting</option>
+        <option value="Operation">Operation</option>
+        <option value="Customer Service">Customer Service</option>
       </select>
 
-      <select class="form-select" @change="handleDateChange">
+      <select class="form-select" v-model="selectedQuarter" @change="handleDateChange">
         <option value="Quarterly">Quarterly</option>
-        <option value="1">Q1</option>
-        <option value="2">Q2</option>
-        <option value="3">Q3</option>
-        <option value="4">Q4</option>
+        <option value="Q1">Q1</option>
+        <option value="Q2">Q2</option>
+        <option value="Q3">Q3</option>
+        <option value="Q4">Q4</option>
 
       </select>
 
-      <select class="form-select" @change="handleDateChange">
+      <select class="form-select" v-model="selectedYear" @change="handleDateChange">
         <option value="Year">Year</option>
-        <option value="1">2024</option>
-        <option value="2">2025</option>
-        <option value="3">2026</option>
-        <option value="4">2027</option>
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+        <option value="2026">2026</option>
+        <option value="2027">2027</option>
 
       </select>
     </div>
     <div class="skill mt-4">
-      <div class="header">
-        <div class="title mb-4">
-          <h3>All Training Schedule</h3>
-
-        </div>
-
-        <div class="lines"></div>
-      </div>
 
       <div class="chart">
         <div class="auto">
@@ -64,8 +81,8 @@ import AllTrainingTable from '../../components/Tables/AllTrainingTable.vue'
       </div>
 
       <div class="table">
-
-        <AllTrainingTable />
+        <!-- <TrainingTable /> -->
+        <KMTrainingTable :level="selectedLevel" :department="selectedDepartment" :quarter="selectedQuarter" :year="selectedYear" />
       </div>
 
     </div>
@@ -74,13 +91,13 @@ import AllTrainingTable from '../../components/Tables/AllTrainingTable.vue'
 
 <style scoped>
 main {
-  height: 1750px;
+  height: 1450px;
 }
 
 .filters .form-select {
   width: 100px;
   border-radius: 10px;
-  height: 40px;
+  margin-top: 10px;
   color: #000;
 }
 
@@ -97,7 +114,7 @@ main {
 }
 .skill h3 {
   color: var(--Black, #000);
-  font-family: "Inter", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 24px;
   font-style: normal;
   font-weight: 500;
@@ -123,7 +140,7 @@ main {
   background: var(--Secondary, #47b65c);
 
   color: var(--White, #fff);
-  font-family: "Inter", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
@@ -148,35 +165,301 @@ main {
 .auto {
   margin: auto;
 }
-.form-select {
-  width: 100px;
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  align-self: stretch;
+  height: 30px !important;
+}
+
+.modal-dialog {
+  --bs-modal-width: 960px;
+  width: 960px;
+  height: 970px;
+  margin-left: 12%;
+  display: inline-flex;
+  padding: 30px;
+  border-radius: 10px;
+  background: #eee;
+}
+
+.modal-body {
+  gap: 20px;
+  background: #fff;
+  margin-top: 0px !important;
+}
+
+.modal-content {
+  width: 900px;
+  height: 920px;
+  z-index: 1;
+  --bs-backdrop-zindex: 1;
+  display: flex;
+  padding: 30px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+  border-radius: 10px;
+}
+
+.first,
+.second,
+.third,
+.fourth,
+.fifth,
+.sixth {
+  display: flex;
+  gap: 30px;
+}
+.frame {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+.frame h6 {
+  color: var(--Black, #000);
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+}
+.frame input {
+  width: 370px;
+  height: 40px;
+}
+.frame textarea {
+  display: flex;
+  width: 370px;
+  height: 200px;
+  padding: 10px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--Grey-Light, #eee);
+  background: var(--White, #fff);
+  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
+}
+.frame textarea::placeholder,
+.frame input::placeholder {
   color: var(--Grey-Dark, #808080);
-  font-family: "Inter", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
   line-height: 14.4px;
-  border: none;
 }
-.filter {
+.form-select {
+  width: 370px;
+  height: 40px;
+  color: var(--Grey-Dark, #808080);
+  font-family: "Roboto", sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 14.4px;
+}
+.modal-footer {
   display: flex;
-  padding: 15px 20px;
+  height: 40px;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-end;
+  align-self: stretch;
+}
+.modal-footer .btn {
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+  color: #fff;
+}
+
+.form-selects {
+  display: flex;
+  width: 320px;
+  height: 40px;
+  padding: 10px;
   justify-content: space-between;
   align-items: center;
-  align-self: stretch;
-  border-radius: 5px 5px 0px 0px;
-  border: 1px solid var(--gray-200, #e4e4e7);
-  background: var(--Color-3, #fff);
-  box-shadow: 0px 4px 30px 0px rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+  border: 1px solid var(--Grey-Light, #eee);
+  background: var(--White, #fff);
+  box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.1);
 }
-.filter label {
+.types button {
   display: flex;
-  padding: 7px 10px;
+  padding: 10px 50px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+  color: #fff;
+  margin-top: 10px;
+}
+
+.month {
+  border: 1px solid var(--Grey-Light, #eee);
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.rating {
+  width: 370px;
+  border: 1px solid var(--Grey-Light, #eee);
+  padding: 0px 10px;
+  border-radius: 5px;
+}
+.frame button {
+  width: 145px;
+  display: flex;
+  padding: 5px 20px;
+  align-items: center;
+  gap: 10px;
+  align-self: stretch;
+  border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+  color: #fff;
+  margin-top: 10px;
+}
+.modal-footer button,
+.one button {
+  display: flex;
+  padding: 8px 30px;
   align-items: center;
   gap: 10px;
   border-radius: 5px;
+  background: var(--Secondary, #47b65c);
+  color: var(--White, #fff);
+  font-family: "Roboto", sans-serif;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 19.2px;
+  border: none;
+}
+.rating input[type="radio"]:not(:nth-of-type(0)) {
+  /* hide visually */
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+.rating [type="radio"]:not(:nth-of-type(0)) + label {
+  display: none;
+}
 
-  background: var(--White, #fff);
+label[for]:hover {
+  cursor: pointer;
+}
+
+.rating .stars label:before {
+  content: "★";
+  font-size: 24px;
+}
+
+.stars label {
+  color: lightgray;
+}
+
+.stars label:hover {
+  text-shadow: 0 0 1px #000;
+}
+
+.rating
+  [type="radio"]:nth-of-type(1):checked
+  ~ .stars
+  label:nth-of-type(-n + 1),
+.rating
+  [type="radio"]:nth-of-type(2):checked
+  ~ .stars
+  label:nth-of-type(-n + 2),
+.rating
+  [type="radio"]:nth-of-type(3):checked
+  ~ .stars
+  label:nth-of-type(-n + 3),
+.rating
+  [type="radio"]:nth-of-type(4):checked
+  ~ .stars
+  label:nth-of-type(-n + 4),
+.rating
+  [type="radio"]:nth-of-type(5):checked
+  ~ .stars
+  label:nth-of-type(-n + 5) {
+  color: orange;
+}
+
+.rating [type="radio"]:nth-of-type(1):focus ~ .stars label:nth-of-type(1),
+.rating [type="radio"]:nth-of-type(2):focus ~ .stars label:nth-of-type(2),
+.rating [type="radio"]:nth-of-type(3):focus ~ .stars label:nth-of-type(3),
+.rating [type="radio"]:nth-of-type(4):focus ~ .stars label:nth-of-type(4),
+.rating [type="radio"]:nth-of-type(5):focus ~ .stars label:nth-of-type(5) {
+  color: darkorange;
+}
+
+@media (max-width: 1200px) {
+  .modal {
+    margin-left: 3%;
+  }
+  .modal-dialog {
+    --bs-modal-width: 700px;
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .modal-content {
+    width: 100%;
+  }
+
+  .modal-body {
+    width: 100%;
+  }
+
+  .form-select,
+  .frame textarea,
+  .frame input,
+  .rating {
+    width: 370px;
+  }
+  /*.form-select,
+  .frame textarea,
+  .frame input,
+  .rating {
+    width: 280px;
+  }*/
+}
+
+@media screen and (max-width: 992px) {
+  .modal-dialog {
+    width: 800px;
+    margin-top: 10%;
+    margin-left: 60px;
+  }
+
+  .modal-content {
+    width: 100%;
+  }
+
+  .modal-body {
+    width: 100%;
+  }
+
+  .form-select,
+  .frame textarea {
+    width: 270px;
+  }
+
+  .frame input,
+  .frame .rating {
+    width: 270px;
+  }
 }
 
 @media screen and (max-width: 768px) {
@@ -231,6 +514,60 @@ main {
   .modal-content {
     padding: 10px;
     height: 1830px;
+  }
+
+  .first,
+  .second,
+  .third,
+  .fourth,
+  .fifth,
+  .sixth {
+    flex-direction: column;
+  }
+
+  .form-control,
+  .form-select,
+  .btn {
+    font-size: 14px;
+  }
+
+  .modal-header h4 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 400px) {
+  .title h3 {
+    font-size: 10px;
+    width: 120px;
+  }
+
+  .title button {
+    width: 125px;
+    padding: 5px;
+    font-size: 8px;
+  }
+
+  .modal-dialog {
+    max-width: 80%;
+    margin-left: 7%;
+    height: 1700px;
+  }
+
+  .modal-content {
+    padding: 10px;
+    height: 1730px;
+  }
+
+  .modal-title {
+    font-size: 12px;
+  }
+
+  .form-select,
+  .frame textarea,
+  .frame input,
+  .rating {
+    width: 170px;
   }
 
   .first,

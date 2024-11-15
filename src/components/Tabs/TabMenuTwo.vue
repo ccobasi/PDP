@@ -2,12 +2,13 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import * as bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { useSelectedNameStore } from '@/store/goals.js';
+// import * as bootstrap from 'bootstrap/dist/js/bootstrap.bundle.min.js';
+// import { useSelectedNameStore } from '@/store/goals.js';
 import { useUsersStore } from '@/store/users.js';
+import axios from 'axios';
 
-const selectedNameStore = useSelectedNameStore();
-const router = useRouter();
+// const selectedNameStore = useSelectedNameStore();
+// const router = useRouter();
 const usersStore = useUsersStore();
 const activeButton = ref('My Profile');
 const showTeamMemberGoals = ref(false);
@@ -15,60 +16,43 @@ const users = computed(() => usersStore.users);
 console.log(users);
 
 
-let modalInstance;
+const router = useRouter(); // Initialize router
 
-onMounted( async () => {
+const fetchDevelopmentPlans = async (userId) => {
+  try {
+    const response = await axios.get(`https://infracredit2.pythonanywhere.com/api/v1/users/${userId}`);
+    return response.data.data; // Assuming the response contains the user's development plans
+  } catch (error) {
+    console.error("Failed to fetch development plans:", error);
+    return null;
+  }
+};
+
+const redirectToUserProfile = async (userId) => {
+  const developmentPlans = await fetchDevelopmentPlans(userId);
+  if (developmentPlans) {
+    
+    router.push({
+      path: `/km/myprofile/${userId}/`,
+      query: { data: JSON.stringify(developmentPlans) }, // Pass data as query
+    });
+  }
+};
+
+onMounted(async () => {
   await usersStore.fetchUsers();
   users.value = usersStore.users;
-  
-  const modalElement = document.getElementById('myModal5');
-  if (modalElement) {
-    modalInstance = new bootstrap.Modal(modalElement);
-  }
 });
 
 const toggleTeamMemberGoals = () => {
   showTeamMemberGoals.value = !showTeamMemberGoals.value;
 };
 
-// const setSelectedName = (name) => {
-//   selectedNameStore.setSelectedName(name);
-
-//   if (modalInstance && modalInstance._isShown) {
-//     modalInstance.hide();
-//   }
-
-//   setTimeout(() => {
-//     router.push({ path: '/km/myprofile', query: { name } });
-//   }, 300); 
-// };
-
-const setSelectedName = async (name) => {
-  selectedNameStore.setSelectedName(name);
-
-  // Fetch the user's goals or records
-  await usersStore .fetchUsers(name);  // Assuming this action fetches the user-specific goals
-  
-  if (modalInstance && modalInstance._isShown) {
-    modalInstance.hide();
-  }
-
-setTimeout(() => {
-    router.push({ path: '/km/myprofile', query: { name } });
-  }, 300); 
-};
-
 const setActiveButton = (buttonName) => {
   activeButton.value = buttonName;
 };
 
-const teamMembers = ref([
-  { name: 'Lola Oyebola', dateOfEmployment: '23/08/2020', department: 'User', level: 'Associate', manager: 'Chinua Azibuke', promotions: 5 },
-  { name: 'Mark Dean', dateOfEmployment: '23/05/2019', department: 'Knowledge Management', level: 'Senior Associate', manager: 'Daniel Clinton', promotions: 3 },
-  { name: 'Uzo Okoro', dateOfEmployment: '23/11/2015', department: 'Manager', level: 'AVP', manager: 'Mosurat Adeniyi', promotions: 1 },
-  { name: 'Daniel Muller', dateOfEmployment: '23/03/2022', department: 'HOD', level: 'Associate', manager: 'Ayo Adenike', promotions: 2 },
-  { name: 'Jane Doe', dateOfEmployment: '23/05/2020', department: 'IT', level: 'Senior Associate', manager: 'Segun Arinze', promotions: 7 },
-]);
+
 </script>
 <template>
   <div>
@@ -157,15 +141,8 @@ const teamMembers = ref([
                     </tr>
                   </thead>
                   <tbody>
-                    <!-- <tr v-for="member in teamMembers" :key="member.name" @click="setSelectedName(member.name)" data-bs-dismiss="modal">
-                      <td>{{ member.name }}</td>
-                      <td>{{ member.dateOfEmployment }}</td>
-                      <td>{{ member.department }}</td>
-                      <td>{{ member.level }}</td>
-                      <td>{{ member.manager }}</td>
-                      <td>{{ member.promotions }}</td>
-                    </tr> -->
-                    <tr v-for="user in users" :key="user.userId">
+                    <tr v-for="user in users" :key="user.userId" @click="redirectToUserProfile(user.userId)" style="cursor: pointer;">
+                      <!-- <tr v-for="user in users" :key="user.userId"> -->
                       <td>{{ user.userFullName || 'N/A' }}</td>
                       <td>{{ user.email }}</td>
                       <td>{{ user.jobTitle || 'N/A' }}</td>

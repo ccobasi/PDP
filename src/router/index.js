@@ -217,11 +217,10 @@ const router = createRouter({
     // recordOwner: route.params.recordOwner  }),
     // },
     {
-    path: "/km/myprofile",
+    path: "/km/myprofile/:userId/",
     name: "Team Dashboard",
     component:TeamDashboard,
-    props: route => ({ selectedName: route.query.name,
-    recordOwner: route.params.recordOwner  }),
+    props: true,
     },
     {
     path: "/km/profileskillassessment",

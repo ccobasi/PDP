@@ -2,17 +2,25 @@
 import authService from '../../services/authService';
 import TabMenu from '../../components/Tabs/TabMenuTwo.vue';
 import DoughNut from '../../components/DoughNut.vue'
-import CareerGoal from '../../components/CareerGoal.vue'
+// import CareerGoal from '../../components/CareerGoal.vue'
 import { ref, onMounted, watch } from 'vue'
 import { useGoalsStore } from "@/store/goals"
 import MidTerm from "../../components/Tables/MidTerm.vue"
 import LongTerm from "../../components/Tables/LongTerm.vue"
 import DashTable from "../../components/Tables/DashTable.vue"
+// import { useTeamMemberStore } from '../../store/goals'
+import { useRoute } from 'vue-router';
+
 
 
 const store = useGoalsStore();
 var goals = ref(store.goals);
 console.log(store.goals);
+const route = useRoute();
+const goalsStore = useGoalsStore();
+const userId = route.params.userId;
+
+const developmentPlans = ref([]);
 
 const goal = ref([])
 // const planTypeId = ref('Select Type')
@@ -138,6 +146,27 @@ const handleSubmit = async () => {
   };
 
 onMounted(async () => {
+  await goalsStore.fetchGoals(userId); 
+  const allGoals = goalsStore.userGoals; 
+
+  const queryData = route.query.data;
+  // if (queryData) {
+  //   developmentPlans.value = JSON.parse(queryData);
+  // }
+  if (queryData) {
+    // If query data is available, parse it and use it to filter goals
+    const filterData = JSON.parse(queryData);
+    developmentPlans.value = allGoals.filter(goal => 
+      filterData.some(user => user.userId === goal.userId)
+    );
+  } else {
+    // If no query data, show all goals
+    developmentPlans.value = allGoals;
+  }
+
+  console.log(developmentPlans.value);
+
+  console.log(queryData);
   await fetchData();
   console.log("Fetched goals")
 
@@ -320,6 +349,14 @@ const saveExpandedText = () => {
       <div class="dev">
         <h3>Personal Development Plan</h3>
         <button data-bs-toggle="modal" data-bs-target="#myModal" type="button">Add Goals</button>
+      </div>
+      <div>
+        <h3>User Development Plans</h3>
+        <ul>
+          <li v-for="(plan, index) in developmentPlans" :key="index">
+            {{ plan }}
+          </li>
+        </ul>
       </div>
       <hr>
       <div class="goals">

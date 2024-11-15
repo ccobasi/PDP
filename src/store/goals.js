@@ -26,24 +26,6 @@ export const useGoalsStore = defineStore('goals', {
     this.goals = [];
   }
 },
-
-    // async fetchGoals({ level = '', department = '', quarter = '', year = '' } = {}) {
-    //   try {
-    //     const response = await axios.get(this.baseUrl, {
-    //       params: {
-    //         recordOwner_role_option: level,      
-    //         recordOwner_department_option: department,  
-    //         quarter,                              
-    //         year,                                
-    //       },
-    //     });
-        
-    //     this.goals = response.data;
-    //     console.log(this.goals);
-    //   } catch (error) {
-    //     console.error('Error fetching goals:', error);
-    //   }
-    // },
     
    async addGoal({
   planType,

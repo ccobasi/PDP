@@ -1,7 +1,7 @@
 <script setup>
 import authService from '../../services/authService';
 import TabMenu from '../../components/Tabs/TabMenu.vue';
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, nextTick } from 'vue'
 import {useUsersStore} from "@/store/users"
 import {useDepartmentsStore} from "@/store/departments"
 import {useBusinessUnitsStore} from "@/store/businessUnit"
@@ -14,28 +14,21 @@ const rolesStore = useRolesStore();
 const departmentsStore = useDepartmentsStore();
 const businessUnitsStore = useBusinessUnitsStore();
 const loading = ref(true); 
-
+const loadingDepartments = ref(true);
 const users = ref([]);
 const userData = ref([]);
 const departs = ref([]);
 // const roleType = rolesStore.roles;
 const roles = ref([])
-const businessUnits = ref([]);
 
+const businessUnits = computed(() => businessUnitsStore.businessUnits || []);
 const lastModifiedBy = ref('');
 const departmentDescription = ref('');
-const shortCode = ref('');
-
-const departments = ref([]);
-const departmentId = ref(0);
+const option = ref('');
+const departments = computed(() => departmentsStore.departments || []);
 
 const userFullName = ref('')
-  // const department = ref('')
-  // const manager = ref('')
   const email = ref('')
-  // const level = ref('')
-  // const status = ref('')
-  // const role = ref('')
   const phoneNumber = ref('')
   const jobTitle = ref('')
   const address = ref('')
@@ -46,9 +39,9 @@ const userFullName = ref('')
   const editingBusinessUnit = ref(null);
   const editingRole = ref(null);
   const editingDepartment = ref(null);
-  const selectedValue = ref('')
-  const businessUnit = ref('')
-  const department = ref('')
+  // const selectedValue = ref('')
+  const businessUnit = ref(null)
+  const department = ref(null)
   const role = ref(null)
 
   const userType = ref(null);
@@ -57,6 +50,7 @@ const userFullName = ref('')
   const usersType = ref([]);
   const loadingUsers = ref(false);
   console.log(usersType.value);
+  
 
 const fetchUserType = async () => {
   loadingUsers.value = true;
@@ -72,7 +66,7 @@ const fetchUserType = async () => {
   
 };
 
-  const loadingDepartments = ref(false);
+  // const loadingDepartments = ref(false);
   console.log(departments.value);
 
 const fetchDepartment = async () => {
@@ -115,8 +109,14 @@ const fetchData = async () => {
 };
 
 onMounted(async () => {
-  await rolesStore.fetchRoles();
-  roles.value = rolesStore.roles;
+  await rolesStore.fetchRoles(); 
+  console.log("Roles Loaded", rolesStore.roles);
+  await departmentsStore.fetchDepartments();
+  loadingDepartments.value = false;
+  await businessUnitsStore.fetchBusinessUnits();
+    await nextTick(); 
+    console.log('Business Units after fetch:', businessUnits.value);
+
   await fetchDepartment();
   console.log('Departments fetched directly:', departments.value);
   await fetchData();
@@ -140,69 +140,63 @@ onMounted(async () => {
 });
 
 const addUser = async () => {
-  if (
-    email.value.trim() !== '' || userFullName.value.trim() !== '' || role.value.trim() !== '' || jobTitle.value.trim() !== '' || phoneNumber.value.trim() !== '' || address.value.trim() !== '' || department.value.trim() !== '' || businessUnit.value.trim() !== ''  || createdBy.value.trim() !== '' 
-  ) {
-    await store.addUser(
-      email.value.trim(), userFullName.value.trim(), role.value.trim(), jobTitle.value.trim(), phoneNumber.value.trim(), address.value.trim(), department.value.trim(), businessUnit.value.trim(), createdBy.value.trim()
-    );
-    email.value = '',
-    userFullName.value = '';
-    role.value = '';
-    jobTitle.value = '';
-    phoneNumber.value = '';
-    address.value = '';
-    department.value = '';
-    businessUnit.value = '';
-    createdBy.value = '';
+      const userData = {
+        userFullName: userFullName.value,
+        email: email.value,
+        role: role.value,
+        department: department.value,
+        jobTitle: jobTitle.value,
+        phoneNumber: phoneNumber.value,
+        address: address.value,
+        businessUnit: businessUnit.value,
+        createdBy: createdBy.value,
+      };
 
-    console.log("User added");
-  }
-};
+      try {
+        await store.addUser(userData); 
+        console.log('User added successfully');
+        document.getElementById('myModal').style.display = 'none'; 
+      } catch (error) {
+        console.error('Error adding user:', error);
+      }
+    };
+
 
 const addDepartment = async () => {
   if (
-    shortCode.value.trim() !== '' || departmentDescription.value.trim() !== '' || lastModifiedBy.value.trim() !== ''
+    option.value.trim() !== '' 
   ) {
     await departmentsStore.addDepartment(
-      shortCode.value.trim(), departmentDescription.value.trim(), lastModifiedBy.value.trim()
+      option.value.trim()
     );
 
-    shortCode.value = '';
-    departmentDescription.value = '';
-    lastModifiedBy.value = '';
+    option.value = '';
     console.log("Department added");
   }
 };
 
 const addBusinessUnit = async () => {
   if (
-    shortCode.value.trim() !== '' || businessUnitDescription.value.trim() !== '' || lastModifiedBy.value.trim() !== ''
+    option.value.trim() !== '' 
   ) {
     await businessUnitsStore.addBusinessUnit(
-      shortCode.value.trim(), businessUnitDescription.value.trim(), lastModifiedBy.value.trim()
+      option.value.trim()
     );
 
-    shortCode.value = '';
-    businessUnitDescription.value = '';
-    lastModifiedBy.value = '';
+    option.value = '';
     console.log("Business unit added");
   }
 };
 
 const addRole = async () => {
 
-  if (name.value && description.value && userType.value) {
-    if (name.value.trim() !== '' && description.value.trim() !== '' && userType.value.trim() !== '') {
+  if (option.value) {
+    if (option.value.trim() !== '') {
       await rolesStore.addRole(
-        name.value.trim(),
-        description.value.trim(),
-        userType.value.trim()
+        option.value.trim()
       );
 
-      name.value = '';
-      description.value = '';
-      usersType.value = '';
+      option.value = '';
 
       console.log("Role added");
     } else {
@@ -214,11 +208,23 @@ const addRole = async () => {
 };
 
 
-const handleSubmit = () => {
-  addUser();
-  console.log("User added")
-  
-};
+const handleSubmit = async () => {
+      console.log({
+        userFullName: userFullName.value,
+        email: email.value,
+        role: role.value,
+        department: department.value,
+        jobTitle: jobTitle.value,
+        phoneNumber: phoneNumber.value,
+        address: address.value,
+        businessUnit: businessUnit.value,
+        createdBy: createdBy.value,
+      });
+
+      await addUser(); // Add user logic
+      console.log("User added");
+    };
+
 
 const handleAddDepartment = () => {
     addDepartment();
@@ -238,11 +244,11 @@ const handleAddRole = () => {
 };
 
 
- const onSelectChange = () => {
-  // eslint-disable-next-line no-self-assign
-  selectedValue.value = selectedValue.value
-  console.log("Selected department ID:", departmentId.value);
-}
+//  const onSelectChange = () => {
+//   // eslint-disable-next-line no-self-assign
+//   selectedValue.value = selectedValue.value
+//   console.log("Selected department ID:", departmentId.value);
+// }
 
 const editUser = (user) => {
   editingUser.value = { ...user };
@@ -286,7 +292,7 @@ const deleteUser = async (userId) => {
 const editBusinessUnit = (biz) => {
   editingBusinessUnit.value = { ...biz };
   
-  shortCode.value = biz.shortCode;
+  option.value = biz.option;
   businessUnitDescription.value = biz.businessUnitDescription;
   lastModifiedBy.value = biz.lastModifiedBy;
   
@@ -295,9 +301,7 @@ const editBusinessUnit = (biz) => {
 
 const updateBusinessUnit = async () => {
   if (editingBusinessUnit.value) {
-    editingBusinessUnit.value.shortCode = shortCode.value;
-    editingBusinessUnit.value.businessUnitDescription = businessUnitDescription.value;
-    editingBusinessUnit.value.lastModifiedBy = lastModifiedBy.value;
+    editingBusinessUnit.value.option = option.value;
     await businessUnitsStore.updateBusinessUnit(editingBusinessUnit.value);
     editingBusinessUnit.value = null;
 
@@ -372,7 +376,8 @@ const tab = ref(1);
 <template>
   <main class="wrapper">
     <TabMenu />
-    <form method="post" action="" @submit.prevent="editingUser ? updateUser() : handleSubmit">
+    <!-- <form method="post" @submit.prevent="editingUser ? updateUser() : handleSubmit"> -->
+    <form method="post" @submit.prevent="handleSubmit">
       <div class="modal" id="myModal" tabindex="-1">
         <div class="modal-dialog modal-lg">
           <div class="modal-content">
@@ -382,180 +387,81 @@ const tab = ref(1);
             </div>
 
             <div class="modal-body">
-
               <div class="goal">
                 <div class="left">
                   <h4>Name</h4>
-
-                  <input type="text" v-model="userFullName" placeholder="Full Name" disabled>
+                  <input type="text" v-model="userFullName" placeholder="Full Name" required>
                 </div>
                 <div class="right">
                   <h4>Email</h4>
-                  <input type="text" v-model="email" placeholder="Email" disabled>
+                  <input type="email" v-model="email" placeholder="Email" required>
                 </div>
               </div>
+
               <div class="goal">
                 <div class="left">
                   <h4>Role</h4>
-                  <!-- <select v-if="rolesStore.roles.length > 0" class="form-select" aria-label="Default select example" v-model="role">
-                    <option v-for="role in rolesStore.roles" :key="role.id" :value="role.id">{{ role.option }}</option>
-                  </select> -->
-                  <select v-if="!loading && rolesStore.roles.length > 0" class="form-select" aria-label="Default select example" v-model="selectedRole">
-                    <option v-for="role in rolesStore.roles" :key="role.id" :value="role.id">
-                      {{ role.option }}
+                  <select v-if="!loading && rolesStore.roles.length > 0" class="form-select" v-model.number="role" required>
+                    <option v-for="roleOption in rolesStore.roles" :key="roleOption.id" :value="roleOption.id">
+                      {{ roleOption.option }}
                     </option>
                   </select>
                 </div>
                 <div class="right">
-                  <h4 class="">Department</h4>
-                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="department">
-
-                    <option class="opt" value="1">Administration</option>
-                    <option class="opt" value="2">Procurement</option>
-                    <option class="opt" value="3">Knowledge Management</option>
-                    <option class="opt" value="4">Credit Risk Management</option>
-                    <option class="opt" value="5">Information Technology</option>
+                  <h4>Department</h4>
+                  <select class="form-select" v-model.number="department" required>
+                    <option v-for="dept in departments" :key="dept.id" :value="dept.id">
+                      {{ dept.option }}
+                    </option>
                   </select>
                 </div>
               </div>
+
               <div class="goal">
                 <div class="left">
                   <h4>Job Title</h4>
-                  <input type="text" v-model="jobTitle" placeholder="Job Title" disabled>
+                  <input type="text" v-model="jobTitle" placeholder="Job Title" required>
                 </div>
                 <div class="right">
-                  <h4 class="">Phone Number</h4>
-                  <input type="text" v-model="phoneNumber" placeholder="Phone Number" disabled>
+                  <h4>Phone Number</h4>
+                  <input type="tel" v-model="phoneNumber" placeholder="Phone Number" required>
                 </div>
               </div>
+
               <div class="goal">
                 <div class="left">
                   <h4>Address</h4>
-                  <input type="text" v-model="address" placeholder="Address" disabled>
+                  <input type="text" v-model="address" placeholder="Address" required>
                 </div>
                 <div class="right">
                   <h4>Business Unit</h4>
-                  <input type="text" v-model="businessUnit" placeholder="Business Unit" disabled>
+                  <select class="form-select" v-model.number="businessUnit" required>
+                    <option v-for="unit in businessUnits" :key="unit.id" :value="unit.id">
+                      {{ unit.option }}
+                    </option>
+                  </select>
                 </div>
               </div>
+
               <div class="goal">
                 <div class="left">
                   <h4>Created By</h4>
-                  <input type="text" v-model="createdBy" placeholder="Email" disabled>
+                  <input type="number" v-model.number="createdBy" placeholder="Creator ID" required>
                 </div>
-                <!-- <div class="right">
-                  <h4>Business Unit</h4>
-                  <textarea name="Business Unit" placeholder="Business Unit" id="" cols="30" rows="10" v-model="businessUnit"></textarea>
-                </div> -->
               </div>
-
             </div>
+
             <div class="modal-footer">
-
-              <button type="submit" class="btn btn-success" data-bs-dismiss="modal" @click="$router.push('/settings')">{{ editingUser ? 'Update' : 'Submit' }}</button>
+              <button type="submit" class="btn btn-success" data-bs-dismiss="modal">
+                <!-- {{ editingUser ? 'Update' : 'Submit' }} -->
+                Submit
+              </button>
             </div>
-
           </div>
         </div>
       </div>
     </form>
-    <!-- <form method="post" action="" @submit.prevent="handleSubmit">
-      <div class="modal" id="myModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">Add User Form</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
 
-            <div class="modal-body">
-
-              <div class="goal">
-                <div class="left">
-                  <h4 class="">Email</h4>
-                  <textarea name="Email" placeholder="Email" id="" cols="30" rows="10" v-model="userId"></textarea>
-                </div>
-                <div class="right">
-                  <h4>Name</h4>
-                  <textarea name="Name" placeholder="Name" id="" cols="30" rows="10" v-model="userFullName"></textarea>
-
-                </div>
-              </div>
-              <div class="goal">
-                <div class="left">
-                  <h4>Role</h4>
-                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="roless">
-                    <option v-for="role in roles" :key="role" :value="role">{{ role }}</option> 
-                    <option class="opt" value="User">User</option>
-                    <option class="opt" value="Supervisor">Supervisor</option>
-                    <option class="opt" value="Auditor">Auditor</option>
-                    <option class="opt" value="IT Admin">IT Admin</option>
-                    <option class="opt" value="Knowledge Manager">Knowledge Manager</option>
-                    <option class="opt" value="Management">Management</option>
-                  </select>
-
-                </div>
-                <div class="right">
-                  <h4 class="">Department</h4>
-                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="department">
-
-                    <option class="opt" value="Knowledge Management">Knowledge Management</option>
-                    <option class="opt" value="Credit Risk Management">Credit Risk Management</option>
-                  </select>
-                </div>
-              </div>
-              <div class="goal">
-                <div class="left">
-                  <h4>Level</h4>
-                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="level">
-
-                    <option class="opt" value="Associates">Associates</option>
-                    <option class="opt" value="Senior Associates">Senior Associates</option>
-                    <option class="opt" value="AVP">AVP</option>
-                  </select>
-                </div>
-                <div class="right">
-                  <h4 class="">Status</h4>
-                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="status">
-
-                    <option class="opt" value="Active">Active</option>
-                    <option class="opt" value="In-Active">In-Active</option>
-                  </select>
-                </div>
-              </div>
-              <div class="goal">
-                <div class="left">
-                  <h4>Manager</h4>
-                  <select class="form-select" aria-label="Default select example" v-on:change="onSelectChange(e)" v-model="manager">
-
-                    <option class="opt" value="Tope">Tope</option>
-                    <option class="opt" value="Stephen">Stephen</option>
-                    <option class="opt" value="Victory">Victory</option>
-                  </select>
-                </div>
-
-              </div>
-              <div class="goal">
-                <div class="left">
-                  <h4>Mission</h4>
-                  <textarea name="Name" placeholder="Name" id="" cols="30" rows="10" v-model="mission"></textarea>
-                </div>
-                <div class="right">
-                  <h4 class="">Vision</h4>
-                  <textarea name="Email" placeholder="Email" id="" cols="30" rows="10" v-model="vision"></textarea>
-
-                </div>
-              </div>
-            </div>
-            <div class="modal-footer">
-
-              <button type="submit" class="btn btn-success" data-bs-dismiss="modal" @click="$router.push('/settings')">Submit Request</button>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </form> -->
     <form method="post" action="" @submit.prevent="editingDepartment ? updateDepartment() : handleAddDepartment()">
       <div class="modal" id="myModal1" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -569,24 +475,17 @@ const tab = ref(1);
 
               <div class="goal">
                 <div class="left">
-                  <h4 class="">Short Code</h4>
-                  <textarea name="shortCode" placeholder="Short Code" id="shortCode" cols="30" rows="10" v-model="shortCode"></textarea>
+                  <h4 class="">Department</h4>
+
+                  <input type="text" v-model="option" placeholder="Department">
 
                 </div>
                 <div class="right">
-                  <h4>Department</h4>
-                  <textarea name="Department" placeholder="Department" v-model="departmentDescription" id="" cols="30" rows="10"></textarea>
-                </div>
-
-              </div>
-              <div class="goal">
-                <div class="left">
-                  <h4 class="">Modified By</h4>
-                  <input type="text" v-model="lastModifiedBy" placeholder="Created By" disabled>
 
                 </div>
 
               </div>
+
             </div>
             <div class="modal-footer">
 
@@ -611,24 +510,12 @@ const tab = ref(1);
               <div class="goal">
                 <div class="leftt">
                   <h4>Role</h4>
-                  <textarea name="Name" placeholder="Name" v-model="name" id="" cols="30" rows="10"></textarea>
+
+                  <input type="text" v-model="option" placeholder="Role">
                 </div>
                 <div class="right">
-                  <h4>Description</h4>
-                  <textarea name="Description" placeholder="Description" v-model="description" id="" cols="30" rows="10"></textarea>
-                </div>
-              </div>
-              <div class="goal">
 
-                <div class="left">
-                  <h4>User Type</h4>
-                  <select class="form-select" aria-label="Default select example" v-model="userType">
-                    <option v-if="loadingUsers" disabled>Loading Users...</option>
-                    <option v-for="userType in usersType" :key="userType.id" :value="userType.id">{{ userType.descriptions }}</option>
-                    <option v-if="!loadingUsers && usersType.length === 0" disabled>No Users Found</option>
-                  </select>
                 </div>
-
               </div>
 
             </div>
@@ -653,20 +540,14 @@ const tab = ref(1);
             <div class="modal-body">
               <div class="goal">
                 <div class="left">
-                  <h4 class="">Short Code</h4>
-                  <textarea name="shortCode" placeholder="Short Code" id="shortCode" cols="30" rows="10" v-model="shortCode"></textarea>
+                  <h4 class="">Business Unit</h4>
+                  <input type="text" v-model="option" placeholder="Business Unit">
                 </div>
                 <div class="right">
-                  <h4>Business Unit</h4>
-                  <textarea name="Business Unit" placeholder="Business Unit Description" v-model="businessUnitDescription" id="" cols="30" rows="10"></textarea>
+
                 </div>
               </div>
-              <div class="goal">
-                <div class="left">
-                  <h4 class="">Modified By</h4>
-                  <input type="text" v-model="lastModifiedBy" placeholder="Created By" disabled>
-                </div>
-              </div>
+
             </div>
             <div class="modal-footer">
               <button type="submit" class="btn btn-success" data-bs-dismiss="modal">{{ editingBusinessUnit ? 'Update' : 'Submit' }}</button>
@@ -706,21 +587,11 @@ const tab = ref(1);
                           <div class="d-flex align-center gap-1">
                             <span> S/N </span>
 
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
-
                           </div>
                         </th>
                         <th class="text-left">
                           <div class="d-flex align-center gap-1">
                             <span> Name </span>
-
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
 
                           </div>
                         </th>
@@ -728,21 +599,11 @@ const tab = ref(1);
                           <div class="d-flex align-center gap-1">
                             <span> Role </span>
 
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
-
                           </div>
                         </th>
                         <th class="text-left">
                           <div class="d-flex align-center gap-1">
                             <span> Title </span>
-
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
 
                           </div>
                         </th>
@@ -750,21 +611,11 @@ const tab = ref(1);
                           <div class="d-flex align-center gap-1">
                             <span> Phone Number </span>
 
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
-
                           </div>
                         </th>
                         <th class="text-left">
                           <div class="d-flex align-center gap-1">
                             <span> Address </span>
-
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
 
                           </div>
                         </th>
@@ -772,32 +623,17 @@ const tab = ref(1);
                           <div class="d-flex align-center gap-1">
                             <span> Department </span>
 
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
-
                           </div>
                         </th>
                         <th class="text-left">
                           <div class="d-flex align-center gap-1">
                             <span> Business Unit </span>
 
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
-
                           </div>
                         </th>
                         <th class="text-left">
                           <div class="d-flex align-center gap-1">
                             <span>Created By </span>
-
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
 
                           </div>
                         </th>
@@ -806,9 +642,9 @@ const tab = ref(1);
                     </thead>
                     <tbody>
                       <tr v-for="user in userData" :key="user.id" @dblclick="editUser(user)">
-                        <td>{{ user.id }}</td>
+                        <td>{{ user.userId }}</td>
                         <td>{{ user.userFullName }}</td>
-                        <td>{{ user.roleId }}</td>
+                        <td>{{ user.role.option }}</td>
                         <td>{{ user.jobTitle }}</td>
                         <td>{{ user.phoneNumber }}</td>
                         <td>{{ user.address }}</td>
@@ -838,32 +674,11 @@ const tab = ref(1);
                           <div class="d-flex align-center gap-1">
                             <span> S/N </span>
 
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
-
                           </div>
                         </th>
                         <th class="text-left">
                           <div class="d-flex align-center gap-1">
-                            <span> Short Code</span>
-
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
-
-                          </div>
-                        </th>
-                        <th class="text-left">
-                          <div class="d-flex align-center gap-1">
-                            <span> Department </span>
-
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
+                            <span> Department</span>
 
                           </div>
                         </th>
@@ -873,8 +688,8 @@ const tab = ref(1);
                     <tbody>
                       <tr v-for="department in departs" :key="department.id" @dblclick="editDepartment(department)">
                         <td>{{ department.id }}</td>
-                        <td>{{ department.shortCode }}</td>
-                        <td>{{ department.departmentDescription }}</td>
+                        <td>{{ department.option }}</td>
+
                         <td>
                           <v-icon icon="mdi-delete" class="icon-danger" @click="deleteDepartment(department.id)"></v-icon>
                         </td>
@@ -905,43 +720,11 @@ const tab = ref(1);
                           <div class="d-flex align-center gap-1">
                             <span> S/N </span>
 
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
-
                           </div>
                         </th>
                         <th class="text-left">
                           <div class="d-flex align-center gap-1">
                             <span> Role </span>
-
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
-
-                          </div>
-                        </th>
-                        <th class="text-left">
-                          <div class="d-flex align-center gap-1">
-                            <span> Description </span>
-
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
-
-                          </div>
-                        </th>
-                        <th class="text-left">
-                          <div class="d-flex align-center gap-1">
-                            <span> User type </span>
-
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
 
                           </div>
                         </th>
@@ -949,11 +732,9 @@ const tab = ref(1);
                       </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="role in storeRole" :key="role.id" @dblclick="editRole(role)">
+                      <tr v-for="role in rolesStore.roles" :key="role.id" @dblclick="editRole(role)">
                         <td>{{ role.id }}</td>
-                        <td>{{ role.name }}</td>
-                        <td>{{ role.description }}</td>
-                        <td>{{ role.userType }}</td>
+                        <td>{{ role.option }}</td>
                         <td>
 
                           <v-icon icon="mdi-delete" class="icon-danger" @click="deleteRole(role.id)"></v-icon>
@@ -977,21 +758,11 @@ const tab = ref(1);
                           <div class="d-flex align-center gap-1">
                             <span> S/N </span>
 
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
-
                           </div>
                         </th>
                         <th class="text-left">
                           <div class="d-flex align-center gap-1">
                             <span>Business Unit </span>
-
-                            <span class="d-flex flex-column align-center">
-                              <v-icon icon="mdi-chevron-up" size="x-small" class="mb-n1"></v-icon>
-                              <v-icon icon="mdi-chevron-down" size="x-small"></v-icon>
-                            </span>
 
                           </div>
                         </th>
@@ -1001,7 +772,7 @@ const tab = ref(1);
                     <tbody>
                       <tr v-for="biz in businessUnits" :key="biz.id" @dblclick="editBusinessUnit(biz)">
                         <td>{{ biz.id }}</td>
-                        <td>{{ biz.businessUnitDescription }}</td>
+                        <td>{{ biz.option }}</td>
                         <td>
                           <v-icon icon="mdi-delete" class="icon-danger" @click="deleteBusinessUnit(biz.id)"></v-icon>
                         </td>
@@ -1043,6 +814,11 @@ const tab = ref(1);
 main {
   height: 1450px;
 }
+
+.text-deep-purple-accent-4 {
+  color: #227cbf !important;
+}
+
 .dev h3 {
   color: var(--Black, #000);
   font-family: Roboto, sans-serif;

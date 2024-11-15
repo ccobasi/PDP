@@ -5,7 +5,7 @@ export const useDepartmentsStore = defineStore('departments', {
   state: () => ({
     departments: [],
     selectedFile: null,
-    baseUrl: 'https://infracreditpdp.azurewebsites.net/api/Settings',
+    baseUrl: 'https://infracredit2.pythonanywhere.com/api/v1/departments/',
     endpoints: {
       getDepartments: '/getDepartments',
       createDepartments: '/createDepartments',
@@ -17,7 +17,7 @@ export const useDepartmentsStore = defineStore('departments', {
   actions: {
     async fetchDepartments() {
       try {
-        const response = await axios.get(`${this.baseUrl}${this.endpoints.getDepartments}`);
+        const response = await axios.get(`${this.baseUrl}`);
         this.departments = response.data;
         console.log(this.departments); 
       } catch (error) {
@@ -25,9 +25,9 @@ export const useDepartmentsStore = defineStore('departments', {
       }
     },
 
-    async addDepartment(shortCode, departmentDescription, lastModifiedBy) {
+    async addDepartment(option) {
       try {
-        const response = await axios.post(`${this.baseUrl}${this.endpoints.createDepartments}`, { shortCode, departmentDescription, lastModifiedBy });
+        const response = await axios.post(`${this.baseUrl}`, { option });
         this.departments.push(response.data);
         console.log(response.data);
       } catch (error) {

@@ -5,7 +5,7 @@ export const useBusinessUnitsStore = defineStore('businessUnits', {
   state: () => ({
     businessUnits: [],
     selectedFile: null,
-    baseUrl: 'https://infracreditpdp.azurewebsites.net/api/Settings',
+    baseUrl: 'https://infracredit2.pythonanywhere.com/api/v1/business-units/',
     endpoints: {
       getBusinessUnits: '/getBusinessUnits',
       createBusinessUnits: '/createBusinessUnits',
@@ -17,7 +17,7 @@ export const useBusinessUnitsStore = defineStore('businessUnits', {
   actions: {
     async fetchBusinessUnits() {
       try {
-        const response = await axios.get(`${this.baseUrl}${this.endpoints.getBusinessUnits}`);
+        const response = await axios.get(`${this.baseUrl}`);
         this.businessUnits = response.data;
         console.log(this.businessUnits); 
       } catch (error) {
@@ -25,9 +25,9 @@ export const useBusinessUnitsStore = defineStore('businessUnits', {
       }
     },
 
-    async addBusinessUnit(shortCode, businessUnitDescription, lastModifiedBy) {
+    async addBusinessUnit(option) {
       try {
-        const response = await axios.post(`${this.baseUrl}${this.endpoints.createBusinessUnits}`, { shortCode, businessUnitDescription, lastModifiedBy });
+        const response = await axios.post(`${this.baseUrl}`, { option });
         this.businessUnits.push(response.data);
         console.log(response.data);
       } catch (error) {
@@ -40,7 +40,7 @@ export const useBusinessUnitsStore = defineStore('businessUnits', {
         const businessUnitIndex = this.businessUnits.findIndex(d => d.id === businessUnit.id);
         console.log(businessUnitIndex);
         if (businessUnitIndex !== -1) {
-          const response = await axios.put(`${this.baseUrl}${this.endpoints.editBusinessUnits}`, businessUnit);
+          const response = await axios.put(`${this.baseUrl}${businessUnit.id}/`, businessUnit);
           this.businessUnits.splice(businessUnitIndex, 1, response.data);
         } else {
           console.error('Business Unit to update not found:', businessUnit.id);

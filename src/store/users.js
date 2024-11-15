@@ -81,19 +81,43 @@ export const useUsersStore = defineStore('users', {
       }
     },
 
-    async addUser(userId, fullName, roleId, jobTitle, phoneNumber, address, departmentId, businessUnitId, createdBy) {
-      try {
-        const response = await axios.post(`${this.baseUrl}`, { 
-          userId, fullName, roleId, jobTitle, phoneNumber, address, departmentId, businessUnitId, createdBy 
-        });
+    // async addUser(userId, fullName, roleId, jobTitle, phoneNumber, address, departmentId, businessUnitId, createdBy) {
+    //   try {
+    //     const response = await axios.post(`${this.baseUrl}`, { 
+    //       userId, fullName, roleId, jobTitle, phoneNumber, address, departmentId, businessUnitId, createdBy 
+    //     });
 
-        console.log('User added:', response.data);
+    //     console.log('User added:', response.data);
 
-        await this.fetchUsers();
-      } catch (error) {
-        console.error('Error adding user:', error);
-      }
-    },
+    //     await this.fetchUsers();
+    //   } catch (error) {
+    //     console.error('Error adding user:', error);
+    //   }
+    // },
+
+    async addUser(role, email, userFullName, jobTitle, phoneNumber, address, department, businessUnit, createdBy) {
+  try {
+    const response = await axios.post(`${this.baseUrl}`, { 
+      role,
+      email,
+      userFullName,
+      jobTitle,
+      phoneNumber,
+      address,
+      department,
+      businessUnit,
+      createdBy
+    });
+
+    console.log('User added:', response.data);
+
+    // Optionally refresh the user list after adding a new user
+    await this.fetchUsers();
+  } catch (error) {
+    console.error('Error adding user:', error);
+  }
+},
+
 
     async updateUser(user) {
       try {
