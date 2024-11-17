@@ -138,18 +138,18 @@ const filteredGoals = computed(() => {
 
     const matchesRecordOwner = !props.recordOwner || (item.recordOwner === props.recordOwner);
 
-    const criteria = {
-      item,
-      matchesYear,
-      matchesQuarter,
-      matchesOption,
-      matchesTerm,
-      matchesDepartment,
-      matchesLevel,
-      matchesRecordOwner,
-    };
+    // const criteria = {
+    //   item,
+    //   matchesYear,
+    //   matchesQuarter,
+    //   matchesOption,
+    //   matchesTerm,
+    //   matchesDepartment,
+    //   matchesLevel,
+    //   matchesRecordOwner,
+    // };
 
-    console.log("Matching Criteria:", criteria);
+    // console.log("Matching Criteria:", criteria);
 
     return matchesYear && matchesQuarter && matchesOption && matchesTerm && matchesDepartment && matchesLevel && matchesRecordOwner;
   });

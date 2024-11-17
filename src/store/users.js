@@ -81,20 +81,6 @@ export const useUsersStore = defineStore('users', {
       }
     },
 
-    // async addUser(userId, fullName, roleId, jobTitle, phoneNumber, address, departmentId, businessUnitId, createdBy) {
-    //   try {
-    //     const response = await axios.post(`${this.baseUrl}`, { 
-    //       userId, fullName, roleId, jobTitle, phoneNumber, address, departmentId, businessUnitId, createdBy 
-    //     });
-
-    //     console.log('User added:', response.data);
-
-    //     await this.fetchUsers();
-    //   } catch (error) {
-    //     console.error('Error adding user:', error);
-    //   }
-    // },
-
     async addUser(role, email, userFullName, jobTitle, phoneNumber, address, department, businessUnit, createdBy) {
   try {
     const response = await axios.post(`${this.baseUrl}`, { 

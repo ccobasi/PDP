@@ -57,32 +57,14 @@ import ITProfileTrainingSchedule from '../views/IT/ProfileTrainingSchedule.vue'
 import ITDashboard from '../views/IT/DashBoard.vue'
 import ITMentorship from '../views/IT/MentorshipPlan.vue'
 import ITSpeakingEngagement from '../views/IT/SpeakingEngagement.vue'
-import LoginView from '../services/LoginView.vue'
+import LoginView from '@/services/LoginView.vue'
 import RoleDetails from '../components/RoleDetails.vue'
-import getUserRoleFromAuth from '../services/auth'
+import authService from '../services/authService'
+// import getUserRoleFromAuth from '../services/auth'
 
-// Vue.use(Router);
 
-// const roleRedirectMap = {
-//   '1': '/', // Admin
-//   '2': '/', // User
-//   '3': '/km/', // Knowledge Management
-//   '4': '/m/', // Manager
-//   '5': '/it/', // Information Technology
-//   '6': '/hod/' // Head of Department
-// }
 
-const roleRedirectMap = {
-    "IT Admin": "/it/",
-    "Manager": "/m/",
-    "Knowledge Manager": "/km/",
-    "HOD": "/hod/",
-    "User": "/", 
-};
-
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
+const routes = [
     {
       path: '/login',
       name: 'login',
@@ -93,49 +75,49 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: HomeView,
-      // meta: { requiresAuth: true, roles: ['1', '2'] }
+      meta: { requiresAuth: true, roles: ['IT Admin', 'User'] }
     },
     {
       path: '/skillassessment',
       name: 'Skill Assessment',
       component: SkillAssessment,
-    
+      meta: { requiresAuth: true, roles: ['IT Admin', 'User'] }
     },
     {
       path: '/trainingschedule',
       name: 'Training Schedule',
       component: TrainingSchedule,
-    
+      meta: { requiresAuth: true, roles: ['IT Admin', 'User'] }
     },
     {
       path: '/taskdeliverables',
       name: 'Task Deliverables',
       component: TaskDeliverables,
-     
+      meta: { requiresAuth: true, roles: ['IT Admin', 'User'] }
     },
     {
       path: '/mentorshipplan',
       name: 'Mentorship Plan',
       component: MentorshipPlan,
-     
+      meta: { requiresAuth: true, roles: ['IT Admin', 'User'] }
     },
     {
       path: '/engagement',
       name: 'User Speaking Engagement',
       component: Engagement,
-     
+      meta: { requiresAuth: true, roles: ['IT Admin', 'User'] }
     },
     {
       path: '/roledetails/:id',
       name: 'Role Detail',
       component: RoleDetails,
-     
+      meta: { requiresAuth: true, roles: ['IT Admin', 'User'] }
     },
     {
       path: '/careergoaldetail/:id',
       name: 'Detail',
       component: CareerGoalDetail,
-     
+      meta: { requiresAuth: true, roles: ['IT Admin', 'User'] }
     },
 
     {
@@ -172,7 +154,7 @@ const router = createRouter({
     path: "/km/",
     name: "Knowledge Manager Development Plan",
     component: DevelopmentPlan,
-    // meta: { requiresAuth: true, roles: ['3'] }
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Knowledge Manager'] }
     },
     {
     path: "/km/dashboard",
@@ -183,39 +165,38 @@ const router = createRouter({
     path: "/km/skillassessment",
     name: "Knowledge Manager Skill Assessment",
     component: KMSkillAssessment,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Knowledge Manager'] }
     },
     {
     path: "/km/trainingschedule",
     name: "Knowledge Manager Training Schedule",
     component: KMTrainingSchedule,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Knowledge Manager'] }
     },
     {
     path: "/km/alltrainingschedule",
     name: "All Knowledge Manager Training Schedule",
     component: KMAllTrainingSchedule,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Knowledge Manager'] }
     },
     {
     path: "/km/taskdeliverables",
     name: "Knowledge Manager Task Deliverables",
     component: KMTaskDeliverables,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Knowledge Manager'] }
     },
     {
     path: "/km/mentorshipplan",
     name: "Knowledge Manager Mentorship",
     component: KMMentorship,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Knowledge Manager'] }
     },
     {
     path: "/km/speakingengagement",
     name: "Speaking Engagement",
     component: SpeakingEngagement,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Knowledge Manager'] }
     },
-    // {
-    // path: "/km/myprofile",
-    // name: "Knowledge Manager Profile",
-    // component: MyProfile,
-    // props: route => ({ selectedName: route.query.name,
-    // recordOwner: route.params.recordOwner  }),
-    // },
     {
     path: "/km/myprofile/:userId/",
     name: "Team Dashboard",
@@ -241,37 +222,43 @@ const router = createRouter({
     path: "/m/",
     name: "Manager Development Plan",
     component: MDevelopmentPlan,
-    // meta: { requiresAuth: true, roles: ['4'] }
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Manager'] }
     },
     {
     path: "/m/skillassessment",
     name: "Manager Skill Assessment",
     component: MSkillAssessment,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Manager'] }
     },
     {
     path: "/m/trainingschedule",
     name: "Manager Training Schedule",
     component: () => import("../views/Manager/TrainingSchedule.vue"),
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Manager'] }
     },
     {
     path: "/m/alltrainingschedule",
     name: "All Manager Training Schedule",
     component: MAllTrainingSchedule,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Manager'] }
     },
     {
     path: "/m/taskdeliverables",
     name: "Manager Task Deliverables",
     component: MTaskDeliverables,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Manager'] }
     },
     {
     path: "/m/mentorshipplan",
     name: "Manager Mentorship",
     component: MMentorship,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Manager'] }
     },
     {
     path: "/m/speakingengagement",
     name: "Manager Speaking Engagement",
     component: MSpeakingEngagement,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'Manager'] }
     },
     {
     path: "/m/myprofile",
@@ -292,32 +279,37 @@ const router = createRouter({
     path: "/hod/",
     name: "HOD Development Plan",
     component: HODDevelopmentPlan,
-    // meta: { requiresAuth: true, roles: ['6'] }
+    meta: { requiresAuth: true, roles: ['IT Admin', 'HOD'] }
     },
     {
     path: "/hod/skillassessment",
     name: "HOD Skill Assessment",
     component: HODSkillAssessment,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'HOD'] }
     },
     {
     path: "/hod/trainingschedule",
     name: "HOD Training Schedule",
     component: HODTrainingSchedule,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'HOD'] }
     },
     {
     path: "/hod/alltrainingschedule",
     name: "All HOD Training Schedule",
     component: AllHODTrainingSchedule,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'HOD'] }
     },
     {
     path: "/hod/taskdeliverables",
     name: "HOD Task Deliverables",
     component: HODTaskDeliverables,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'HOD'] }
     },
     {
     path: "/hod/myprofile",
     name: "HOD Profile",
     component: HODProfile,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'HOD'] }
     },
     {
     path: "/hod/profileskillassessment",
@@ -338,42 +330,49 @@ const router = createRouter({
     path: "/hod/mentorshipplan",
     name: "HOD Mentorship",
     component: HODMentorship,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'HOD'] }
     },
     {
     path: "/hod/speakingengagement",
     name: "HOD Speaking Engagement",
     component: HODSpeakingEngagement,
+    meta: { requiresAuth: true, roles: ['IT Admin', 'HOD'] }
     },
     {
     path: "/it/",
     name: "IT Development Plan",
     component: ITDevelopmentPlan,
-    // meta: { requiresAuth: true, roles: ['5'] }
+    meta: { requiresAuth: true, roles: ['IT Admin'] }
     },
     {
     path: "/it/skillassessment",
     name: "IT Skill Assessment",
     component: ITSkillAssessment,
+    meta: { requiresAuth: true, roles: ['IT Admin'] }
     },
     {
     path: "/it/trainingschedule",
     name: "IT Training Schedule",
     component: ITTrainingSchedule,
+    meta: { requiresAuth: true, roles: ['IT Admin'] }
     },
     {
     path: "/it/alltrainingschedule",
     name: "All IT Training Schedule",
     component: ITAllTrainingSchedule,
+    meta: { requiresAuth: true, roles: ['IT Admin'] }
     },
     {
     path: "/it/taskdeliverables",
     name: "IT Task Deliverables",
     component: ITTaskDeliverables,
+    meta: { requiresAuth: true, roles: ['IT Admin'] }
     },
     {
     path: "/it/myprofile",
     name: "IT Profile",
     component: ITProfile,
+    meta: { requiresAuth: true, roles: ['IT Admin'] }
     },
     {
     path: "/it/profileskillassessment",
@@ -394,41 +393,65 @@ const router = createRouter({
     path: "/it/mentorshipplan",
     name: "IT Mentorship",
     component: ITMentorship,
+    meta: { requiresAuth: true, roles: ['IT Admin'] }
     },
     {
     path: "/it/speakingengagement",
     name: "IT Speaking Engagement",
     component: ITSpeakingEngagement,
+    meta: { requiresAuth: true, roles: ['IT Admin'] }
     },
     {
       path: '/it/settings',
       name: 'Settings',
       component: Settings,
-     
+      meta: { requiresAuth: true, roles: ['IT Admin'] }
     },
   ]
-})
 
-router.beforeEach((to, from, next) => {
-    const userRole = getUserRoleFromAuth(); 
 
-    if (userRole) {
-        const redirectUrl = roleRedirectMap[userRole];
-        if (redirectUrl) {
-            
-            if (to.path === '/login') {
-                
-                next(redirectUrl);
-            } else {
-                next(); 
-            }
-        } else {
-            next(); 
-        }
-    } else {
-        next(); 
-    }
+const router = createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
+  routes,
+});
+
+const isAuthenticated = () => {
+  const accounts = authService.getMsalInstance().getAllAccounts();
+  return accounts.length > 0; 
+};
+
+router.beforeEach(async (to, from, next) => {
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  
+  if (requiresAuth && !isAuthenticated()) {
+    next('/login'); 
+  } else {
+    next(); 
+  }
 });
 
 
+// router.beforeEach(async (to, from, next) => {
+//   const requiresAuth = to.meta.requiresAuth;
+//   const userRoles = await authService.getUserRole(); 
+
+//   if (requiresAuth) {
+//     if (!userRoles) {
+      
+//       next({ name: 'login' });
+//     } else {
+      
+//       const hasAccess = to.meta.roles.some(role => userRoles.includes(role));
+//       if (hasAccess) {
+//         next(); 
+//       } else {
+//         next({ name: 'home' }); 
+//       }
+//     }
+//   } else {
+//     next(); 
+//   }
+// });
+
 export default router;
+

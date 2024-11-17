@@ -1,11 +1,24 @@
 <script setup>
-import {  RouterView } from 'vue-router'
-import NavBar from '../src/components/NavBar.vue';
+// import { onMounted } from "vue";
+// import authService from "@/services/authService";
+import NavBar from "@/components/NavBar.vue";
+
+// onMounted(async () => {
+//   try {
+//     console.log("Initializing MSAL...");
+//     await authService.initialize(); 
+//     console.log("MSAL initialized successfully");
+//   } catch (error) {
+//     console.error("Error during MSAL initialization:", error);
+//   }
+// });
 </script>
 
 <template>
-  <NavBar />
-  <RouterView />
+  <div id="app">
+    <NavBar />
+    <router-view />
+  </div>
 </template>
 
 <style scoped>

@@ -1,3 +1,25 @@
+<template>
+  <div class="pageheader d-flex justify-content-between align-items-center">
+    <div class="logo">
+      <img src="../assets/Group.png" alt="brand_logo" />
+    </div>
+    <div class="brand">Personalized Development Platform</div>
+    <div class="subheader d-flex align-center gap-4">
+      <v-badge content="2" color="green-darken-1">
+        <v-icon icon="mdi-bell-outline" size="large" />
+      </v-badge>
+      <div class="avatar">
+        <img src="../assets/images/ellipse.png" alt="" class="profile-image" />
+        <span v-if="account">{{ formattedDisplayName }}</span>
+      </div>
+      <div class="logout">
+        <img src="../assets/images/frame67.svg" alt="" />
+        <span @click="SignOut"> Logout </span>
+      </div>
+    </div>
+  </div>
+</template>
+
 <script>
 import authService from '../services/authService';
 
@@ -6,114 +28,50 @@ export default {
   data() {
     return {
       account: undefined,
+      userRole: null,
     };
+  },
+  computed: {
+    formattedDisplayName() {
+      if (this.account && this.account.name) {
+        const nameParts = this.account.name.split(' ');
+        const firstName = nameParts[0]; 
+        const lastName = nameParts[nameParts.length - 1]; 
+        return `${firstName} ${lastName}`; 
+      }
+      return ''; 
+    },
   },
   async mounted() {
     try {
+   
       await authService.initialize();
+
       const msalInstance = authService.getMsalInstance();
       const accounts = msalInstance.getAllAccounts();
+
       if (accounts.length) {
         this.account = accounts[0];
-        this.$emit('login', this.account);
-        this.$router.replace(this.$route.query.redirect || '/');
+        this.userRole = await authService.getUserRole(this.account); // Fetch user role from authService
       }
     } catch (error) {
       console.error("Error during MSAL initialization:", error);
     }
   },
   methods: {
-    async SignOut() {
+     async SignOut() {
       try {
-        await authService.initialize();
         await authService.signOut();
-        this.account = undefined;
-        this.$emit('logout');
-        this.$router.replace('/login');
       } catch (error) {
-        console.error("Error during sign out:", error);
+        console.error("Error during sign-out:", error);
+        alert("Sign-out failed. Please try again.");
       }
     },
   },
-  computed: {
-    displayName() {
-      
-      const fullName = this.account.name || this.account.username || this.account.email;
-
-      const nameParts = fullName.split(" ");
-      if (nameParts.length > 2) {
-        return `${nameParts[0]} ${nameParts[1]}`; 
-      }
-
-      return fullName; 
-    }
-  }
 };
-
-
-
-// import { onMounted, ref } from 'vue';
-// import axios from 'axios'; 
-
-// const notifications = ref([]);
-
-// async function fetchNotifications() {
-//   try {
-//     const response = await axios.get('/api/notifications'); 
-//     notifications.value = response.data;
-//   } catch (error) {
-//     console.error('Error fetching notifications:', error);
-//     // Handle errors appropriately (e.g., display an error message to the user)
-//   }
-// }
-
-// onMounted(()=>{
-//   fetchNotifications(); 
-// })
-
 </script>
 
 
-<template>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aladin:wght@400&display=swap" />
-  <div class="pageheader d-flex justify-content-between align-items-center">
-    <div class="logo">
-      <img src="../assets/Group.png" alt="brand_logo">
-    </div>
-    <div class="brand">
-      Personalized Development Platform
-
-    </div>
-    <div class="subheader d-flex align-center gap-4">
-      <v-badge content=2 color="green-darken-1">
-        <v-icon icon="mdi-bell-outline" size="large" />
-      </v-badge>
-      <div class="avatar">
-        <img src="../assets/images/ellipse.png" alt="" class="profile-image">
-        <!-- <span v-if="account">{{ account.name || account.username || account.email }}</span> -->
-        <span v-if="account">{{ displayName }}</span>
-        <span v-else>Guest </span>
-      </div>
-      <div class="logout">
-        <img src="../assets/images/frame67.svg" alt="">
-        <span @click="SignOut"> Logout </span>
-
-      </div>
-    </div>
-  </div>
-  <!-- <div class="notifications">
-    <h2>Notifications</h2>
-    <ul v-if="notifications.length > 0">
-      <li v-for="notification in notifications" :key="notification.RecordId">
-        <div class="notification-details">
-          <span class="notification-type">{{ notification.NotificationType }}</span>
-          <p>{{ notification.Description }}</p>
-        </div>
-        </li>
-    </ul>
-    <p v-else>No notifications yet.</p>
-  </div> -->
-</template>
 
 <style scoped>
 .pageheader {
